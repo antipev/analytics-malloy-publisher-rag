@@ -1,0 +1,2649 @@
+{
+  "ecommerce_explore": {
+    "file": "3_explores/ecommerce_explore.malloy",
+    "dialect": "duckdb",
+    "primary_key": null,
+    "is_published_explore": true,
+    "direct_fields": [
+      {
+        "name": "User_Age",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The age of the customer in years."
+      },
+      {
+        "name": "User_City",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The city where the customer is located."
+      },
+      {
+        "name": "User_Country",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The country where the customer resides."
+      },
+      {
+        "name": "User_Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the customer account was created."
+      },
+      {
+        "name": "User_Email",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The primary email address of the customer."
+      },
+      {
+        "name": "User_Gender",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The gender of the customer."
+      },
+      {
+        "name": "User_Latitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS latitude coordinate of the customer's location."
+      },
+      {
+        "name": "User_Longitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS longitude coordinate of the customer's location."
+      },
+      {
+        "name": "User_State",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The state or province where the customer is located."
+      },
+      {
+        "name": "User_geom",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Geospatial point representation of the customer's address."
+      },
+      {
+        "name": "User_First_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The given name of the customer."
+      },
+      {
+        "name": "User_Last_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The family name of the customer."
+      },
+      {
+        "name": "User_Traffic_Source",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The marketing channel or source that brought the user to the site."
+      },
+      {
+        "name": "User_Postal_Code",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The residential postal or ZIP code."
+      },
+      {
+        "name": "User_Street_Address",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full street address of the customer."
+      },
+      {
+        "name": "Stage",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The identifier representing the fact table name (e.g., 'events', 'order_items')."
+      },
+      {
+        "name": "Conversion",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Conversion rate. Ratio of unique orders to total web events. Synonyms: conversion efficiency, order conversion, purchase rate."
+      },
+      {
+        "name": "Total Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Cost of Goods Sold (COGS). Total cost of inventory items that have a matching order. Synonyms: COGS, cost of sales, cost of goods."
+      },
+      {
+        "name": "Total_Gross_Margin",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total gross margin = gross profit = profitability. Revenue minus COGS, in USD. Synonyms: gross profit, profit, margin, profitability."
+      },
+      {
+        "name": "Average_Gross_Margin",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average gross margin = profit per order. Total gross margin divided by number of orders. Synonyms: average profit, profit per order, margin per order."
+      },
+      {
+        "name": "Gross_Markup_Percent",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Markup percentage = ROI on inventory. Profit as a percentage of cost. Synonyms: markup, margin %, return on cost. percent"
+      },
+      {
+        "name": "Lifetime_Orders_Avg",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Lifetime orders per user. Average number of orders placed per customer over their lifetime. Synonyms: orders per customer, repeat orders, lifetime value."
+      }
+    ],
+    "joined_entities": {
+      "order_items": {
+        "name": "order_items",
+        "fields": [
+          {
+            "name": "order_items.Id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for each individual item within an order."
+          },
+          {
+            "name": "order_items.Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the order item was first created."
+          },
+          {
+            "name": "order_items.Delivered_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the item was successfully delivered to the customer."
+          },
+          {
+            "name": "order_items.Inventory_item_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the specific item in the inventory."
+          },
+          {
+            "name": "order_items.Order_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the parent order containing this item."
+          },
+          {
+            "name": "order_items.Product_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the product being sold."
+          },
+          {
+            "name": "order_items.Returned_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the item was returned by the customer, if applicable."
+          },
+          {
+            "name": "order_items.Sale_price",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The price at which the individual item was sold to the customer."
+          },
+          {
+            "name": "order_items.Shipped_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the item was shipped from the warehouse."
+          },
+          {
+            "name": "order_items.Status",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Line-item lifecycle status. Values: Processing, Shipped, Complete, Returned. Synonyms: item state, fulfillment state."
+          },
+          {
+            "name": "order_items.User_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the customer who placed the order."
+          },
+          {
+            "name": "order_items.Total_Revenue",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total revenue = gross sales. Sum of sale price across order items, in USD. Synonyms: sales, revenue, gross sales."
+          },
+          {
+            "name": "order_items.Total_Revenue_Completed_Orders",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Revenue from completed (fulfilled) orders only (Status = 'Complete'). Synonyms: fulfilled revenue, recognized revenue."
+          },
+          {
+            "name": "order_items.Order_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Order count. Total number of unique orders. Synonyms: number of orders, # orders."
+          },
+          {
+            "name": "order_items.Order_Item_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total item count = units sold. Total individual line items across all orders. Synonyms: items sold, quantity, unit count."
+          },
+          {
+            "name": "order_items.Average_num_of_item",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The average number of items per order."
+          },
+          {
+            "name": "order_items.Total_Users",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of unique customers who have placed at least one order."
+          },
+          {
+            "name": "order_items.Average_Sale_Price",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The average price at which individual items were sold."
+          },
+          {
+            "name": "order_items.Average_Spend_per_User",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The average amount of money spent by each unique customer (Total_Revenue / Total_Users)."
+          },
+          {
+            "name": "order_items.Average_Order_Value",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Average order value (AOV). Total revenue / order count. Synonyms: AOV, average basket size, average order size."
+          },
+          {
+            "name": "order_items.Percent_Of_Total_Revenue",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The percentage contribution of the current grouping to the overall total revenue across all categories or segments."
+          },
+          {
+            "name": "order_items.User_Country",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The country where the customer resides."
+          },
+          {
+            "name": "order_items.User_City",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The city where the customer is located."
+          },
+          {
+            "name": "order_items.User_State",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The state or province where the customer is located."
+          },
+          {
+            "name": "order_items.User_Age",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The age of the customer in years."
+          },
+          {
+            "name": "order_items.User_Gender",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The gender of the customer."
+          },
+          {
+            "name": "order_items.User_First_Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The given name of the customer."
+          },
+          {
+            "name": "order_items.User_Last_Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The family name of the customer."
+          },
+          {
+            "name": "order_items.User_Email",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The primary email address of the customer."
+          },
+          {
+            "name": "order_items.User_Traffic_Source",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The marketing channel or source that brought the user to the site."
+          },
+          {
+            "name": "order_items.User_Postal_Code",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The residential postal or ZIP code."
+          },
+          {
+            "name": "order_items.User_Street_Address",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The full street address of the customer."
+          },
+          {
+            "name": "order_items.User_Latitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS latitude coordinate of the customer's location."
+          },
+          {
+            "name": "order_items.User_Longitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS longitude coordinate of the customer's location."
+          },
+          {
+            "name": "order_items.User_Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the customer account was created."
+          },
+          {
+            "name": "order_items.User_geom",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Geospatial point representation of the customer's address."
+          }
+        ]
+      },
+      "events": {
+        "name": "events",
+        "fields": [
+          {
+            "name": "events.Id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for each individual event or click."
+          },
+          {
+            "name": "events.User_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the user who performed the action."
+          },
+          {
+            "name": "events.Sequence_number",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The numerical position of this event within a specific user session."
+          },
+          {
+            "name": "events.Session_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "A unique identifier for the user's browsing session."
+          },
+          {
+            "name": "events.Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the event occurred."
+          },
+          {
+            "name": "events.Ip_address",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The IP address of the user at the time of the event."
+          },
+          {
+            "name": "events.City",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The city associated with the user's IP address."
+          },
+          {
+            "name": "events.State",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The state or region associated with the user's IP address."
+          },
+          {
+            "name": "events.Postal_code",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The postal or ZIP code associated with the user's IP address."
+          },
+          {
+            "name": "events.Browser",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The web browser used by the customer (e.g., Chrome, Safari)."
+          },
+          {
+            "name": "events.Traffic_source",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The marketing or referral source that led the user to the event."
+          },
+          {
+            "name": "events.Uri",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The specific Uniform Resource Identifier (URL path) visited."
+          },
+          {
+            "name": "events.Event_type",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Web event type. Values: view, cart, purchase. Synonyms: event, action, activity, interaction."
+          },
+          {
+            "name": "events.Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of events recorded."
+          },
+          {
+            "name": "events.Total_Sequence_Number",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The sum of sequence numbers, used to calculate session depth."
+          },
+          {
+            "name": "events.Average_Sequence_Number",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The average position of events in a session; indicates average session depth."
+          },
+          {
+            "name": "events.User_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of users visited."
+          },
+          {
+            "name": "events.User_Country",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The country where the customer resides."
+          },
+          {
+            "name": "events.User_City",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The city where the customer is located."
+          },
+          {
+            "name": "events.User_State",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The state or province where the customer is located."
+          },
+          {
+            "name": "events.User_Age",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The age of the customer in years."
+          },
+          {
+            "name": "events.User_Gender",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The gender of the customer."
+          },
+          {
+            "name": "events.User_First_Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The given name of the customer."
+          },
+          {
+            "name": "events.User_Last_Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The family name of the customer."
+          },
+          {
+            "name": "events.User_Email",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The primary email address of the customer."
+          },
+          {
+            "name": "events.User_Traffic_Source",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The marketing channel or source that brought the user to the site."
+          },
+          {
+            "name": "events.User_Postal_Code",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The residential postal or ZIP code."
+          },
+          {
+            "name": "events.User_Street_Address",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The full street address of the customer."
+          },
+          {
+            "name": "events.User_Latitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS latitude coordinate of the customer's location."
+          },
+          {
+            "name": "events.User_Longitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS longitude coordinate of the customer's location."
+          },
+          {
+            "name": "events.User_Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the customer account was created."
+          },
+          {
+            "name": "events.User_geom",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Geospatial point representation of the customer's address."
+          }
+        ]
+      },
+      "users": {
+        "name": "users",
+        "fields": [
+          {
+            "name": "users.Id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for each customer."
+          },
+          {
+            "name": "users.User_Age",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The age of the customer in years."
+          },
+          {
+            "name": "users.User_City",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The city where the customer is located."
+          },
+          {
+            "name": "users.User_Country",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The country where the customer resides."
+          },
+          {
+            "name": "users.User_Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the customer account was created."
+          },
+          {
+            "name": "users.User_Email",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The primary email address of the customer."
+          },
+          {
+            "name": "users.User_First_name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The given name of the customer."
+          },
+          {
+            "name": "users.User_Gender",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The gender of the customer."
+          },
+          {
+            "name": "users.User_Last_name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The family name of the customer."
+          },
+          {
+            "name": "users.User_Latitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS latitude coordinate of the customer's location."
+          },
+          {
+            "name": "users.User_Longitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS longitude coordinate of the customer's location."
+          },
+          {
+            "name": "users.User_State",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The state or province where the customer is located."
+          },
+          {
+            "name": "users.User_Street_address",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The full street address of the customer."
+          },
+          {
+            "name": "users.User_Traffic_source",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Traffic source = marketing channel = acquisition channel. Where the user came from (Search, Email, Social, Direct). Synonyms: channel, source, referrer."
+          },
+          {
+            "name": "users.User_Postal_code",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The residential postal or ZIP code."
+          },
+          {
+            "name": "users.User_geom",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Geospatial point representation of the customer's address."
+          },
+          {
+            "name": "users.Total_Users",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of unique customers."
+          },
+          {
+            "name": "users.Total_Age",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The sum of ages for the selected customer base."
+          },
+          {
+            "name": "users.Average_Age",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The calculated average age of the customer base."
+          }
+        ]
+      },
+      "event_session_facts": {
+        "name": "event_session_facts",
+        "fields": [
+          {
+            "name": "event_session_facts.Session_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "A unique identifier for the user's browsing session."
+          },
+          {
+            "name": "event_session_facts.Identifier",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "event_session_facts.Session_start",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp of the very first event recorded in the session."
+          },
+          {
+            "name": "event_session_facts.Session_end",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp of the final event recorded in the session."
+          },
+          {
+            "name": "event_session_facts.Session_landing_page",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The type of event that initiated the session, representing the user's entry point."
+          },
+          {
+            "name": "event_session_facts.Session_exit_page",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The type of event that concluded the session, representing the user's last action."
+          },
+          {
+            "name": "event_session_facts.Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total count of unique sessions."
+          }
+        ]
+      },
+      "event_session_funnel": {
+        "name": "event_session_funnel",
+        "fields": [
+          {
+            "name": "event_session_funnel.Session_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "A unique identifier for the user's browsing session. The unique identifier for the user session being tracked through the funnel."
+          },
+          {
+            "name": "event_session_funnel.Event1_time",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp of the first 'Product' view event in the session."
+          },
+          {
+            "name": "event_session_funnel.Event2_time",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp of the first 'Cart' addition event in the session."
+          },
+          {
+            "name": "event_session_funnel.Event3_time",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp of the first 'Purchase' event in the session."
+          },
+          {
+            "name": "event_session_funnel.Event1_before_event2",
+            "type": "boolean",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Boolean flag indicating if the product was viewed before an item was added to the cart."
+          },
+          {
+            "name": "event_session_funnel.Event2_before_event3",
+            "type": "boolean",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Boolean flag indicating if the cart addition happened before the final purchase."
+          },
+          {
+            "name": "event_session_funnel.Time_in_funnel",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The total duration in hours from the first product view to the final conversion or cart action."
+          },
+          {
+            "name": "event_session_funnel.Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of funnel records."
+          },
+          {
+            "name": "event_session_funnel.Count_Sessions",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of unique sessions entering the funnel."
+          },
+          {
+            "name": "event_session_funnel.Count_Sessions_event1",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The number of sessions that reached the first step (Product View)."
+          },
+          {
+            "name": "event_session_funnel.Count_Sessions_event12",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The number of sessions that successfully moved from Product View to Cart in the correct chronological order."
+          },
+          {
+            "name": "event_session_funnel.Count_Sessions_event123",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The number of sessions that completed the full journey from Product to Cart to Purchase in order."
+          }
+        ]
+      },
+      "orders": {
+        "name": "orders",
+        "fields": [
+          {
+            "name": "orders.Order_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for the order."
+          },
+          {
+            "name": "orders.Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the order was placed."
+          },
+          {
+            "name": "orders.Delivered_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the entire order was delivered to the customer."
+          },
+          {
+            "name": "orders.Gender",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The gender category associated with the customer profile for this order."
+          },
+          {
+            "name": "orders.Num_of_item",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The count of individual items contained within this specific order."
+          },
+          {
+            "name": "orders.Returned_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the order was returned by the customer."
+          },
+          {
+            "name": "orders.Shipped_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the order left the distribution center."
+          },
+          {
+            "name": "orders.Status",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Order lifecycle status. Values: Processing, Shipped, Complete, Returned, Canceled. Synonyms: order state, fulfillment status."
+          },
+          {
+            "name": "orders.User_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the unique customer who placed the order."
+          },
+          {
+            "name": "orders.User_Country",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The country where the customer resides."
+          },
+          {
+            "name": "orders.User_City",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The city where the customer is located."
+          },
+          {
+            "name": "orders.User_State",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The state or province where the customer is located."
+          },
+          {
+            "name": "orders.User_Age",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The age of the customer in years."
+          },
+          {
+            "name": "orders.User_Gender",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The gender of the customer."
+          },
+          {
+            "name": "orders.User_First_Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The given name of the customer."
+          },
+          {
+            "name": "orders.User_Last_Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The family name of the customer."
+          },
+          {
+            "name": "orders.User_Email",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The primary email address of the customer."
+          },
+          {
+            "name": "orders.User_Traffic_Source",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The marketing channel or source that brought the user to the site."
+          },
+          {
+            "name": "orders.User_Postal_Code",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The residential postal or ZIP code."
+          },
+          {
+            "name": "orders.User_Street_Address",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The full street address of the customer."
+          },
+          {
+            "name": "orders.User_Latitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS latitude coordinate of the customer's location."
+          },
+          {
+            "name": "orders.User_Longitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS longitude coordinate of the customer's location."
+          },
+          {
+            "name": "orders.User_Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the customer account was created."
+          },
+          {
+            "name": "orders.User_geom",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Geospatial point representation of the customer's address."
+          }
+        ]
+      },
+      "inventory_items": {
+        "name": "inventory_items",
+        "fields": [
+          {
+            "name": "inventory_items.Id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for each specific item in the inventory."
+          },
+          {
+            "name": "inventory_items.Cost",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The acquisition cost of the specific inventory item."
+          },
+          {
+            "name": "inventory_items.Created_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when the item was added to the inventory."
+          },
+          {
+            "name": "inventory_items.Product_brand",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The brand name of the product associated with this inventory item."
+          },
+          {
+            "name": "inventory_items.Product_category",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The category of the product associated with this inventory item."
+          },
+          {
+            "name": "inventory_items.Product_department",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The high-level department (e.g., Men, Women) of the associated product."
+          },
+          {
+            "name": "inventory_items.Product_distribution_center_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the distribution center where this specific item is located."
+          },
+          {
+            "name": "inventory_items.Product_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the product definition."
+          },
+          {
+            "name": "inventory_items.Product_name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The full commercial name of the product."
+          },
+          {
+            "name": "inventory_items.Product_retail_price",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The retail price at which the product is listed for sale."
+          },
+          {
+            "name": "inventory_items.Product_sku",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The unique Stock Keeping Unit identifier for the product."
+          },
+          {
+            "name": "inventory_items.Sold_at",
+            "type": "timestamp",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The timestamp when this specific inventory item was sold."
+          },
+          {
+            "name": "inventory_items.Inventory_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of unique items currently or previously in inventory."
+          },
+          {
+            "name": "inventory_items.Total Items Cost",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total combined cost of the items in inventory."
+          },
+          {
+            "name": "inventory_items.Average Item Cost",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The average cost across the selected inventory items."
+          }
+        ]
+      },
+      "products": {
+        "name": "products",
+        "fields": [
+          {
+            "name": "products.Id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for each product."
+          },
+          {
+            "name": "products.Brand",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The manufacturer or brand name of the product."
+          },
+          {
+            "name": "products.Category",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The specific category classification of the product."
+          },
+          {
+            "name": "products.Cost",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The acquisition cost of the product to the company."
+          },
+          {
+            "name": "products.Department",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Product department. Values: Men, Women, etc. Synonyms: category group, division, department."
+          },
+          {
+            "name": "products.Distribution_center_id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Foreign key referencing the distribution center where the product is stocked."
+          },
+          {
+            "name": "products.Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The full commercial name of the product."
+          },
+          {
+            "name": "products.Retail_price",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The price at which the product is listed for sale to customers."
+          },
+          {
+            "name": "products.Sku",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The Stock Keeping Unit, a unique alphanumeric code for tracking inventory."
+          },
+          {
+            "name": "products.Total_Product_Cost",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total combined cost of all products in the current selection."
+          },
+          {
+            "name": "products.Average_Cost",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The average cost across the selected products."
+          },
+          {
+            "name": "products.Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of unique products."
+          }
+        ]
+      },
+      "distribution_centers": {
+        "name": "distribution_centers",
+        "fields": [
+          {
+            "name": "distribution_centers.Id",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for each distribution center."
+          },
+          {
+            "name": "distribution_centers.Latitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS latitude coordinate of the distribution center location."
+          },
+          {
+            "name": "distribution_centers.Longitude",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "The GPS longitude coordinate of the distribution center location."
+          },
+          {
+            "name": "distribution_centers.Name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Distribution center name (e.g. 'Houston TX'). The human-readable label to group or rank by. Synonyms: warehouse, fulfillment center, DC, location."
+          },
+          {
+            "name": "distribution_centers.Distribution_Center_Geom",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Geospatial point representation of the distribution center's location."
+          },
+          {
+            "name": "distribution_centers.Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "The total number of unique distribution centers."
+          }
+        ]
+      }
+    },
+    "fields": [
+      {
+        "name": "User_Age",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The age of the customer in years."
+      },
+      {
+        "name": "User_City",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The city where the customer is located."
+      },
+      {
+        "name": "User_Country",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The country where the customer resides."
+      },
+      {
+        "name": "User_Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the customer account was created."
+      },
+      {
+        "name": "User_Email",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The primary email address of the customer."
+      },
+      {
+        "name": "User_Gender",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The gender of the customer."
+      },
+      {
+        "name": "User_Latitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS latitude coordinate of the customer's location."
+      },
+      {
+        "name": "User_Longitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS longitude coordinate of the customer's location."
+      },
+      {
+        "name": "User_State",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The state or province where the customer is located."
+      },
+      {
+        "name": "User_geom",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Geospatial point representation of the customer's address."
+      },
+      {
+        "name": "User_First_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The given name of the customer."
+      },
+      {
+        "name": "User_Last_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The family name of the customer."
+      },
+      {
+        "name": "User_Traffic_Source",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The marketing channel or source that brought the user to the site."
+      },
+      {
+        "name": "User_Postal_Code",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The residential postal or ZIP code."
+      },
+      {
+        "name": "User_Street_Address",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full street address of the customer."
+      },
+      {
+        "name": "Stage",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The identifier representing the fact table name (e.g., 'events', 'order_items')."
+      },
+      {
+        "name": "Conversion",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Conversion rate. Ratio of unique orders to total web events. Synonyms: conversion efficiency, order conversion, purchase rate."
+      },
+      {
+        "name": "Total Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Cost of Goods Sold (COGS). Total cost of inventory items that have a matching order. Synonyms: COGS, cost of sales, cost of goods."
+      },
+      {
+        "name": "Total_Gross_Margin",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total gross margin = gross profit = profitability. Revenue minus COGS, in USD. Synonyms: gross profit, profit, margin, profitability."
+      },
+      {
+        "name": "Average_Gross_Margin",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average gross margin = profit per order. Total gross margin divided by number of orders. Synonyms: average profit, profit per order, margin per order."
+      },
+      {
+        "name": "Gross_Markup_Percent",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Markup percentage = ROI on inventory. Profit as a percentage of cost. Synonyms: markup, margin %, return on cost. percent"
+      },
+      {
+        "name": "Lifetime_Orders_Avg",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Lifetime orders per user. Average number of orders placed per customer over their lifetime. Synonyms: orders per customer, repeat orders, lifetime value."
+      },
+      {
+        "name": "order_items.Id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for each individual item within an order."
+      },
+      {
+        "name": "order_items.Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the order item was first created."
+      },
+      {
+        "name": "order_items.Delivered_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the item was successfully delivered to the customer."
+      },
+      {
+        "name": "order_items.Inventory_item_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the specific item in the inventory."
+      },
+      {
+        "name": "order_items.Order_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the parent order containing this item."
+      },
+      {
+        "name": "order_items.Product_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the product being sold."
+      },
+      {
+        "name": "order_items.Returned_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the item was returned by the customer, if applicable."
+      },
+      {
+        "name": "order_items.Sale_price",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The price at which the individual item was sold to the customer."
+      },
+      {
+        "name": "order_items.Shipped_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the item was shipped from the warehouse."
+      },
+      {
+        "name": "order_items.Status",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Line-item lifecycle status. Values: Processing, Shipped, Complete, Returned. Synonyms: item state, fulfillment state."
+      },
+      {
+        "name": "order_items.User_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the customer who placed the order."
+      },
+      {
+        "name": "order_items.Total_Revenue",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total revenue = gross sales. Sum of sale price across order items, in USD. Synonyms: sales, revenue, gross sales."
+      },
+      {
+        "name": "order_items.Total_Revenue_Completed_Orders",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Revenue from completed (fulfilled) orders only (Status = 'Complete'). Synonyms: fulfilled revenue, recognized revenue."
+      },
+      {
+        "name": "order_items.Order_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Order count. Total number of unique orders. Synonyms: number of orders, # orders."
+      },
+      {
+        "name": "order_items.Order_Item_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total item count = units sold. Total individual line items across all orders. Synonyms: items sold, quantity, unit count."
+      },
+      {
+        "name": "order_items.Average_num_of_item",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The average number of items per order."
+      },
+      {
+        "name": "order_items.Total_Users",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of unique customers who have placed at least one order."
+      },
+      {
+        "name": "order_items.Average_Sale_Price",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The average price at which individual items were sold."
+      },
+      {
+        "name": "order_items.Average_Spend_per_User",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The average amount of money spent by each unique customer (Total_Revenue / Total_Users)."
+      },
+      {
+        "name": "order_items.Average_Order_Value",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average order value (AOV). Total revenue / order count. Synonyms: AOV, average basket size, average order size."
+      },
+      {
+        "name": "order_items.Percent_Of_Total_Revenue",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The percentage contribution of the current grouping to the overall total revenue across all categories or segments."
+      },
+      {
+        "name": "order_items.User_Country",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The country where the customer resides."
+      },
+      {
+        "name": "order_items.User_City",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The city where the customer is located."
+      },
+      {
+        "name": "order_items.User_State",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The state or province where the customer is located."
+      },
+      {
+        "name": "order_items.User_Age",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The age of the customer in years."
+      },
+      {
+        "name": "order_items.User_Gender",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The gender of the customer."
+      },
+      {
+        "name": "order_items.User_First_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The given name of the customer."
+      },
+      {
+        "name": "order_items.User_Last_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The family name of the customer."
+      },
+      {
+        "name": "order_items.User_Email",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The primary email address of the customer."
+      },
+      {
+        "name": "order_items.User_Traffic_Source",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The marketing channel or source that brought the user to the site."
+      },
+      {
+        "name": "order_items.User_Postal_Code",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The residential postal or ZIP code."
+      },
+      {
+        "name": "order_items.User_Street_Address",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full street address of the customer."
+      },
+      {
+        "name": "order_items.User_Latitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS latitude coordinate of the customer's location."
+      },
+      {
+        "name": "order_items.User_Longitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS longitude coordinate of the customer's location."
+      },
+      {
+        "name": "order_items.User_Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the customer account was created."
+      },
+      {
+        "name": "order_items.User_geom",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Geospatial point representation of the customer's address."
+      },
+      {
+        "name": "events.Id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for each individual event or click."
+      },
+      {
+        "name": "events.User_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the user who performed the action."
+      },
+      {
+        "name": "events.Sequence_number",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The numerical position of this event within a specific user session."
+      },
+      {
+        "name": "events.Session_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "A unique identifier for the user's browsing session."
+      },
+      {
+        "name": "events.Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the event occurred."
+      },
+      {
+        "name": "events.Ip_address",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The IP address of the user at the time of the event."
+      },
+      {
+        "name": "events.City",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The city associated with the user's IP address."
+      },
+      {
+        "name": "events.State",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The state or region associated with the user's IP address."
+      },
+      {
+        "name": "events.Postal_code",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The postal or ZIP code associated with the user's IP address."
+      },
+      {
+        "name": "events.Browser",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The web browser used by the customer (e.g., Chrome, Safari)."
+      },
+      {
+        "name": "events.Traffic_source",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The marketing or referral source that led the user to the event."
+      },
+      {
+        "name": "events.Uri",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The specific Uniform Resource Identifier (URL path) visited."
+      },
+      {
+        "name": "events.Event_type",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Web event type. Values: view, cart, purchase. Synonyms: event, action, activity, interaction."
+      },
+      {
+        "name": "events.Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of events recorded."
+      },
+      {
+        "name": "events.Total_Sequence_Number",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The sum of sequence numbers, used to calculate session depth."
+      },
+      {
+        "name": "events.Average_Sequence_Number",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The average position of events in a session; indicates average session depth."
+      },
+      {
+        "name": "events.User_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of users visited."
+      },
+      {
+        "name": "events.User_Country",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The country where the customer resides."
+      },
+      {
+        "name": "events.User_City",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The city where the customer is located."
+      },
+      {
+        "name": "events.User_State",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The state or province where the customer is located."
+      },
+      {
+        "name": "events.User_Age",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The age of the customer in years."
+      },
+      {
+        "name": "events.User_Gender",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The gender of the customer."
+      },
+      {
+        "name": "events.User_First_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The given name of the customer."
+      },
+      {
+        "name": "events.User_Last_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The family name of the customer."
+      },
+      {
+        "name": "events.User_Email",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The primary email address of the customer."
+      },
+      {
+        "name": "events.User_Traffic_Source",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The marketing channel or source that brought the user to the site."
+      },
+      {
+        "name": "events.User_Postal_Code",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The residential postal or ZIP code."
+      },
+      {
+        "name": "events.User_Street_Address",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full street address of the customer."
+      },
+      {
+        "name": "events.User_Latitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS latitude coordinate of the customer's location."
+      },
+      {
+        "name": "events.User_Longitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS longitude coordinate of the customer's location."
+      },
+      {
+        "name": "events.User_Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the customer account was created."
+      },
+      {
+        "name": "events.User_geom",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Geospatial point representation of the customer's address."
+      },
+      {
+        "name": "users.Id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for each customer."
+      },
+      {
+        "name": "users.User_Age",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The age of the customer in years."
+      },
+      {
+        "name": "users.User_City",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The city where the customer is located."
+      },
+      {
+        "name": "users.User_Country",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The country where the customer resides."
+      },
+      {
+        "name": "users.User_Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the customer account was created."
+      },
+      {
+        "name": "users.User_Email",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The primary email address of the customer."
+      },
+      {
+        "name": "users.User_First_name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The given name of the customer."
+      },
+      {
+        "name": "users.User_Gender",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The gender of the customer."
+      },
+      {
+        "name": "users.User_Last_name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The family name of the customer."
+      },
+      {
+        "name": "users.User_Latitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS latitude coordinate of the customer's location."
+      },
+      {
+        "name": "users.User_Longitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS longitude coordinate of the customer's location."
+      },
+      {
+        "name": "users.User_State",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The state or province where the customer is located."
+      },
+      {
+        "name": "users.User_Street_address",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full street address of the customer."
+      },
+      {
+        "name": "users.User_Traffic_source",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Traffic source = marketing channel = acquisition channel. Where the user came from (Search, Email, Social, Direct). Synonyms: channel, source, referrer."
+      },
+      {
+        "name": "users.User_Postal_code",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The residential postal or ZIP code."
+      },
+      {
+        "name": "users.User_geom",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Geospatial point representation of the customer's address."
+      },
+      {
+        "name": "users.Total_Users",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of unique customers."
+      },
+      {
+        "name": "users.Total_Age",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The sum of ages for the selected customer base."
+      },
+      {
+        "name": "users.Average_Age",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The calculated average age of the customer base."
+      },
+      {
+        "name": "event_session_facts.Session_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "A unique identifier for the user's browsing session."
+      },
+      {
+        "name": "event_session_facts.Identifier",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "event_session_facts.Session_start",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp of the very first event recorded in the session."
+      },
+      {
+        "name": "event_session_facts.Session_end",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp of the final event recorded in the session."
+      },
+      {
+        "name": "event_session_facts.Session_landing_page",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The type of event that initiated the session, representing the user's entry point."
+      },
+      {
+        "name": "event_session_facts.Session_exit_page",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The type of event that concluded the session, representing the user's last action."
+      },
+      {
+        "name": "event_session_facts.Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total count of unique sessions."
+      },
+      {
+        "name": "event_session_funnel.Session_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "A unique identifier for the user's browsing session. The unique identifier for the user session being tracked through the funnel."
+      },
+      {
+        "name": "event_session_funnel.Event1_time",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp of the first 'Product' view event in the session."
+      },
+      {
+        "name": "event_session_funnel.Event2_time",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp of the first 'Cart' addition event in the session."
+      },
+      {
+        "name": "event_session_funnel.Event3_time",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp of the first 'Purchase' event in the session."
+      },
+      {
+        "name": "event_session_funnel.Event1_before_event2",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Boolean flag indicating if the product was viewed before an item was added to the cart."
+      },
+      {
+        "name": "event_session_funnel.Event2_before_event3",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Boolean flag indicating if the cart addition happened before the final purchase."
+      },
+      {
+        "name": "event_session_funnel.Time_in_funnel",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The total duration in hours from the first product view to the final conversion or cart action."
+      },
+      {
+        "name": "event_session_funnel.Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of funnel records."
+      },
+      {
+        "name": "event_session_funnel.Count_Sessions",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of unique sessions entering the funnel."
+      },
+      {
+        "name": "event_session_funnel.Count_Sessions_event1",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The number of sessions that reached the first step (Product View)."
+      },
+      {
+        "name": "event_session_funnel.Count_Sessions_event12",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The number of sessions that successfully moved from Product View to Cart in the correct chronological order."
+      },
+      {
+        "name": "event_session_funnel.Count_Sessions_event123",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The number of sessions that completed the full journey from Product to Cart to Purchase in order."
+      },
+      {
+        "name": "orders.Order_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for the order."
+      },
+      {
+        "name": "orders.Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the order was placed."
+      },
+      {
+        "name": "orders.Delivered_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the entire order was delivered to the customer."
+      },
+      {
+        "name": "orders.Gender",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The gender category associated with the customer profile for this order."
+      },
+      {
+        "name": "orders.Num_of_item",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The count of individual items contained within this specific order."
+      },
+      {
+        "name": "orders.Returned_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the order was returned by the customer."
+      },
+      {
+        "name": "orders.Shipped_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the order left the distribution center."
+      },
+      {
+        "name": "orders.Status",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order lifecycle status. Values: Processing, Shipped, Complete, Returned, Canceled. Synonyms: order state, fulfillment status."
+      },
+      {
+        "name": "orders.User_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the unique customer who placed the order."
+      },
+      {
+        "name": "orders.User_Country",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The country where the customer resides."
+      },
+      {
+        "name": "orders.User_City",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The city where the customer is located."
+      },
+      {
+        "name": "orders.User_State",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The state or province where the customer is located."
+      },
+      {
+        "name": "orders.User_Age",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The age of the customer in years."
+      },
+      {
+        "name": "orders.User_Gender",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The gender of the customer."
+      },
+      {
+        "name": "orders.User_First_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The given name of the customer."
+      },
+      {
+        "name": "orders.User_Last_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The family name of the customer."
+      },
+      {
+        "name": "orders.User_Email",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The primary email address of the customer."
+      },
+      {
+        "name": "orders.User_Traffic_Source",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The marketing channel or source that brought the user to the site."
+      },
+      {
+        "name": "orders.User_Postal_Code",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The residential postal or ZIP code."
+      },
+      {
+        "name": "orders.User_Street_Address",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full street address of the customer."
+      },
+      {
+        "name": "orders.User_Latitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS latitude coordinate of the customer's location."
+      },
+      {
+        "name": "orders.User_Longitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS longitude coordinate of the customer's location."
+      },
+      {
+        "name": "orders.User_Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the customer account was created."
+      },
+      {
+        "name": "orders.User_geom",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Geospatial point representation of the customer's address."
+      },
+      {
+        "name": "inventory_items.Id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for each specific item in the inventory."
+      },
+      {
+        "name": "inventory_items.Cost",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The acquisition cost of the specific inventory item."
+      },
+      {
+        "name": "inventory_items.Created_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when the item was added to the inventory."
+      },
+      {
+        "name": "inventory_items.Product_brand",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The brand name of the product associated with this inventory item."
+      },
+      {
+        "name": "inventory_items.Product_category",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The category of the product associated with this inventory item."
+      },
+      {
+        "name": "inventory_items.Product_department",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The high-level department (e.g., Men, Women) of the associated product."
+      },
+      {
+        "name": "inventory_items.Product_distribution_center_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the distribution center where this specific item is located."
+      },
+      {
+        "name": "inventory_items.Product_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the product definition."
+      },
+      {
+        "name": "inventory_items.Product_name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full commercial name of the product."
+      },
+      {
+        "name": "inventory_items.Product_retail_price",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The retail price at which the product is listed for sale."
+      },
+      {
+        "name": "inventory_items.Product_sku",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The unique Stock Keeping Unit identifier for the product."
+      },
+      {
+        "name": "inventory_items.Sold_at",
+        "type": "timestamp",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The timestamp when this specific inventory item was sold."
+      },
+      {
+        "name": "inventory_items.Inventory_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of unique items currently or previously in inventory."
+      },
+      {
+        "name": "inventory_items.Total Items Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total combined cost of the items in inventory."
+      },
+      {
+        "name": "inventory_items.Average Item Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The average cost across the selected inventory items."
+      },
+      {
+        "name": "products.Id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for each product."
+      },
+      {
+        "name": "products.Brand",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The manufacturer or brand name of the product."
+      },
+      {
+        "name": "products.Category",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The specific category classification of the product."
+      },
+      {
+        "name": "products.Cost",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The acquisition cost of the product to the company."
+      },
+      {
+        "name": "products.Department",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Product department. Values: Men, Women, etc. Synonyms: category group, division, department."
+      },
+      {
+        "name": "products.Distribution_center_id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Foreign key referencing the distribution center where the product is stocked."
+      },
+      {
+        "name": "products.Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The full commercial name of the product."
+      },
+      {
+        "name": "products.Retail_price",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The price at which the product is listed for sale to customers."
+      },
+      {
+        "name": "products.Sku",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The Stock Keeping Unit, a unique alphanumeric code for tracking inventory."
+      },
+      {
+        "name": "products.Total_Product_Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total combined cost of all products in the current selection."
+      },
+      {
+        "name": "products.Average_Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The average cost across the selected products."
+      },
+      {
+        "name": "products.Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of unique products."
+      },
+      {
+        "name": "distribution_centers.Id",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for each distribution center."
+      },
+      {
+        "name": "distribution_centers.Latitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS latitude coordinate of the distribution center location."
+      },
+      {
+        "name": "distribution_centers.Longitude",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "The GPS longitude coordinate of the distribution center location."
+      },
+      {
+        "name": "distribution_centers.Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Distribution center name (e.g. 'Houston TX'). The human-readable label to group or rank by. Synonyms: warehouse, fulfillment center, DC, location."
+      },
+      {
+        "name": "distribution_centers.Distribution_Center_Geom",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Geospatial point representation of the distribution center's location."
+      },
+      {
+        "name": "distribution_centers.Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "The total number of unique distribution centers."
+      }
+    ]
+  }
+}

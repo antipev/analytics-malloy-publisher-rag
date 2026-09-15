@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@malloydata/db-bigquery": "^0.0.433",
+    "@malloydata/db-duckdb": "^0.0.433",
+    "@malloydata/malloy": "^0.0.433"
+  }
+}

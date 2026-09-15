@@ -1,0 +1,15 @@
+{
+  "frozenConfig": false,
+  "environments": [
+    {
+      "name": "theLook-DEMO",
+      "connections": [],
+      "packages": [
+        {
+          "name": "thelook_ecommerce",
+          "location": "./thelook_ecommerce"
+        }
+      ]
+    }
+  ]
+}

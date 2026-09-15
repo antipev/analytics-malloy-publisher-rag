@@ -1,7 +1,0 @@
-
-import '../../A_Semantic_Layer/1_sources/distribution_centers.malloy'
-
-
-source: distribution_centers is distribution_centers_source extend {
- 
-}

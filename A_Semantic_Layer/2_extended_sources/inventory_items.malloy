@@ -1,7 +1,0 @@
-
-import '../../A_Semantic_Layer/1_sources/inventory_items.malloy'
-
-
-source: inventory_items is inventory_items_source extend {
-
-}

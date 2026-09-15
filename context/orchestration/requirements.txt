@@ -1,0 +1,6 @@
+# Python deps for the Option-2 front server (ChromaDB RAG + FastAPI MCP relay).
+# Install with:  pip install -r requirements.txt
+chromadb
+fastapi
+uvicorn
+httpx

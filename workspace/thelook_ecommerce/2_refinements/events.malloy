@@ -1,0 +1,118 @@
+##! experimental.access_modifiers
+
+
+import '../1_raw_views/config.malloy'
+
+
+#(doc) "Web traffic and user behavior logs, tracking session activity and site interactions."
+source: events is events_raw extend {
+
+  primary_key: Id
+
+  rename:
+    #(doc) "Unique identifier for each individual event or click."
+    `Id`              is id
+    
+    #(doc) "Foreign key referencing the user who performed the action."
+    `User_id`         is user_id
+    
+    #(doc) "The numerical position of this event within a specific user session."
+    `Sequence_number` is sequence_number
+    
+    #(doc) "A unique identifier for the user's browsing session."
+    `Session_id`      is session_id
+    
+    #(doc) "The timestamp when the event occurred."
+    `Created_at`      is created_at
+    
+    #(doc) "The IP address of the user at the time of the event."
+    `Ip_address`      is ip_address
+    
+    #(doc) "The city associated with the user's IP address."
+    `City`            is city
+    
+    #(doc) "The state or region associated with the user's IP address."
+    `State`           is state
+    
+    #(doc) "The postal or ZIP code associated with the user's IP address."
+    `Postal_code`     is postal_code
+    
+    #(doc) "The web browser used by the customer (e.g., Chrome, Safari)."
+    `Browser`         is browser
+    
+    #(doc) "The marketing or referral source that led the user to the event."
+    `Traffic_source`  is traffic_source
+    
+    #(doc) "The specific Uniform Resource Identifier (URL path) visited."
+    `Uri`             is uri
+    
+    #(doc) "Web event type. Values: view, cart, purchase. Synonyms: event, action, activity, interaction."
+    `Event_type`      is event_type
+
+  measure: 
+    #(doc) "The total number of events recorded."
+    `Count` is count()
+    
+    #(doc) "The sum of sequence numbers, used to calculate session depth."
+    `Total_Sequence_Number` is sum(Sequence_number)
+    
+    #(doc) "The average position of events in a session; indicates average session depth."
+    `Average_Sequence_Number` is avg(Sequence_number)
+
+    #(doc) "The total number of users visited."
+    `User_Count` is count(`User_id`)
+
+// adding join from dim tables where is necessary
+  join_one: users_raw                            on User_id=users_raw.id 
+  
+    dimension: 
+    
+    #(doc) "The country where the customer resides."
+    `User_Country`      is users_raw.country,
+
+    #(doc) "The city where the customer is located."
+    `User_City`         is users_raw.city,
+
+    #(doc) "The state or province where the customer is located."
+    `User_State`        is users_raw.state,
+
+    #(doc) "The age of the customer in years."
+    `User_Age`          is users_raw.age,
+
+    #(doc) "The gender of the customer."
+    `User_Gender`       is users_raw.gender,
+
+    #(doc) "The given name of the customer."
+    `User_First_Name`   is users_raw.first_name,
+
+    #(doc) "The family name of the customer."
+    `User_Last_Name`    is users_raw.last_name,
+
+    #(doc) "The primary email address of the customer."
+    `User_Email`        is users_raw.email,
+
+    #(doc) "The marketing channel or source that brought the user to the site."
+    `User_Traffic_Source` is users_raw.traffic_source,
+
+    #(doc) "The residential postal or ZIP code."
+    `User_Postal_Code`  is users_raw.postal_code,
+
+    #(doc) "The full street address of the customer."
+    `User_Street_Address` is users_raw.street_address,
+
+    #(doc) "The GPS latitude coordinate of the customer's location."
+    `User_Latitude`     is users_raw.latitude,
+
+    #(doc) "The GPS longitude coordinate of the customer's location."
+    `User_Longitude`    is users_raw.longitude,
+
+    #(doc) "The timestamp when the customer account was created."
+    `User_Created_at`   is users_raw.created_at,
+
+    #(doc) "Geospatial point representation of the customer's address."
+    `User_geom`         is users_raw.user_geom
+    
+} include {
+  *
+  private: users_raw
+}

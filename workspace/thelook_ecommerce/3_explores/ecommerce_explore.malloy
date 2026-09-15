@@ -1,0 +1,50 @@
+##! experimental {join_types}
+##! experimental { composite_sources }
+##! experimental.access_modifiers
+
+import '../3_explores/bridge_model.malloy'
+import '../2_refinements/order_items.malloy'
+import '../2_refinements/users.malloy'
+import '../2_refinements/events.malloy'
+import '../2_refinements/orders.malloy'
+
+#(doc) "Unified analytical explore for theLook eCommerce, integrating orders, inventory, web events, customer demographics, and product catalog."
+source: ecommerce_explore is compose(users, order_items, events, orders, bridge_model) include {
+
+  // 1. Explicitly list ONLY the Common Dimensions
+  Stage,
+  User_Country,
+  User_City,
+  User_State,
+  User_Age,
+  User_Gender,
+  User_First_Name,
+  User_Last_Name,
+  User_Email,
+  User_Traffic_Source,
+  User_Postal_Code,
+  User_Street_Address,
+  User_Latitude,
+  User_Longitude,
+  User_Created_at,
+  User_geom,
+
+  // 2. Explicitly list the Common Bridge Measures
+  Conversion,
+  `Total Cost`,
+  `Total_Gross_Margin`,
+  `Average_Gross_Margin`,
+  `Gross_Markup_Percent`,
+  `Lifetime_Orders_Avg`,
+
+  // 3. Include the table names to keep them as clickable folders (arrows) in the UI
+  order_items,
+  events,
+  users,
+  event_session_facts,
+  event_session_funnel,
+  orders,
+  inventory_items,
+  products,
+  distribution_centers
+}

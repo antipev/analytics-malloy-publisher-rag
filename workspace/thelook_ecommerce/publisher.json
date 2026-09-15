@@ -1,0 +1,8 @@
+{
+  "name": "thelook_ecommerce",
+  "version": "1.0.0",
+  "description": "theLook eCommerce Unified Star Schema Semantic Layer — Orders, inventory, web events, and customer analytics.",
+  "explores": [
+    "3_explores/ecommerce_explore.malloy"
+  ]
+}

@@ -1,6 +1,0 @@
-{
-  "name": "Published_Semantic_Layer",
-  "version": "1.0.0",
-  "description": "Malloy models",
-  "explores": ["EXPLORE/ecommerce_explore.malloy"]
-}

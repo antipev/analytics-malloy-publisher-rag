@@ -3,9 +3,23 @@
 *.db
 *.db.wal
 
-# Data folders
+# Node dependencies
+node_modules/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Data folders & local databases
 publisher_data/
-A_Semantic_Layer/0_data/thelook.duckdb
+**/publisher_data/
+workspace/publisher_data/
+workspace/publisher.db*
+workspace/.publisher.db*
 
 # Optional: Large data files
 # *.parquet

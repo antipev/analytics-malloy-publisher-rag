@@ -1,0 +1,47 @@
+
+import '../1_raw_views/config.malloy'
+
+#(doc) "Master catalog of products, including branding, categories, and pricing information."
+source: products is products_raw extend {
+
+  primary_key: Id
+
+  rename:
+    #(doc) "Unique identifier for each product."
+    `Id`                     is id
+    
+    #(doc) "The manufacturer or brand name of the product."
+    `Brand`                  is brand
+    
+    #(doc) "The specific category classification of the product."
+    `Category`               is category
+    
+    #(doc) "The acquisition cost of the product to the company."
+    `Cost`                   is cost
+    
+    #(doc) "Product department. Values: Men, Women, etc. Synonyms: category group, division, department."
+    `Department`             is department
+    
+    #(doc) "Foreign key referencing the distribution center where the product is stocked."
+    `Distribution_center_id` is distribution_center_id
+    
+    #(doc) "The full commercial name of the product."
+    `Name`                   is name
+    
+    #(doc) "The price at which the product is listed for sale to customers."
+    `Retail_price`           is retail_price
+    
+    #(doc) "The Stock Keeping Unit, a unique alphanumeric code for tracking inventory."
+    `Sku`                    is sku
+
+  measure: 
+    #(doc) "The total combined cost of all products in the current selection."
+    `Total_Product_Cost`   is sum(Cost)
+    
+    #(doc) "The average cost across the selected products."
+    `Average_Cost` is avg(Cost)
+    
+    #(doc) "The total number of unique products."
+    `Count`        is count()
+
+}

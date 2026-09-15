@@ -1,0 +1,169 @@
+##! experimental {join_types}
+##! experimental { composite_sources }
+##! experimental.access_modifiers
+
+import '../2_refinements/bridge.malloy'
+
+import '../2_refinements/order_items.malloy'
+import '../2_refinements/users.malloy'
+import '../2_refinements/inventory_items.malloy'
+import '../2_refinements/products.malloy'
+import '../2_refinements/distribution_centers.malloy'
+import '../2_refinements/events.malloy'
+import '../2_refinements/event_session_facts.malloy'
+import '../2_refinements/event_session_funnel.malloy'
+import '../2_refinements/orders.malloy'
+
+#(doc) "Unified analytical bridge model connecting customer orders, web events, user profiles, and inventory through common dimensions."
+source: bridge_model is bridge extend {
+  
+  // fact/transactional tables, that can be connected/analased only via common dimensions, but not directly linked
+   join_one: order_items                      on Stage = "order_items" 
+   join_one: events                           on Stage = "events"
+   join_one: users                            on Stage = "users" 
+  
+  // tables that desribes connected above fact/transactional tables and directly linked via ids                                   
+   join_one: event_session_facts              on Stage = "events"      and events.Session_id    = event_session_facts.Session_id
+   join_one: event_session_funnel             on Stage = "events"      and events.Session_id    = event_session_funnel.Session_id
+
+   join_one: orders                           on Stage = "order_items" and order_items.Order_id = orders.Order_id
+   
+   join_one: inventory_items             full on order_items.Inventory_item_id   = inventory_items.Id
+   join_one: products                    full on inventory_items.Product_id      = products.Id
+   join_one: distribution_centers        full on products.Distribution_center_id = distribution_centers.Id
+
+
+// common dimensions
+dimension:
+  #(doc) "Unique identifier for each customer."
+  `User_id`             is pick users.Id                   when Stage = "users" 
+                           pick order_items.User_id        when Stage = "order_items"
+                           pick events.User_id             when Stage = "events"
+                           else null
+
+  #(doc) "The country where the customer resides."
+  `User_Country`        is pick users.User_Country              when Stage = "users" 
+                           pick order_items.User_Country        when Stage = "order_items"
+                           pick events.User_Country             when Stage = "events"
+                           else null
+
+  #(doc) "The city where the customer is located."
+  `User_City`           is pick users.User_City                 when Stage = "users" 
+                           pick order_items.User_City           when Stage = "order_items"
+                           pick events.User_City                when Stage = "events"
+                           else null
+
+  #(doc) "The state or province where the customer is located."
+  `User_State`          is pick users.User_State                when Stage = "users" 
+                           pick order_items.User_State          when Stage = "order_items"
+                           pick events.User_State               when Stage = "events"
+                           else null
+
+  #(doc) "The age of the customer in years."
+  `User_Age`            is pick users.User_Age                  when Stage = "users" 
+                           pick order_items.User_Age            when Stage = "order_items"
+                           pick events.User_Age                 when Stage = "events"
+                           else null
+
+  #(doc) "The gender of the customer."
+  `User_Gender`         is pick users.User_Gender                    when Stage = "users" 
+                           pick order_items.User_Gender         when Stage = "order_items"
+                           pick events.User_Gender              when Stage = "events"
+                           else null
+
+  #(doc) "The given name of the customer."
+  `User_First_Name`     is pick users.User_First_name           when Stage = "users" 
+                           pick order_items.User_First_Name     when Stage = "order_items"
+                           pick events.User_First_Name          when Stage = "events"
+                           else null
+
+  #(doc) "The family name of the customer."
+  `User_Last_Name`      is pick users.User_Last_name            when Stage = "users" 
+                           pick order_items.User_Last_Name      when Stage = "order_items"
+                           pick events.User_Last_Name           when Stage = "events"
+                           else null
+
+  #(doc) "The primary email address of the customer."
+  `User_Email`          is pick users.User_Email                when Stage = "users" 
+                           pick order_items.User_Email          when Stage = "order_items"
+                           pick events.User_Email               when Stage = "events"
+                           else null
+
+  #(doc) "The marketing channel or source that brought the user to the site."
+  `User_Traffic_Source` is pick users.User_Traffic_source       when Stage = "users" 
+                           pick order_items.User_Traffic_Source when Stage = "order_items"
+                           pick events.User_Traffic_Source      when Stage = "events"
+                           else null
+
+  #(doc) "The residential postal or ZIP code."
+  `User_Postal_Code`    is pick users.User_Postal_code          when Stage = "users" 
+                           pick order_items.User_Postal_Code    when Stage = "order_items"
+                           pick events.User_Postal_Code         when Stage = "events"
+                           else null
+
+  #(doc) "The full street address of the customer."
+  `User_Street_Address` is pick users.User_Street_address       when Stage = "users" 
+                           pick order_items.User_Street_Address when Stage = "order_items"
+                           pick events.User_Street_Address      when Stage = "events"
+                           else null
+
+  #(doc) "The GPS latitude coordinate of the customer's location."
+  `User_Latitude`       is pick users.User_Latitude             when Stage = "users" 
+                           pick order_items.User_Latitude       when Stage = "order_items"
+                           pick events.User_Latitude            when Stage = "events"
+                           else null
+
+  #(doc) "The GPS longitude coordinate of the customer's location."
+  `User_Longitude`      is pick users.User_Longitude            when Stage = "users" 
+                           pick order_items.User_Longitude      when Stage = "order_items"
+                           pick events.User_Longitude           when Stage = "events"
+                           else null
+
+  #(doc) "The timestamp when the customer account was created."
+  `User_Created_at`     is pick users.User_Created_at           when Stage = "users" 
+                           pick order_items.User_Created_at     when Stage = "order_items"
+                           pick events.User_Created_at          when Stage = "events"
+                           else null
+
+  #(doc) "Geospatial point representation of the customer's address."
+  `User_geom`           is pick users.User_geom                 when Stage = "users" 
+                           pick order_items.User_geom           when Stage = "order_items"
+                           pick events.User_geom                when Stage = "events"
+                           else null
+
+  measure:
+    #(doc) "Conversion rate. Ratio of unique orders to total web events. Synonyms: conversion efficiency, order conversion, purchase rate."
+    `Conversion`                   is pick order_items.Order_Count
+                                           / events.`Count`  
+                            
+                                      when events.`Count` != 0
+                                      else 0
+    
+    #(doc) "Cost of Goods Sold (COGS). Total cost of inventory items that have a matching order. Synonyms: COGS, cost of sales, cost of goods."
+    `Total Cost`                   is inventory_items.`Total Items Cost` { 
+                                   where: order_items.Id is not null 
+                                   }
+
+    #(doc) "Total gross margin = gross profit = profitability. Revenue minus COGS, in USD. Synonyms: gross profit, profit, margin, profitability."
+    `Total_Gross_Margin`           is order_items.`Total_Revenue` - `Total Cost`
+
+    
+    #(doc) "Average gross margin = profit per order. Total gross margin divided by number of orders. Synonyms: average profit, profit per order, margin per order."
+    `Average_Gross_Margin`         is pick Total_Gross_Margin 
+                                           / order_items.Order_Count 
+                            
+                                      when order_items.Order_Count != 0
+                                      else 0
+
+    #(doc) "Markup percentage = ROI on inventory. Profit as a percentage of cost. Synonyms: markup, margin %, return on cost."
+    #(doc) percent
+    `Gross_Markup_Percent`         is pick `Total_Gross_Margin` / `Total Cost`
+                                      when `Total Cost` != 0
+                                      else 0
+    #(doc) "Lifetime orders per user. Average number of orders placed per customer over their lifetime. Synonyms: orders per customer, repeat orders, lifetime value."
+    `Lifetime_Orders_Avg`          is pick order_items.Order_Count / users.Total_Users
+                                      when users.Total_Users != 0
+                                      else 0
+
+
+}

@@ -1,0 +1,53 @@
+import "events.malloy"
+
+#(doc) "Aggregated session-level facts derived from raw events to analyze user journeys and behavior."
+source: event_session_facts is events -> {
+  group_by: 
+    Session_id
+    `Identifier` is coalesce(cast(User_id as string), Ip_address)
+    Created_at
+    Event_type
+  
+  calculate:
+    #(doc) "The timestamp of the very first event recorded in the session."
+    `Session_start` is first_value(Created_at) { 
+      partition_by: Session_id 
+      order_by: Created_at asc 
+    }
+
+    #(doc) "The timestamp of the final event recorded in the session."
+    `Session_end` is last_value(Created_at) { 
+      partition_by: Session_id 
+      order_by: Created_at asc
+    }
+
+    #(doc) "The type of event that initiated the session, representing the user's entry point."
+    `Session_landing_page` is first_value(Event_type) { 
+      partition_by: Session_id 
+      order_by: Created_at asc 
+    }
+
+    #(doc) "The type of event that concluded the session, representing the user's last action."
+    `Session_exit_page` is last_value(Event_type) { 
+      partition_by: Session_id 
+      order_by: Created_at asc 
+    }
+} -> {
+  group_by: 
+    Session_id, 
+    Identifier, 
+    Session_start, 
+    Session_end, 
+    Session_landing_page, 
+    Session_exit_page
+} extend {
+  primary_key: Session_id
+
+  measure: 
+    #(doc) "The total count of unique sessions."
+    `Count` is count()
+
+  -- view: detail is {
+  --   select: Session_id, Identifier, Session_start, Session_end, Session_landing_page, Session_exit_page
+  -- }
+}

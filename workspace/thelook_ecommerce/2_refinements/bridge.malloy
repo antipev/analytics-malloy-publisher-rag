@@ -1,0 +1,14 @@
+##! experimental { composite_sources }
+##! experimental.access_modifiers
+
+import '../1_raw_views/config.malloy'
+
+#(doc) "A structural metadata source used to facilitate many-to-many joins and unified schema virtualization."
+source: bridge is bridge_raw extend {
+  primary_key: Stage
+  
+  rename: 
+    #(doc) "The identifier representing the fact table name (e.g., 'events', 'order_items')."
+    `Stage` is stage
+}
+

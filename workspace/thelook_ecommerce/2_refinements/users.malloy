@@ -1,0 +1,68 @@
+
+import '../1_raw_views/config.malloy'
+
+#(doc) "Customer profile data containing demographic information and contact details."
+source: users is users_raw extend {
+
+  primary_key: Id
+
+  rename:
+    #(doc) "Unique identifier for each customer."
+    `Id`                  is id
+    
+    #(doc) "The age of the customer in years."
+    `User_Age`            is age
+    
+    #(doc) "The city where the customer is located."
+    `User_City`           is city
+    
+    #(doc) "The country where the customer resides."
+    `User_Country`        is country
+    
+    #(doc) "The timestamp when the customer account was created."
+    `User_Created_at`     is created_at
+    
+    #(doc) "The primary email address of the customer."
+    `User_Email`          is email
+    
+    #(doc) "The given name of the customer."
+    `User_First_name`     is first_name
+    
+    #(doc) "The gender of the customer."
+    `User_Gender`         is gender
+    
+    #(doc) "The family name of the customer."
+    `User_Last_name`      is last_name
+    
+    #(doc) "The GPS latitude coordinate of the customer's location."
+    `User_Latitude`       is latitude
+    
+    #(doc) "The GPS longitude coordinate of the customer's location."
+    `User_Longitude`      is longitude
+    
+    #(doc) "The state or province where the customer is located."
+    `User_State`          is state
+    
+    #(doc) "The full street address of the customer."
+    `User_Street_address` is street_address
+    
+    #(doc) "Traffic source = marketing channel = acquisition channel. Where the user came from (Search, Email, Social, Direct). Synonyms: channel, source, referrer."
+    `User_Traffic_source` is traffic_source
+    
+    #(doc) "The residential postal or ZIP code."
+    `User_Postal_code`    is postal_code
+    
+    #(doc) "Geospatial point representation of the customer's address."
+    `User_geom`      is user_geom
+
+  measure: 
+    #(doc) "The total number of unique customers."
+    `Total_Users` is count()
+    
+    #(doc) "The sum of ages for the selected customer base."
+    `Total_Age`   is sum(User_Age)
+    
+    #(doc) "The calculated average age of the customer base."
+    `Average_Age` is avg(User_Age)
+
+}

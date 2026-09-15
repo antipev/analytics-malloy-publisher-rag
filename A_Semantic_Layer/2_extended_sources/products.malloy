@@ -1,7 +1,0 @@
-
-import '../../A_Semantic_Layer/1_sources/products.malloy'
-
-
-source: products is products_source extend {
-
-}

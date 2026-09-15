@@ -1,8 +1,0 @@
-##! experimental.access_modifiers
-import '../../A_Semantic_Layer/1_sources/events.malloy'
-
-
-source: events is events_source include { 
-   *
-   private: users_raw
-}

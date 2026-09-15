@@ -1,0 +1,12 @@
+# Local dev artifacts that must not ship into the image
+node_modules/
+**/node_modules/
+**/publisher.db*
+**/publisher_data/
+workspace/publisher.db*
+workspace/publisher_data/
+context/.venv/
+context/__pycache__/
+**/__pycache__/
+.git/
+V3/

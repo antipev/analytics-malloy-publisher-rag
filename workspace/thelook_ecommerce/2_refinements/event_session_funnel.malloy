@@ -1,0 +1,63 @@
+import "events.malloy"
+
+#(doc) "A funnel analysis source that tracks the progression of user sessions through key e-commerce milestones."
+source: event_session_funnel is events -> {
+  group_by: 
+    #(doc) "The unique identifier for the user session being tracked through the funnel."
+    Session_id
+  aggregate:
+    #(doc) "The timestamp of the first 'Product' view event in the session."
+    `Event1_time` is min(Created_at) { where: Event_type = 'Product' }
+    
+    #(doc) "The timestamp of the first 'Cart' addition event in the session."
+    `Event2_time` is min(Created_at) { where: Event_type = 'Cart' }
+    
+    #(doc) "The timestamp of the first 'Purchase' event in the session."
+    `Event3_time` is min(Created_at) { where: Event_type = 'Purchase' }
+} extend {
+  primary_key: Session_id
+
+  // Dimensions
+  dimension: 
+    #(doc) "Boolean flag indicating if the product was viewed before an item was added to the cart."
+    Event1_before_event2 is Event1_time < Event2_time
+    
+    #(doc) "Boolean flag indicating if the cart addition happened before the final purchase."
+    Event2_before_event3 is Event2_time < Event3_time
+    
+    #(doc) "The total duration in hours from the first product view to the final conversion or cart action."
+    Time_in_funnel is hours(Event1_time to coalesce(Event3_time, Event2_time))
+
+  // Measures
+  measure: 
+    #(doc) "The total number of funnel records."
+    `Count` is count()
+    
+    #(doc) "The total number of unique sessions entering the funnel."
+    Count_Sessions is count(Session_id)
+    
+    #(doc) "The number of sessions that reached the first step (Product View)."
+    Count_Sessions_event1 is count(Session_id) { 
+      where: Event1_time is not null 
+    }
+    
+    #(doc) "The number of sessions that successfully moved from Product View to Cart in the correct chronological order."
+    Count_Sessions_event12 is count(Session_id) { 
+      where: Event1_time is not null 
+        and Event2_time is not null 
+        and Event1_before_event2 = true
+    }
+    
+    #(doc) "The number of sessions that completed the full journey from Product to Cart to Purchase in order."
+    Count_Sessions_event123 is count(Session_id) { 
+      where: Event1_time is not null 
+        and Event2_time is not null 
+        and Event3_time is not null 
+        and Event1_before_event2 = true 
+        and Event2_before_event3 = true
+    }
+
+  -- view: detail is {
+  --   select: Session_id, Event1_time, Event2_time, Event3_time
+  -- }
+}

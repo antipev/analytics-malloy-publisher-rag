@@ -1,0 +1,12 @@
+{
+    "connections": {
+        "bigquery": {
+          "is": "bigquery",
+          "defaultProjectId": "my-1-st-project-training"
+        },
+        "duckdb": {
+            "is": "duckdb",
+             "workingDirectory": "workspace/thelook_ecommerce"
+        }
+    }
+}

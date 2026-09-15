@@ -1,37 +1,26 @@
-# 1. Ignore the source data folders (the red circle in your image)
-A_Semantic_Layer/0_data/*
-# ...EXCEPT the parquet data folders (needed by the published package's duckdb sandbox)
-!A_Semantic_Layer/0_data/config.malloy
-!A_Semantic_Layer/0_data/distribution_centers/
-!A_Semantic_Layer/0_data/distribution_centers/**
-!A_Semantic_Layer/0_data/events/
-!A_Semantic_Layer/0_data/events/**
-!A_Semantic_Layer/0_data/inventory_items/
-!A_Semantic_Layer/0_data/inventory_items/**
-!A_Semantic_Layer/0_data/order_items/
-!A_Semantic_Layer/0_data/order_items/**
-!A_Semantic_Layer/0_data/orders/
-!A_Semantic_Layer/0_data/orders/**
-!A_Semantic_Layer/0_data/products/
-!A_Semantic_Layer/0_data/products/**
-!A_Semantic_Layer/0_data/users/
-!A_Semantic_Layer/0_data/users/**
-
-# 2. Ignore Malloy Publisher's local state
+# 1. Ignore Malloy Publisher local state
 publisher.db*
 .publisher.db*
 publisher_data/
+**/publisher.db*
+**/publisher_data/
+workspace/publisher.db*
+workspace/publisher_data/
 
-
-# 3. Ignore DuckDB temporary spill files
+# 2. Ignore DuckDB temporary spill files
 **/*.tmp/
 **/duckdb_temp_storage_*
 **/*.duckdb.tmp/
 
-# 4. Standard Development Bloat
+# 3. Standard Development Bloat
 .git/
 .gitignore
 node_modules/
+**/node_modules/
+**/.venv/
+**/__pycache__/
+context/chroma_db/
 .vscode/
 .DS_Store
 *.log
+V3/

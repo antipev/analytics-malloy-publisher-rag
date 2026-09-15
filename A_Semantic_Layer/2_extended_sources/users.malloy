@@ -1,8 +1,0 @@
-
-import '../../A_Semantic_Layer/1_sources/users.malloy'
-
-#(doc) "Customer profile data containing demographic information and contact details."
-source: users is users_source extend {
-
-  
-}

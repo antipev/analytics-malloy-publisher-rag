@@ -1,66 +1,49 @@
 FROM node:20-slim
 
-# Install dependencies
-RUN apt-get update && apt-get install -y procps curl unzip && rm -rf /var/lib/apt/lists/*
+# Install system dependencies (curl, python3, pip, venv)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    python3 \
+    python3-pip \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install DuckDB CLI
-RUN curl -L https://github.com/duckdb/duckdb/releases/download/v0.10.1/duckdb_cli-linux-amd64.zip -o duckdb.zip \
-    && unzip duckdb.zip -d /usr/local/bin \
-    && rm duckdb.zip
+# Install Malloy Publisher server globally
+RUN npm install -g @malloy-publisher/server@0.0.244
 
-RUN npm install -g @malloy-publisher/server@0.0.240
+# Create Python virtual environment and install RAG dependencies
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+COPY context/orchestration/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 WORKDIR /app
-COPY . /app/
 
-# Create a symlink so absolute paths from your MSI work inside Docker
-RUN mkdir -p /home/maxantipev/ && ln -s /app /home/maxantipev/analytics-malloy-publisher
-# ---------------------------
+# Copy configuration, workspace, and context
+COPY malloy-config.json ./
+COPY workspace/ ./workspace/
+COPY context/ ./context/
 
-ENV PROJECT_NAME="theLook eCommerce - Unified Star Schema Model - DEMO"
-ENV DEST="/app/publisher_data/${PROJECT_NAME}"
+# Install context JS dependencies for Malloy AST compilation
+WORKDIR /app/context
+RUN npm install --omit=dev
+WORKDIR /app
 
+# Run context pipeline to refresh ChromaDB and RAG Intent Graph at build time
+ENV PYTHONPATH="/app/context:/app/context/shared"
+RUN python3 /app/context/orchestration/run_context_pipeline.py --all --fresh --index-chroma
 
-# Cleanup & Structure Setup
-RUN rm -rf publisher_data/ publisher.db* .publisher.db* && \
-    mkdir -p "${DEST}/"
+# Ensure entrypoint script is executable
+RUN chmod +x ./context/deploy/entrypoint.sh
 
-# Copy layers into the project destination
-RUN cp -r /app/A_Semantic_Layer /app/B_Published_Semantic_Layer "${DEST}/"
+# Cleanup any stale local database files
+RUN rm -rf ./workspace/publisher.db* \
+           ./workspace/publisher_data/
 
-# Keep your specific EXPLORE fix (this helps the Publisher find the entry points)
-RUN find /app -path "*/EXPLORE/*.malloy" -type f -exec sed -i 's|/home/maxantipev/analytics-malloy-publisher/|/app/|g' {} +
-RUN find /app -name "*.malloy_view" -type f -exec sed -i 's|main\.||g' {} +
-
-# Copy raw parquet data into the served package so the per-package duckdb sandbox can read it
-RUN mkdir -p /app/B_Published_Semantic_Layer/A_Semantic_Layer \
-    && cp -r /app/A_Semantic_Layer/0_data /app/B_Published_Semantic_Layer/A_Semantic_Layer/
+ENV MALLOY_SERVER_MODE=mcp
 
 EXPOSE 8080
 
-
-# CMD ["npx", "@malloy-publisher/server", \
-#      "--server_root", "/app", \
-#      "--port", "8080", \
-#      "--host", "0.0.0.0", \
-#      "--path", "/app/B_Published_Semantic_Layer/",\
-#      "--mcp"]
-
-# malloy-publisher-ui
-# CMD ["npx", "@malloy-publisher/server", \
-#      "--server_root", "/app", \
-#      "--port", "8080", \
-#      "--host", "0.0.0.0", \
-#      "--path", "/app/B_Published_Semantic_Layer/"]
-
-# malloy-publisher-mcp
-ENV MALLOY_SERVER_MODE=mcp
-CMD ["npx", "@malloy-publisher/server", \
-     "--server_root", "/app", \
-     "--port", "8080", \
-     "--mcp-port", "5050", \
-     "--host", "0.0.0.0", \
-     "--path", "/app/B_Published_Semantic_Layer/", \
-     "--mcp"]
-
-
+ENTRYPOINT ["/app/context/deploy/entrypoint.sh"]
