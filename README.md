@@ -74,6 +74,21 @@ flowchart TD
 
 ---
 
+## 🤖 AI Agent Skills & Capabilities
+
+The repository equips AI agents (Antigravity CLI `agy`, Antigravity IDE, and Claude) with **31 modular skills**: 30 official Malloy skills (linked from [`.claude/skills`](./.claude/skills) into [`.agents/skills`](./.agents/skills)) plus 1 custom domain skill specifically tailored to `thelook_ecommerce`.
+
+| Category | Skills Included | Purpose |
+| :--- | :--- | :--- |
+| **Index & Workflow Drivers** | `malloy`, `malloy-getting-started`, `malloy-modeling`, `malloy-analysis` | Top-level orchestrators for modeling and analysis workflows over MCP. |
+| **Modeling & Schema Design** | `malloy-discover`, `malloy-scope`, `malloy-define`, `malloy-model`, `malloy-lookml-review`, `malloy-document`, `malloy-gotchas-modeling`, `malloy-review`, `malloy-publish` | End-to-end data modeling, tagging, compile checks, and publishing. |
+| **Querying & Analysis** | `malloy-queries`, `malloy-gotchas-queries`, `malloy-analyze`, `malloy-analysis-report`, `malloy-analysis-pitfalls`, `malloy-patterns`, `malloy-phrase-detection` | Query construction, reporting, and statistical pitfalls. |
+| **Data Apps & Dashboards** | `malloy-charts`, `malloy-gotchas-rendering`, `malloy-notebooks`, `malloy-notebook-chat`, `malloy-html-data-apps`, `malloy-html-data-app-runtime`, `malloy-html-data-app-embedding` | Chart rendering, interactive notebooks (`.malloynb`), and HTML data apps. |
+| **Optimization & Debugging** | `malloy-debug`, `malloy-materialization`, `malloy-materialization-tuning` | Compiler diagnostics and DuckDB persistence table performance tuning. |
+| **Repository Domain Custom** | `malloy-query-best-practices` | Star schema conventions specifically for `thelook_ecommerce` (`ecommerce_explore`). |
+
+---
+
 ## ⚡ Quick Start
 
 ### 1. Run Locally (Web UI)
