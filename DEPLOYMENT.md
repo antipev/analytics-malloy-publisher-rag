@@ -1,6 +1,6 @@
 # Deployment & Operations Guide
 
-This guide details how to run the **Malloy Publisher UI** and **Malloy Publisher MCP Server** locally in your web browser and deploy to **Google Cloud Run**, along with data preparation, Gemini CLI integration, and Google Apps Script endpoints.
+This guide details how to run the **Malloy Publisher UI** and **Malloy Publisher MCP Server** locally in your web browser and deploy to **Google Cloud Run**, along with data preparation, Antigravity CLI (agy) integration, and Google Apps Script endpoints.
 
 ---
 
@@ -154,7 +154,7 @@ cd /home/maxantipev/analytics-malloy-publisher/context
 source .venv/bin/activate
 PORT=8080 python3 step_3_mcp_server/step_3_mcp_dual_pathway_server.py
 ```
-* **AI Agent Gateway:** Connect your AI agent / Claude / Gemini CLI to `http://localhost:8080/mcp`.
+* **AI Agent Gateway:** Connect your AI agent / Claude / Antigravity (agy) to `http://localhost:8080/mcp`.
 * **Execution Engine:** Queries forward seamlessly to internal port `5050`.
 
 ---
@@ -204,7 +204,7 @@ The current architecture merges both into a **single, cost-effective container**
 
 4. **Verify Deployment:**
    * **Web UI for Humans:** Open `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/` in your browser.
-   * **AI MCP for LLMs:** Query `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp` via curl or Gemini CLI.
+   * **AI MCP for LLMs:** Query `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp` via curl or Antigravity (agy).
    * **Logs:**
      ```bash
      gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=malloy-publisher-mcp" \
@@ -243,7 +243,7 @@ If you specifically require an isolated UI container without the Python AI MCP g
 
 ---
 
-## 7. Connecting AI Clients (Gemini CLI)
+## 7. Connecting AI Clients (Antigravity CLI - agy)
 
 ### 1. Quick Test via `curl`
 Verify that the live endpoint responds to MCP JSON-RPC protocol requests:
@@ -254,22 +254,13 @@ curl -X POST https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp \
   -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'
 ```
 
-### 2. Configure Gemini CLI (`settings.json`)
-Add the Malloy Cloud MCP server to your Gemini CLI configuration:
+### 2. Configure Antigravity CLI (`settings.json`)
+Add the Malloy Cloud MCP server to your Antigravity CLI configuration (or use workspace `.agents/settings.json`):
 
 ```bash
-mkdir -p ~/.gemini
-cat << 'EOF' > ~/.gemini/settings.json
+mkdir -p ~/.gemini/antigravity-cli
+cat << 'EOF' > ~/.gemini/antigravity-cli/settings.json
 {
-  "ide": {
-    "hasSeenNudge": true,
-    "enabled": true
-  },
-  "security": {
-    "auth": {
-      "selectedType": "oauth-personal"
-    }
-  },
   "mcpServers": {
     "malloy-cloud": {
       "url": "https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp",
@@ -282,11 +273,11 @@ cat << 'EOF' > ~/.gemini/settings.json
 EOF
 ```
 
-### 3. Verify in Gemini CLI
-Start the Gemini CLI and list registered tools:
+### 3. Verify in Antigravity CLI (`agy`)
+Start the Antigravity CLI and list registered tools:
 ```bash
-gemini
-# Inside the Gemini prompt:
+agy
+# Inside the Antigravity prompt:
 /mcp list
 ```
 You should see `malloy-cloud` marked as active with tools `malloy_getContext`, `malloy_executeQuery`, etc.

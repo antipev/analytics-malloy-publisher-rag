@@ -1,6 +1,11 @@
+---
+name: ai-ready-semantic-layer
+description: Structured methodology for documenting Malloy semantic models (dimensions, measures, ontology headers) so AI agents can accurately interpret them via MCP.
+---
+
 # Building AI-Ready Malloy Semantic Layers
 
-This skill provides a structured methodology for documenting Malloy models to ensure they are fully interpretable by AI agents (like Gemini, Claude, or DeepSeek) accessing them via MCP.
+This skill provides a structured methodology for documenting Malloy models to ensure they are fully interpretable by AI agents (like Antigravity, Claude, or Gemini) accessing them via MCP.
 
 ## The Core Concept: Semantic Ontology
 An "AI-Ready" Malloy file is more than just code; it is a **self-describing ontology**. It maps out what things are and how they connect in the real world. By using specific commenting conventions and structural headers, you provide the **Context** that agents need to understand the relationship between data grains and dimensions.

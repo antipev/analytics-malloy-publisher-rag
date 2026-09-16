@@ -299,4 +299,4 @@ Tests executed against `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp
 ### 9.4 Architectural Conclusion
 The deployment at `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app` functions simultaneously as:
 1. An **Interactive Web UI** when accessed by a human in a web browser.
-2. An **AI Agent MCP Server** (`/mcp`) when queried by LLMs and Gemini CLI.
+2. An **AI Agent MCP Server** (`/mcp`) when queried by LLMs and Antigravity (`agy`).

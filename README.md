@@ -23,7 +23,7 @@ Rather than maintaining and paying for two separate servers, the service runs as
 ```mermaid
 flowchart LR
     User["Human User (Browser)"] -->|"GET /"| CloudRun["Google Cloud Run (:5050)<br>Unified Container"]
-    Agent["AI Agent (Gemini / Claude)"] -->|"POST /mcp"| CloudRun
+    Agent["AI Agent (Antigravity / Claude)"] -->|"POST /mcp"| CloudRun
     
     subgraph Container ["Inside the Container"]
         Gateway["Python FastAPI Gateway"]
@@ -67,7 +67,7 @@ flowchart TD
 
 | Guide | Purpose | Key Contents |
 | :--- | :--- | :--- |
-| 🚀 **[`DEPLOYMENT.md`](./DEPLOYMENT.md)** | **Operations & Deployment** | Step-by-step local launch, Cloud Run single-container deployment, and Gemini CLI client connection. |
+| 🚀 **[`DEPLOYMENT.md`](./DEPLOYMENT.md)** | **Operations & Deployment** | Step-by-step local launch, Cloud Run single-container deployment, and Antigravity CLI (agy) connection. |
 | 🧪 **[`context/TEST.md`](./context/TEST.md)** | **Live Test Proof & Results** | Verification of all 6 analytical test cases against live Cloud Run, plus dual-process (UI + MCP) verification. |
 | 🧠 **[`context/README.md`](./context/README.md)** | **Technical Deep Dive** | Internal mechanics of AST extraction, 3-Layer Intent Graph, ChromaDB vector indexing, and RAG retrieval. |
 | 📊 **[`workspace/thelook_ecommerce/README.md`](./workspace/thelook_ecommerce/README.md)** | **eCommerce Data Package** | Star schema explores, raw views, staging refinements, and compiled HTML data apps. |
@@ -83,8 +83,8 @@ npx @malloy-publisher/server --init --server_root ./workspace --port 4000
 ```
 Open **`http://localhost:4000`** in your browser to view the interactive Visual Explorer.
 
-### 2. Connect Gemini CLI to the Live Cloud Run Service
-Configure your `~/.gemini/settings.json`:
+### 2. Connect Antigravity CLI (`agy`) to the Live Cloud Run Service
+Configure your `~/.gemini/antigravity-cli/settings.json` (or `.agents/settings.json`):
 ```json
 {
   "mcpServers": {
@@ -97,7 +97,7 @@ Configure your `~/.gemini/settings.json`:
   }
 }
 ```
-Then run `gemini` in your terminal and type `/mcp list` to access certified Malloy tools! (See [DEPLOYMENT.md](./DEPLOYMENT.md#7-connecting-ai-clients-gemini-cli) for detailed CLI setup).
+Then run `agy` in your terminal and type `/mcp list` to access certified Malloy tools! (See [DEPLOYMENT.md](./DEPLOYMENT.md#7-connecting-ai-clients-antigravity-cli---agy) for detailed setup).
 
 ### 3. Verify Live MCP via `curl`
 ```bash
