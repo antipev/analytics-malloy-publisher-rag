@@ -6,11 +6,12 @@ This guide details how to run the **Malloy Publisher UI** and **Malloy Publisher
 
 ## 1. Live Production Endpoints
 
-| Service | Target URL | Description |
-| :--- | :--- | :--- |
-| **Malloy Publisher UI** | https://malloy-publisher-bolcwt6srq-nn.a.run.app | Interactive visual explorer and web dashboard |
-| **Malloy Publisher MCP** | https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp | AI Agent MCP endpoint (Dual-Pathway fast router + ChromaDB) |
-| **Google Apps Script Web App** | https://script.google.com/macros/s/AKfycbzfCG7RNWVxVkaiHiGdeGKf9d74co43LzjjEZj_JqPH-fRKQINcSwsLJezBryfy39FQ/exec | Google Apps Script frontend integration |
+| Service / Interface | URL | Description | Audience |
+| :--- | :--- | :--- | :--- |
+| **Unified All-In-One Service (Web UI)** | https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/ | Interactive Visual Explorer, Dashboards, and Reports | **Humans / Analysts** |
+| **Unified All-In-One Service (AI MCP)** | https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp | AI Agent MCP endpoint (In-RAM Fast Router + ChromaDB RAG) | **AI Agents / LLMs** |
+| **Google Apps Script Web App** | https://script.google.com/macros/s/AKfycbzfCG7RNWVxVkaiHiGdeGKf9d74co43LzjjEZj_JqPH-fRKQINcSwsLJezBryfy39FQ/exec | Google Apps Script frontend integration | **Business Users** |
+| *Standalone UI (Legacy)* | https://malloy-publisher-bolcwt6srq-nn.a.run.app/ | Dedicated standalone UI container | *Legacy Deployment* |
 
 ### Environment Path Mapping
 * **Host / Development Root:** `/home/maxantipev/analytics-malloy-publisher/`
@@ -158,20 +159,71 @@ PORT=8080 python3 step_3_mcp_server/step_3_mcp_dual_pathway_server.py
 
 ---
 
+---
+
 ## 6. Google Cloud Run Deployment Workflow
 
-Both services share an identical container architecture based on `node:20-slim`. The only difference is that `Dockerfile.mcp` defines `ENV MALLOY_SERVER_MODE=mcp`, exposes port `5050`, and passes `--mcp_port 5050`.
+### Architecture in Plain English: Why One Unified Container?
+Previously, running the Web UI and AI MCP server required two separate Cloud Run deployments on two different ports.
 
-Prior to building each service, copy the respective Dockerfile to `Dockerfile` at root:
+The current architecture merges both into a **single, cost-effective container** managed by [`context/deploy/entrypoint.sh`](./context/deploy/entrypoint.sh):
+1. **Background Engine:** Malloy Publisher (Node.js) runs privately inside the container on `127.0.0.1:4000` (Web UI) and `127.0.0.1:5050` (DuckDB query execution).
+2. **Public Gateway:** The Stage 3 Python MCP server (`step_3_mcp_dual_pathway_server.py`) listens on Cloud Run's public port (`5050`):
+   * When an **AI Agent** requests `/mcp`, it serves the AI Context/RAG engine directly.
+   * When a **Human** visits `/` in a browser, it transparently forwards traffic to the Web UI on port 4000.
 
-### Option A: Deploy Malloy Publisher UI (`malloy-publisher`)
+**Benefit:** You only need to deploy **one service (`malloy-publisher-mcp`)** to get both the Web UI and the AI MCP server at the exact same URL, cutting hosting costs in half.
+
+---
+
+### Primary & Recommended: Deploy Unified Service (`malloy-publisher-mcp`)
+
+1. **Prepare Dockerfile:**
+   ```bash
+   cp Dockerfile.mcp Dockerfile
+   ```
+
+2. **Build and push container image to Google Container Registry:**
+   ```bash
+   gcloud builds submit --tag gcr.io/my-1-st-project-training/malloy-publisher-mcp .
+   ```
+
+3. **Deploy Unified Service to Cloud Run:**
+   ```bash
+   gcloud run deploy malloy-publisher-mcp \
+     --image gcr.io/my-1-st-project-training/malloy-publisher-mcp \
+     --platform managed \
+     --region northamerica-northeast1 \
+     --allow-unauthenticated \
+     --memory 4Gi \
+     --cpu 2 \
+     --cpu-boost \
+     --timeout 600 \
+     --port 5050
+   ```
+
+4. **Verify Deployment:**
+   * **Web UI for Humans:** Open `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/` in your browser.
+   * **AI MCP for LLMs:** Query `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp` via curl or Gemini CLI.
+   * **Logs:**
+     ```bash
+     gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=malloy-publisher-mcp" \
+       --limit 20 \
+       --format="table(timestamp, textPayload)"
+     ```
+
+---
+
+### Optional / Legacy: Deploy Standalone UI Only (`malloy-publisher`)
+
+If you specifically require an isolated UI container without the Python AI MCP gateway:
 
 1. **Prepare Dockerfile:**
    ```bash
    cp Dockerfile.ui Dockerfile
    ```
 
-2. **Build and push container image to Google Container Registry:**
+2. **Build and push container image:**
    ```bash
    gcloud builds submit --tag gcr.io/my-1-st-project-training/malloy-publisher .
    ```
@@ -189,53 +241,12 @@ Prior to building each service, copy the respective Dockerfile to `Dockerfile` a
      --timeout 600
    ```
 
-4. **Verify UI Deployment Logs:**
-   ```bash
-   gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=malloy-publisher" \
-     --limit 20 \
-     --format="table(timestamp, textPayload)"
-   ```
-
----
-
-### Option B: Deploy Malloy Publisher MCP (`malloy-publisher-mcp`)
-
-1. **Prepare Dockerfile:**
-   ```bash
-   cp Dockerfile.mcp Dockerfile
-   ```
-
-2. **Build and push MCP container image to Google Container Registry:**
-   ```bash
-   gcloud builds submit --tag gcr.io/my-1-st-project-training/malloy-publisher-mcp .
-   ```
-
-3. **Deploy MCP Service to Cloud Run:**
-   ```bash
-   gcloud run deploy malloy-publisher-mcp \
-     --image gcr.io/my-1-st-project-training/malloy-publisher-mcp \
-     --platform managed \
-     --region northamerica-northeast1 \
-     --allow-unauthenticated \
-     --memory 4Gi \
-     --cpu 2 \
-     --cpu-boost \
-     --timeout 600 \
-     --port 5050
-   ```
-
-4. **Verify MCP Deployment Logs:**
-   ```bash
-   gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=malloy-publisher-mcp" \
-     --limit 20 \
-     --format="table(timestamp, textPayload)"
-   ```
-
 ---
 
 ## 7. Connecting AI Clients (Gemini CLI)
 
-### 1. Test Endpoint Availability via `curl`
+### 1. Quick Test via `curl`
+Verify that the live endpoint responds to MCP JSON-RPC protocol requests:
 ```bash
 curl -X POST https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp \
   -H "Content-Type: application/json" \
@@ -243,19 +254,42 @@ curl -X POST https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp \
   -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'
 ```
 
-### 2. Register Server with Gemini CLI
+### 2. Configure Gemini CLI (`settings.json`)
+Add the Malloy Cloud MCP server to your Gemini CLI configuration:
+
 ```bash
-gemini mcp add malloy-cloud --transport sse \
-  --header "Accept: application/json, text/event-stream" \
-  https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp
+mkdir -p ~/.gemini
+cat << 'EOF' > ~/.gemini/settings.json
+{
+  "ide": {
+    "hasSeenNudge": true,
+    "enabled": true
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "mcpServers": {
+    "malloy-cloud": {
+      "url": "https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp",
+      "headers": {
+        "Accept": "application/json, text/event-stream"
+      }
+    }
+  }
+}
+EOF
 ```
 
 ### 3. Verify in Gemini CLI
+Start the Gemini CLI and list registered tools:
 ```bash
 gemini
 # Inside the Gemini prompt:
 /mcp list
 ```
+You should see `malloy-cloud` marked as active with tools `malloy_getContext`, `malloy_executeQuery`, etc.
 
 ---
 

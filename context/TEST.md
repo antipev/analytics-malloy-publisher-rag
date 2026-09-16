@@ -254,3 +254,49 @@ Our user base is remarkably balanced, exhibiting an exact **50/50 gender balance
 | **Certified Measures** | LLM invents formulas for profit & markup | Directly supplies certified measure `Total_Gross_Margin` | **Exact Financial Consistency** |
 | **Token Window Overhead** | 20,000–50,000 tokens per schema prompt | 400–700 tokens per targeted intent | **98% Token Reduction** |
 | **Execution Reliability** | Frequent runtime syntax errors | Live queries run sub-second on Cloud Run | **`isError: false` on all 6 tests** |
+
+---
+
+## 9. Live Verification: Unified Dual-Process Architecture (UI + MCP Single Endpoint)
+
+**Test Execution Date:** September 16, 2026  
+**Target Unified Endpoint:** `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app`  
+**Cloud Run Revision:** `malloy-publisher-mcp-00022-rih` (Port `5050`)  
+**Container Supervision:** `entrypoint.sh` (Node Publisher on internal `127.0.0.1:4000` & `127.0.0.1:5050` + FastAPI Gateway on `$PORT`)
+
+### 9.1 Architectural Mechanism
+The container is deployed as a single Cloud Run service listening on port `5050`. Inside the container:
+1. `entrypoint.sh` launches `@malloy-publisher/server` in the background on loopback interfaces:
+   - `127.0.0.1:4000`: Publisher Web UI & REST API.
+   - `127.0.0.1:5050`: Internal DuckDB analytical execution engine.
+2. `step_3_mcp_dual_pathway_server.py` (FastAPI / Uvicorn) binds publicly to Cloud Run's port `5050`:
+   - Any request to `/mcp` is processed directly by the Python Dual-Pathway RAG engine (Path A Fast Router + Path B ChromaDB) and relayed to Node on `127.0.0.1:5050`.
+   - Any request to `/` or non-MCP paths (`/assets/*`, `/api/v0/*`, `/logo.svg`) is reverse-proxied over `localhost` to Node on `127.0.0.1:4000`.
+
+### 9.2 Live UI Verification Results (Same Endpoint)
+Tests executed against `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app`:
+
+| Test Target | HTTP Method & Path | Status Code | Verified Payload / Content |
+| :--- | :--- | :---: | :--- |
+| **Root Web UI** | `GET /` | `200 OK` | Rendered HTML Single Page Application (`<title>Malloy Publisher</title>`) |
+| **Compiled JS Bundle** | `GET /assets/index-B8MmVXwE.js` | `200 OK` | Returned 1.98 MB production React/UI client bundle (`x-powered-by: Express`) |
+| **System Status API** | `GET /api/v0/status` | `200 OK` | `operationalState: "serving"`, package: `thelook_ecommerce`, explore: `3_explores/ecommerce_explore.malloy` |
+| **Package Metadata API**| `GET /api/v0/environments/theLook-DEMO/packages/thelook_ecommerce` | `200 OK` | `name: "thelook_ecommerce"`, `queryableSources: "declared"`, explores verified |
+
+### 9.3 Live MCP Analytical Execution Results (Same Endpoint)
+Tests executed against `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp`:
+
+| Test Case | Tool Called | `isError` | Result Verification |
+| :--- | :--- | :---: | :--- |
+| **RAG Schema Discovery** | `malloy_getContext` | `false` | Successfully resolved `distribution_centers.Name`, `Total_Gross_Margin`, `Total_Revenue`, `Total Cost` |
+| **Test 1: DC Profitability (Q1 2026)** | `malloy_executeQuery` | `false` | Returned 10 rows. **#1 Houston TX** ($135,991.74 Margin, $255,200.74 Revenue, 114.08% Markup, 3,543 Orders) |
+| **Test 2: Company Profitability** | `malloy_executeQuery` | `false` | Returned 1 row. Total Revenue: `$10,833,920.81`, Total Gross Margin: `$5,623,206.55`, Margin/Order: `$44.94` |
+| **Test 3: Customer Traffic Channels** | `malloy_executeQuery` | `false` | Returned 6 rows. **Search:** 70,036 users (70.0% of user base) |
+| **Test 4: Order Status & Risk** | `malloy_executeQuery` | `false` | Returned 6 rows. **Shipped:** `$3,220,134.64` across 37,328 orders |
+| **Test 5: Top Product Categories** | `malloy_executeQuery` | `false` | Returned 10 rows. **Outerwear & Coats:** `$1,351,497.60`, **Jeans:** `$1,273,530.00` |
+| **Test 6: Demographics & Gender** | `malloy_executeQuery` | `false` | Returned 10 rows. **China Female:** 17,048, **China Male:** 16,922 (50/50 split) |
+
+### 9.4 Architectural Conclusion
+The deployment at `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app` functions simultaneously as:
+1. An **Interactive Web UI** when accessed by a human in a web browser.
+2. An **AI Agent MCP Server** (`/mcp`) when queried by LLMs and Gemini CLI.

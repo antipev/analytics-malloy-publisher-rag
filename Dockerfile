@@ -42,7 +42,7 @@ RUN chmod +x ./context/deploy/entrypoint.sh
 RUN rm -rf ./workspace/publisher.db* \
            ./workspace/publisher_data/
 
-ENV MALLOY_SERVER_MODE=ui
+ENV MALLOY_SERVER_MODE=mcp
 
 EXPOSE 8080
 
