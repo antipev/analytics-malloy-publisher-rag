@@ -15,6 +15,7 @@ import json
 import os
 import subprocess
 import sys
+import re
 
 # Dynamically resolve directories (SCRIPT_DIR is step_1_extract, CONTEXT_DIR is context)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -209,6 +210,21 @@ extract_and_flatten_malloy_ontology = extract_and_inspect_malloy_ontology
 # ==============================================================================
 # GENERIC, PACKAGE-AWARE EXTRACTION (used by run_context_pipeline.py + __main__)
 # ==============================================================================
+def _extract_source_doc(filepath: str) -> str:
+    """Fallback: read the source-level #(doc) annotations from the raw .malloy file.
+
+    The JS compiler emits `doc` from the AST, but if that is empty, capture every
+    `#(doc) "..."` before the `source:` keyword and join them into one string.
+    """
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            text = f.read()
+        matches = re.findall(r'#\(doc\)\s+"((?:[^"\\]|\\.)*)"', text)
+        return " ".join(matches).strip() if matches else ""
+    except Exception:
+        return ""
+
+
 def compile_package_explores(explore_files: list, config_path: str = PUBLISHER_CONFIG_PATH, package_dir: str | None = None) -> dict:
     """
     Compile only a package's *published* explore entry-point files (their `import`
@@ -228,8 +244,10 @@ def compile_package_explores(explore_files: list, config_path: str = PUBLISHER_C
             if source_name.endswith("_raw"):
                 continue
             is_published = (len(ast_sources) == 1) or (source_name == explore_base)
+            source_doc = details.get("doc") or _extract_source_doc(filepath)
             extracted[source_name] = {
                 "file": rel_file_path,
+                "doc": source_doc,
                 "dialect": details.get("dialect", "duckdb"),
                 "primary_key": details.get("primary_key"),
                 "is_published_explore": is_published,

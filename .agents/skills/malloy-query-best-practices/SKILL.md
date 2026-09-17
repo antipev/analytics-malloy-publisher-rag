@@ -31,6 +31,11 @@ If a measure and a dimension are available within the same joined source (e.g., 
   group_by: User_Country  // Using the top-level pick dimension
   aggregate: order_items.Total_Revenue
   ```
+- **Exception — cross-source / bridge measures:** When a query combines measures from different sources (e.g., `order_items.Total_Revenue` + `bridge_model.Total_Gross_Margin` + `events.Count`), no single fact's dimension is correct; group by the BRIDGE common dimension instead (`bridge_model.User_Country`, or the top-level `User_Country`):
+  ```malloy
+  group_by: bridge_model.User_Country
+  aggregate: bridge_model.Total_Gross_Margin, order_items.Total_Revenue
+  ```
 
 ### 4. Filtering and Aggregation
 When filtering by time, use the specific timestamp relevant to the measure's grain.
