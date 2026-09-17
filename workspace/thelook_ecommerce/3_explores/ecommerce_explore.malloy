@@ -8,7 +8,7 @@ import '../2_refinements/users.malloy'
 import '../2_refinements/events.malloy'
 import '../2_refinements/orders.malloy'
 
-#(doc) "Unified analytical explore for theLook eCommerce, integrating orders, inventory, web events, customer demographics, and product catalog."
+#(doc) "theLook is an online fashion e-commerce retailer. BRIDGE/STAR-SCHEMA: the facts (order_items, events, orders, inventory_items, users) connect only through a shared Stage bridge and common dimensions, never directly to each other. Metric map: revenue / orders / AOV / units -> order_items; web activity / sessions / funnel -> events; COGS / gross margin / markup -> bridge_model; customer counts / demographics -> users; product catalog / branding -> products; logistics -> distribution_centers. Grain rules: always pair a measure with a dimension from the SAME source (order_items.User_Country with order_items.Total_Revenue), never a bare top-level dimension; filter time on the fact's own timestamp (order_items.Created_at); having: filters aggregates, where: filters rows; backtick reserved words."
 source: ecommerce_explore is compose(users, order_items, events, orders, bridge_model) include {
 
   // 1. Explicitly list ONLY the Common Dimensions

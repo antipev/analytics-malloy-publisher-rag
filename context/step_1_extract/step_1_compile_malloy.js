@@ -95,6 +95,7 @@ function extractExploreData(explore) {
 
   return {
     name: explore.name,
+    doc: cleanComment(explore),
     dialect: (explore.structDef && explore.structDef.dialect) ? explore.structDef.dialect : 'duckdb',
     primary_key: pk,
     direct_fields: directFields,

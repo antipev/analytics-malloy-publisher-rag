@@ -59,26 +59,25 @@ run: ecommerce_explore -> {
 }
 ```
 
-## Available MCP Tools for Malloy Cloud
-You have access to the following Malloy Cloud MCP tools. Always use these to navigate the semantic layer and execute queries:
-* `m_malloy_projectList`: Lists all Malloy projects.
-* `m_malloy_packageList`: Lists all Malloy packages within a project.
-* `m_malloy_packageGet`: Lists resources within a package.
-* `m_malloy_modelGetText`: Gets the raw text content of a model file.
-* `m_malloy_executeQuery`: Executes a Malloy query (ad-hoc or named) against a model.
+## Available MCP Tools (Malloy Publisher)
+You have access to the following Malloy Publisher MCP tools. Always use these to navigate the semantic layer and execute queries:
+* `malloy_getContext`: Discover environments/packages, then retrieve the sources, views, dimensions and measures most relevant to a plain-English question. Progressive: no args -> environments; +environmentName -> packages; +query -> fields.
+* `malloy_executeQuery`: Run a Malloy query (ad-hoc `query`, or named `queryName`/`sourceName`) against a model.
+* `malloy_searchDocs`: Search Malloy language docs (filters, aggregates, joins, nesting).
+* `malloy_searchDatabaseSchema`: Find tables/columns in a database connection by description (to model an unmodeled DB).
+* `malloy_compile`: Compile a model (authoring).
+* `malloy_reloadPackage`: Reload a package after editing.
 
 ## Discovery Protocol for Templates & Underlying Sources
-If the user asks to find templates, pre-configured queries, available views, or deep details about underlying sources, execute the following chain of actions:
-1. Use `m_malloy_projectList` and `m_malloy_packageList` to explore the available data.
-2. Use `m_malloy_modelGetText` to read the primary model file.
-3. Extract and list all the **Named Queries** and **Views** defined inside the model, providing a brief explanation of what each one analyzes.
-4. **Deep Source Discovery via Import-Proxy:** If source fields or schemas are not fully visible in the primary package manifest, execute an ad-hoc query with an `import` statement targeting the specific `.malloy` file path, combined with `index: *` to extract all available dimensions.
-   - *Example:* `import "/app/A_Semantic_Layer/1_sources/products.malloy" run: products_source -> { index: * }`
-5. **Measure Verification:** Since `index: *` only discovers dimensions, verify available measures by inspecting referenced dashboard files (`.malloynb`) or executing minimal ad-hoc aggregations based on discovered keys.
+If the user asks to find templates, pre-configured queries, available views, or deep details about underlying sources:
+1. Call `malloy_getContext` with no arguments to list environments and their packages.
+2. Call it again with `environmentName` (and `packageName`) to list what the package exposes.
+3. Call it with a plain-English `query` to retrieve the most relevant sources, views, dimensions and measures (with their `#(doc)` descriptions).
+4. For a database connection not yet modeled, use `malloy_searchDatabaseSchema` to walk schemas/tables/columns.
 
 ## Analytical Execution Protocol
-When a user asks an analytical question (e.g., "What is the revenue for X?" or "Show me trends for Y"), follow these steps:
-1. **Identify the View:** Check if a pre-existing Named Query or View (discovered via the Discovery Protocol) already answers the question.
-2. **Execute:** - If a view exists, use `m_malloy_executeQuery` with the `named_query` parameter.
-   - If no view exists, use your Malloy expertise to write a new query and execute it via `m_malloy_executeQuery` using the `query` parameter.
-3. **Strict Syntax:** Ensure the generated Malloy code follows the "Primary Data Source" and "Explicit Pathing" rules defined at the top of this skill.
+When a user asks an analytical question (e.g., "What is the revenue for X?"), follow these steps:
+1. **Ground:** call `malloy_getContext` with the question to confirm exact field names and paths.
+2. **Identify the View:** reuse a Named Query / View if one already answers the question.
+3. **Execute:** call `malloy_executeQuery` — `queryName`/`sourceName` for a named view, or the `query` parameter for ad-hoc Malloy.
+4. **Strict Syntax:** follow the "Primary Data Source" + "Explicit Pathing" + "Intra-Source Consistency" rules at the top of this skill.

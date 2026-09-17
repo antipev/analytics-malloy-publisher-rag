@@ -116,6 +116,7 @@ def generate_intent_graph_chunks(
         file_path = details.get("file", "")
         dialect = details.get("dialect", "duckdb")
         primary_key = details.get("primary_key", "")
+        source_doc = details.get("doc", "")
         is_published = details.get("is_published_explore", False)
         direct_fields = details.get("direct_fields", [])
         joined_entities = details.get("joined_entities", {})
@@ -230,6 +231,7 @@ def generate_intent_graph_chunks(
 
             root_node_text = (
                 f"GRAPH NODE: Root Explore `{source_name}`\n"
+                f"Description: {source_doc}\n"
                 f"File: {file_path} | Dialect: {dialect} | Primary Key: {primary_key}\n"
                 f"Is Published Explore: {is_published}\n"
                 f"Direct Measures Count: {len(measures)} | Direct Dimensions Count: {len(dimensions)}\n"
@@ -247,6 +249,7 @@ def generate_intent_graph_chunks(
                     "entity_type": "root",
                     "source_name": source_name,
                     "parent_source": source_name,
+                    "source_doc": source_doc,
                     "joined_entity": None,
                     "file_name": file_path,
                     "is_published_explore": is_published,

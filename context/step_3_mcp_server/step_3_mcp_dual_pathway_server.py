@@ -521,6 +521,12 @@ def get_publisher_context(env: str, package: str, question: str = "") -> dict:
 
     source = domain.get("fallback_explore") or router.fallback_explore or (next(iter(router.explore_chunks.keys()), "") if router.explore_chunks else "")
 
+    source_doc = ""
+    for node in router.entity_chunks.values():
+        if node.get("metadata", {}).get("entity_type") == "root":
+            source_doc = node.get("metadata", {}).get("source_doc", "") or ""
+            break
+
     if not question:
         return {
             "results": [{
@@ -530,7 +536,7 @@ def get_publisher_context(env: str, package: str, question: str = "") -> dict:
                 "environmentName": env,
                 "packageName": package,
                 "modelPath": (domain.get("published_file") or ""),
-                "doc": "Published Malloy explore in this package.",
+                "doc": source_doc or "Published Malloy explore in this package.",
             }],
             "executableContext": f"Root Explore: `{source}`. Provide a query string to retrieve canonical measures and join blueprint.",
         }
@@ -659,6 +665,7 @@ def get_publisher_context(env: str, package: str, question: str = "") -> dict:
         "=== 1. CANONICAL EXECUTABLE FIELDS ===\n"
         + "\n".join(field_lines)
         + f"\n\n=== 2. EXPLORE & JOIN HIERARCHY ===\n* Root Explore: {source}\n"
+        + (f"* Source description: {source_doc}\n" if source_doc else "")
         + (f"* Joined Entities: {', '.join(joined_entities)}\n" if joined_entities else "")
         + "\n=== 3. VALID MALLOY QUERY TEMPLATE ===\n"
         + "\n".join(tmpl_lines)
