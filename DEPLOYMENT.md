@@ -195,12 +195,28 @@ The current architecture merges both into a **single, cost-effective container**
      --platform managed \
      --region northamerica-northeast1 \
      --allow-unauthenticated \
+     --min-instances 0 \
+     --max-instances 3 \
      --memory 4Gi \
      --cpu 2 \
      --cpu-boost \
      --timeout 600 \
      --port 5050
    ```
+
+   > **Cost / scaling note:** `--min-instances 0` enables scale-to-zero so you are
+   > only billed while requests are being processed (no idle 2 vCPU / 4 GiB charge).
+   > The trade-off is a **cold start** (a few seconds) on the first request after the
+   > container has scaled down — `--cpu-boost` above helps shorten it. Scale-to-zero
+   > requires **CPU only during request processing** (the default; do *not* pass
+   > `--no-cpu-throttling`). If the live service was previously pinned to 1 instance,
+   > also reset it directly without rebuilding:
+   >
+   > ```bash
+   > gcloud run services update malloy-publisher-mcp \
+   >   --region northamerica-northeast1 \
+   >   --min-instances 0
+   > ```
 
 4. **Verify Deployment:**
    * **Web UI for Humans:** Open `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/` in your browser.
@@ -235,6 +251,8 @@ If you specifically require an isolated UI container without the Python AI MCP g
      --platform managed \
      --region northamerica-northeast1 \
      --allow-unauthenticated \
+     --min-instances 0 \
+     --max-instances 3 \
      --memory 4Gi \
      --cpu 2 \
      --cpu-boost \
