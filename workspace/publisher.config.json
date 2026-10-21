@@ -20,11 +20,11 @@
         },
         {
           "name": "comics",
-          "location": "./semantic/comics"
+          "location": "./semantic_layer/comics"
         },
         {
           "name": "jaffle_shop",
-          "location": "./semantic/jaffle_shop"
+          "location": "./semantic_layer/jaffle_shop"
         }
       ]
     }

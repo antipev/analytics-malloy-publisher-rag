@@ -25,7 +25,7 @@ workspace/.publisher.db*
 workspace-local/
 
 # Generated copy of the semantic layer (built into the image, never committed)
-workspace/semantic/
+workspace/semantic_layer/
 
 # Optional: Large data files
 # *.parquet

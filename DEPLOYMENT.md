@@ -106,11 +106,11 @@ The workspace configuration links environment `workspace` to packages within `wo
         },
         {
           "name": "comics",
-          "location": "./semantic/comics"
+          "location": "./semantic_layer/comics"
         },
         {
           "name": "jaffle_shop",
-          "location": "./semantic/jaffle_shop"
+          "location": "./semantic_layer/jaffle_shop"
         }
       ]
     }
@@ -209,7 +209,7 @@ The current architecture merges both into a **single, cost-effective container**
    ```
 
    > `scripts/sync_semantic_layer.sh` copies `semantic_layer/workspace/*` into
-   > `workspace/semantic/` before the build. The Docker build runs the RAG/context
+   > `workspace/semantic_layer/` before the build. The Docker build runs the RAG/context
    > pipeline with `workspace/publisher.context.config.json`, which lists only the
    > packages the build-time DuckDB/BigQuery compiler can validate. Publisher
    > itself still loads every package in `workspace/publisher.config.json`.
