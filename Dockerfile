@@ -31,9 +31,13 @@ WORKDIR /app/context
 RUN npm install --omit=dev
 WORKDIR /app
 
-# Run context pipeline to refresh ChromaDB and RAG Intent Graph at build time
+# Run context pipeline to refresh ChromaDB and RAG Intent Graph at build time.
+# The build-time compiler has only DuckDB/BigQuery connections, so this config
+# intentionally contains only packages that compile against those connections.
+# Publisher still serves every package in publisher.config.json.
 ENV PYTHONPATH="/app/context:/app/context/shared"
-RUN python3 /app/context/orchestration/run_context_pipeline.py --all --fresh --index-chroma
+RUN python3 /app/context/orchestration/run_context_pipeline.py --all --fresh --index-chroma \
+      --config /app/workspace/publisher.context.config.json
 
 # Ensure entrypoint script is executable
 RUN chmod +x ./context/deploy/entrypoint.sh

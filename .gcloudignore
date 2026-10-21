@@ -6,6 +6,7 @@ publisher_data/
 **/publisher_data/
 workspace/publisher.db*
 workspace/publisher_data/
+workspace-local/
 
 # 2. Ignore DuckDB temporary spill files
 **/*.tmp/

@@ -81,25 +81,44 @@ EOF
 ## 4. Running Malloy Publisher Locally in the Web Browser
 
 ### Workspace Configuration (`workspace/publisher.config.json`)
-The workspace configuration links environment `theLook-DEMO` to packages within `workspace/`:
+The workspace configuration links environment `workspace` to packages within `workspace/`:
 
 ```json
 {
   "frozenConfig": false,
   "environments": [
     {
-      "name": "theLook-DEMO",
-      "connections": [],
+      "name": "workspace",
+      "connections": [
+        {
+          "name": "motherduck",
+          "type": "motherduck",
+          "motherduckConnection": {
+            "accessToken": "${MOTHERDUCK_TOKEN}",
+            "database": "data_warehouse_demo"
+          }
+        }
+      ],
       "packages": [
         {
           "name": "thelook_ecommerce",
           "location": "./thelook_ecommerce"
+        },
+        {
+          "name": "comics",
+          "location": "./semantic/comics"
+        },
+        {
+          "name": "jaffle_shop",
+          "location": "./semantic/jaffle_shop"
         }
       ]
     }
   ]
 }
 ```
+
+`thelook_ecommerce` uses the bundled DuckDB/Parquet data. `comics` and `jaffle_shop` use the `motherduck` connection, so `MOTHERDUCK_TOKEN` must be set in the process environment (locally) or injected from Secret Manager (Cloud Run).
 
 ### Quick Start: Launch Web UI
 Run the official Malloy Publisher server from the repository root:
@@ -116,7 +135,7 @@ npx @malloy-publisher/server --init --server_root ./workspace --port 4000
 ```
 
 1. Open your web browser to: **`http://localhost:4000`**
-2. You will see the **theLook-DEMO** environment with the **thelook_ecommerce** package.
+2. You will see the **workspace** environment with the **thelook_ecommerce** package.
 3. Click on **`ecommerce_explore`** to open the interactive Visual Explorer (drag and drop dimensions, measures, filters, and run queries).
 4. Click on **`business_pulse`** under Dashboards to view pre-rendered KPIs, line charts, and brand ranking tables.
 
@@ -124,7 +143,7 @@ npx @malloy-publisher/server --init --server_root ./workspace --port 4000
 When modifying `.malloy` models or notebooks, launch with `--watch-env` so Publisher reloads edits in place:
 
 ```bash
-npx @malloy-publisher/server --init --server_root ./workspace --port 4000 --watch-env theLook-DEMO
+npx @malloy-publisher/server --init --server_root ./workspace --port 4000 --watch-env workspace
 ```
 
 ### Local Health & Diagnostic Endpoints
@@ -185,8 +204,15 @@ The current architecture merges both into a **single, cost-effective container**
 
 2. **Build and push container image to Google Container Registry:**
    ```bash
+   ./scripts/sync_semantic_layer.sh
    gcloud builds submit --tag gcr.io/my-1-st-project-training/malloy-publisher-mcp .
    ```
+
+   > `scripts/sync_semantic_layer.sh` copies `semantic_layer/workspace/*` into
+   > `workspace/semantic/` before the build. The Docker build runs the RAG/context
+   > pipeline with `workspace/publisher.context.config.json`, which lists only the
+   > packages the build-time DuckDB/BigQuery compiler can validate. Publisher
+   > itself still loads every package in `workspace/publisher.config.json`.
 
 3. **Deploy Unified Service to Cloud Run:**
    ```bash
@@ -201,8 +227,13 @@ The current architecture merges both into a **single, cost-effective container**
      --cpu 2 \
      --cpu-boost \
      --timeout 600 \
-     --port 5050
+     --port 5050 \
+     --set-secrets=MOTHERDUCK_TOKEN=motherduck-token:latest
    ```
+
+   > The `motherduck` connection in `workspace/publisher.config.json` reads
+   > `${MOTHERDUCK_TOKEN}`. Without the `--set-secrets` flag, `comics` and
+   > `jaffle_shop` are listed but their models fail to load.
 
    > **Cost / scaling note:** `--min-instances 0` enables scale-to-zero so you are
    > only billed while requests are being processed (no idle 2 vCPU / 4 GiB charge).

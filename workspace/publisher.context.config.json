@@ -1,0 +1,15 @@
+{
+  "frozenConfig": false,
+  "environments": [
+    {
+      "name": "workspace",
+      "connections": [],
+      "packages": [
+        {
+          "name": "thelook_ecommerce",
+          "location": "./thelook_ecommerce"
+        }
+      ]
+    }
+  ]
+}

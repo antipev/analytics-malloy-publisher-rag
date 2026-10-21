@@ -21,6 +21,12 @@ workspace/publisher_data/
 workspace/publisher.db*
 workspace/.publisher.db*
 
+# Local Publisher workspace (absolute-path dev config)
+workspace-local/
+
+# Generated copy of the semantic layer (built into the image, never committed)
+workspace/semantic/
+
 # Optional: Large data files
 # *.parquet
 A_Semantic_Layer/0_data/README.md

@@ -2,12 +2,29 @@
   "frozenConfig": false,
   "environments": [
     {
-      "name": "theLook-DEMO",
-      "connections": [],
+      "name": "workspace",
+      "connections": [
+        {
+          "name": "motherduck",
+          "type": "motherduck",
+          "motherduckConnection": {
+            "accessToken": "${MOTHERDUCK_TOKEN}",
+            "database": "data_warehouse_demo"
+          }
+        }
+      ],
       "packages": [
         {
           "name": "thelook_ecommerce",
           "location": "./thelook_ecommerce"
+        },
+        {
+          "name": "comics",
+          "location": "./semantic/comics"
+        },
+        {
+          "name": "jaffle_shop",
+          "location": "./semantic/jaffle_shop"
         }
       ]
     }

@@ -126,7 +126,7 @@ curl -X POST https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp \
     "params": {
       "name": "malloy_getContext",
       "arguments": {
-        "environmentName": "theLook-DEMO",
+        "environmentName": "workspace",
         "packageName": "thelook_ecommerce",
         "query": "Which distribution centers were the most profitable in Q1 2026?"
       }
