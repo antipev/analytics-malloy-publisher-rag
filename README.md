@@ -72,6 +72,8 @@ flowchart TD
 | 🧠 **[`context/README.md`](./context/README.md)** | **Technical Deep Dive** | Internal mechanics of AST extraction, 3-Layer Intent Graph, ChromaDB vector indexing, and RAG retrieval. |
 | 📊 **[`workspace/thelook_ecommerce/README.md`](./workspace/thelook_ecommerce/README.md)** | **eCommerce Data Package** | Star schema explores, raw views, staging refinements, and compiled HTML data apps. |
 
+> **Note:** `workspace/semantic_layer/` is a generated build artifact. The `analytics-engineering` workflow copies the canonical `comics` and `jaffle_shop` packages into this directory immediately before Cloud Build, and `.gitignore` excludes it. It does **not** appear in this repository on GitHub; it exists only in the CI build context and the deployed image. See [`DEPLOYMENT.md`](./DEPLOYMENT.md) and runbook §9A.
+
 ---
 
 ## 🤖 AI Agent Skills & Capabilities
