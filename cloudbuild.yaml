@@ -1,0 +1,39 @@
+steps:
+  # The Dockerfile needs MOTHERDUCK_TOKEN as a build arg, because Stage 1
+  # recompiles every served package inside the image and jaffle_shop/comics only
+  # compile against MotherDuck. `gcloud builds submit --tag` cannot carry build
+  # args, which is why this config exists (see TASK-04/TASK-08 in
+  # DOCUMENTATION/2_Plan_and_Implementation/11_PROJECT_1_RAG_Context_Coverage.md).
+  #
+  # The token is injected with secretEnv, so it never appears in this file, in a
+  # substitution, or in the build log: Cloud Build mounts it as an environment
+  # variable for this step only, and `$$` is how a literal `$` is written in a
+  # build config (the shell inside the step does the expansion).
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        set -Eeuo pipefail
+        test -n "$$MOTHERDUCK_TOKEN" || { echo "MOTHERDUCK_TOKEN is empty" >&2; exit 1; }
+        docker build \
+          --build-arg MOTHERDUCK_TOKEN="$$MOTHERDUCK_TOKEN" \
+          -t "${_IMAGE}" \
+          .
+
+images:
+  - '${_IMAGE}'
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/motherduck-token/versions/latest
+      env: MOTHERDUCK_TOKEN
+
+# The index build inside the image compiles 12 .malloy files against MotherDuck
+# (~3.1 s/file) on top of a pip install; the default 2-CPU builder is the
+# difference between a 6-minute and a 3-minute deploy.
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY  # logs go to Cloud Logging; no GCS log bucket needed
+
+timeout: 1800s
