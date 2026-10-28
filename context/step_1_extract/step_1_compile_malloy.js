@@ -122,11 +122,33 @@ async function compileMalloyFile(filePath) {
   const duckdbConn = new DuckDBConnection('duckdb', undefined, packageDir);
   const bigqueryConn = new BigQueryConnection('bigquery');
 
+  const connectionEntries = [
+    ['duckdb', duckdbConn],
+    ['bigquery', bigqueryConn]
+  ];
+
+  // MotherDuck is registered only when a token is present. The semantic-layer
+  // packages (jaffle_shop, comics) declare their sources as
+  // `motherduck.table('marts...')`, so without this connection the model cannot
+  // compile at all; thelook_ecommerce does not reference it, so an absent token
+  // keeps this script's behaviour exactly as it was before this change.
+  // The database name matches workspace/publisher.config.json
+  // (motherduckConnection.database) and can be overridden for a different env.
+  const motherduckToken = process.env.MOTHERDUCK_TOKEN;
+  if (motherduckToken) {
+    const motherduckDatabase = process.env.MOTHERDUCK_DATABASE || 'data_warehouse_demo';
+    connectionEntries.push([
+      'motherduck',
+      new DuckDBConnection({
+        name: 'motherduck',
+        databasePath: `md:${motherduckDatabase}`,
+        motherDuckToken: motherduckToken
+      })
+    ]);
+  }
+
   const connectionMap = new FixedConnectionMap(
-    new Map([
-      ['duckdb', duckdbConn],
-      ['bigquery', bigqueryConn]
-    ]),
+    new Map(connectionEntries),
     'duckdb'
   );
 

@@ -1,0 +1,113 @@
+{
+  "context_source": "auto-derived (editable)",
+  "published_file": "3_explores/comics_explore.malloy",
+  "package_description": "Malloy semantic layer for explore 'comics_explore'",
+  "preferred_group_by": [
+    "Month",
+    "Year",
+    "Day",
+    "Link",
+    "News",
+    "Safe_title",
+    "Title",
+    "Transcript",
+    "Extra_parts",
+    "Tooltip_text",
+    "News_count",
+    "Link_count",
+    "Extra_parts_count",
+    "Transcript_characters",
+    "Transcript_words",
+    "Tooltip_characters",
+    "Tooltip_words",
+    "Title_characters",
+    "Title_words",
+    "Calendar_Year",
+    "Calendar_Month",
+    "Calendar_Month_Year",
+    "Calendar_Week",
+    "Calendar_Day_Of_Week",
+    "Calendar_Quarter"
+  ],
+  "fallback_explore": "comics_explore",
+  "intents": [
+    {
+      "intent_id": "intent_comics_explore_overview",
+      "intent_name": "Comics Explore Core Metrics",
+      "description": "Core cross-cutting measures and calculations defined at the root of explore 'comics_explore' (file 3_explores/comics_explore.malloy).",
+      "entity_filters": [
+        "calendar"
+      ],
+      "metric_patterns": [
+        "comic",
+        "comics",
+        "count",
+        "links",
+        "news",
+        "title",
+        "tooltip",
+        "transcript",
+        "words"
+      ]
+    },
+    {
+      "intent_id": "intent_calendar",
+      "intent_name": "Calendar Analysis",
+      "description": "Number of calendar days in the selected period.",
+      "entity_filters": [
+        "calendar",
+        "comics_explore"
+      ],
+      "metric_patterns": [
+        "abbrv",
+        "calendar",
+        "count",
+        "current",
+        "date",
+        "day",
+        "end",
+        "future",
+        "key",
+        "last",
+        "month",
+        "monthly",
+        "past",
+        "quarter",
+        "start",
+        "today",
+        "week",
+        "year",
+        "yesterday"
+      ]
+    }
+  ],
+  "keyword_mappings": {
+    "calendar": "intent_calendar",
+    "comic": "intent_comics_explore_overview",
+    "count": "intent_comics_explore_overview",
+    "transcript": "intent_comics_explore_overview",
+    "words": "intent_comics_explore_overview",
+    "title": "intent_comics_explore_overview",
+    "tooltip": "intent_comics_explore_overview",
+    "comics": "intent_comics_explore_overview",
+    "news": "intent_comics_explore_overview",
+    "links": "intent_comics_explore_overview",
+    "day": "intent_calendar",
+    "key": "intent_calendar",
+    "monthly": "intent_calendar",
+    "year": "intent_calendar",
+    "month": "intent_calendar",
+    "week": "intent_calendar",
+    "abbrv": "intent_calendar",
+    "start": "intent_calendar",
+    "end": "intent_calendar",
+    "quarter": "intent_calendar",
+    "last": "intent_calendar",
+    "date": "intent_calendar",
+    "current": "intent_calendar",
+    "today": "intent_calendar",
+    "yesterday": "intent_calendar",
+    "past": "intent_calendar",
+    "future": "intent_calendar"
+  }
+}

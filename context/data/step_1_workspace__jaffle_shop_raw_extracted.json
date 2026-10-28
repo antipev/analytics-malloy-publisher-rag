@@ -1,0 +1,1360 @@
+{
+  "cafe_explore": {
+    "file": "3_explores/cafe_explore.malloy",
+    "doc": "One row per Jaffle Shop order with customer, location, item, and revenue context. Order-grain explore for Jaffle Shop revenue, customer, location, and product analysis. Use Order_Count, Total_Revenue, and the order measures at this grain; drill into cafe_order_items for product-level analysis.",
+    "dialect": "duckdb",
+    "primary_key": "Order_id",
+    "is_published_explore": true,
+    "direct_fields": [
+      {
+        "name": "_key_cafe_orders",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "_key_cafe_customers",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "_key_cafe_locations",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "Order_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for the order."
+      },
+      {
+        "name": "Location_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Store location where the order was placed."
+      },
+      {
+        "name": "Customer_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Customer who placed the order."
+      },
+      {
+        "name": "Subtotal_cents",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order subtotal in cents."
+      },
+      {
+        "name": "Tax_paid_cents",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Tax paid in cents."
+      },
+      {
+        "name": "Order_total_cents",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order total in cents."
+      },
+      {
+        "name": "Subtotal",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order subtotal before tax."
+      },
+      {
+        "name": "Tax_paid",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Tax paid on the order."
+      },
+      {
+        "name": "Order_total",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order total including tax."
+      },
+      {
+        "name": "Order_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Date the order was placed."
+      },
+      {
+        "name": "Order_cost",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Supply cost to fulfil the order."
+      },
+      {
+        "name": "Order_items_subtotal",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Sum of item prices before tax."
+      },
+      {
+        "name": "Count_food_items",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of food items in the order."
+      },
+      {
+        "name": "Count_drink_items",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of drink items in the order."
+      },
+      {
+        "name": "Count_order_items",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of items in the order."
+      },
+      {
+        "name": "Is_food_order",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the order contains food."
+      },
+      {
+        "name": "Is_drink_order",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the order contains a drink."
+      },
+      {
+        "name": "Customer_order_number",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Sequence number of the order within the customer's history."
+      },
+      {
+        "name": "Order_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of orders."
+      },
+      {
+        "name": "Total_Revenue",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Gross revenue including tax."
+      },
+      {
+        "name": "Total_Subtotal",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Revenue before tax."
+      },
+      {
+        "name": "Total_Tax_Paid",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total tax collected."
+      },
+      {
+        "name": "Average_Order_Value",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average order value including tax."
+      },
+      {
+        "name": "Total_Order_Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total supply cost across the selected orders."
+      },
+      {
+        "name": "Gross_Margin",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Gross margin after supply cost, including tax."
+      },
+      {
+        "name": "Total_Items",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of items sold."
+      },
+      {
+        "name": "Average_Items_per_Order",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of items per order."
+      },
+      {
+        "name": "Food_Order_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of orders containing food."
+      },
+      {
+        "name": "Drink_Order_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of orders containing a drink."
+      },
+      {
+        "name": "Customer_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Name of the customer who placed the order."
+      },
+      {
+        "name": "Customer_Type",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Customer segment: new or returning."
+      },
+      {
+        "name": "Location_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Store location where the order was placed."
+      },
+      {
+        "name": "Location_Tax_Rate",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Tax rate of the store location."
+      }
+    ],
+    "joined_entities": {
+      "cafe_customers": {
+        "name": "cafe_customers",
+        "fields": [
+          {
+            "name": "cafe_customers._key_cafe_customers",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_customers.Customer_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for the customer."
+          },
+          {
+            "name": "cafe_customers.Customer_name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Customer full name."
+          },
+          {
+            "name": "cafe_customers.Count_lifetime_orders",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Total number of orders the customer has placed."
+          },
+          {
+            "name": "cafe_customers.First_order_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Date of the customer's first order."
+          },
+          {
+            "name": "cafe_customers.Last_order_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Date of the customer's most recent order."
+          },
+          {
+            "name": "cafe_customers.Lifetime_spend_pretax",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Lifetime spend before tax."
+          },
+          {
+            "name": "cafe_customers.Lifetime_tax_paid",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Lifetime tax paid."
+          },
+          {
+            "name": "cafe_customers.Lifetime_spend",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Lifetime spend including tax."
+          },
+          {
+            "name": "cafe_customers.Customer_type",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Customer segment: new or returning."
+          },
+          {
+            "name": "cafe_customers.Customer_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total number of customers."
+          },
+          {
+            "name": "cafe_customers.Total_Lifetime_Spend",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total lifetime spend across the selected customers."
+          },
+          {
+            "name": "cafe_customers.Average_Lifetime_Spend",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Average lifetime spend per customer."
+          },
+          {
+            "name": "cafe_customers.Average_Lifetime_Orders",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Average number of lifetime orders per customer."
+          },
+          {
+            "name": "cafe_customers.Returning_Customer_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Number of customers who have placed more than one order."
+          },
+          {
+            "name": "cafe_customers.New_Customer_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Number of customers with only their first order so far."
+          },
+          {
+            "name": "cafe_customers.Returning_Customer_Rate",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Share of customers in the returning segment."
+          }
+        ]
+      },
+      "cafe_locations": {
+        "name": "cafe_locations",
+        "fields": [
+          {
+            "name": "cafe_locations._key_cafe_locations",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_locations.Location_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for the store location."
+          },
+          {
+            "name": "cafe_locations.Location_name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Human-readable store location name."
+          },
+          {
+            "name": "cafe_locations.Tax_rate",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Tax rate applied to orders at the location."
+          },
+          {
+            "name": "cafe_locations.Opened_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Date the location opened."
+          },
+          {
+            "name": "cafe_locations.Location_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total number of store locations."
+          },
+          {
+            "name": "cafe_locations.Average_Tax_Rate",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Average tax rate across the selected locations."
+          },
+          {
+            "name": "cafe_locations.Earliest_Opened_Date",
+            "type": "date",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Earliest opening date among the selected locations."
+          }
+        ]
+      },
+      "cafe_order_items": {
+        "name": "cafe_order_items",
+        "fields": [
+          {
+            "name": "cafe_order_items._key_cafe_order_items",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_order_items._key_cafe_orders",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_order_items._key_cafe_products",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_order_items._key_cafe_customers",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_order_items._key_cafe_locations",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_order_items.Order_item_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for the order item."
+          },
+          {
+            "name": "cafe_order_items.Order_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Order that contains this item."
+          },
+          {
+            "name": "cafe_order_items.Product_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Product ordered."
+          },
+          {
+            "name": "cafe_order_items.Order_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Date the parent order was placed."
+          },
+          {
+            "name": "cafe_order_items.Product_name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Product name at the time of the order."
+          },
+          {
+            "name": "cafe_order_items.Product_price",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Product price at the time of the order."
+          },
+          {
+            "name": "cafe_order_items.Is_food_item",
+            "type": "boolean",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Whether the item is food."
+          },
+          {
+            "name": "cafe_order_items.Is_drink_item",
+            "type": "boolean",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Whether the item is a drink."
+          },
+          {
+            "name": "cafe_order_items.Supply_cost",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Cost of supplies required to fulfil the item."
+          },
+          {
+            "name": "cafe_order_items.Order_Item_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total number of order items."
+          },
+          {
+            "name": "cafe_order_items.Item_Revenue",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Revenue from order items before tax."
+          },
+          {
+            "name": "cafe_order_items.Total_Supply_Cost",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total supply cost for the selected order items."
+          },
+          {
+            "name": "cafe_order_items.Item_Gross_Margin",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Item-level gross margin: item revenue minus supply cost."
+          },
+          {
+            "name": "cafe_order_items.Average_Item_Price",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Average price per order item."
+          },
+          {
+            "name": "cafe_order_items.Food_Item_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Number of food items sold."
+          },
+          {
+            "name": "cafe_order_items.Drink_Item_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Number of drink items sold."
+          },
+          {
+            "name": "cafe_order_items.cafe_products._key_cafe_products",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Product_id",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Unique identifier for the product."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Product_name",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Product name shown on the menu."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Product_type",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Product category."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Product_description",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Product description."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Product_price",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Menu price of the product."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Is_food_item",
+            "type": "boolean",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Whether the product is a food item."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Is_drink_item",
+            "type": "boolean",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Whether the product is a drink item."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Product_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Total number of products."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Average_Product_Price",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Average menu price across the selected products."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Food_Product_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Number of food products."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Drink_Product_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Number of drink products."
+          },
+          {
+            "name": "cafe_order_items.cafe_products.Menu_Price_Range",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Difference between the highest and lowest menu price."
+          }
+        ]
+      }
+    },
+    "fields": [
+      {
+        "name": "_key_cafe_orders",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "_key_cafe_customers",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "_key_cafe_locations",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "Order_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for the order."
+      },
+      {
+        "name": "Location_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Store location where the order was placed."
+      },
+      {
+        "name": "Customer_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Customer who placed the order."
+      },
+      {
+        "name": "Subtotal_cents",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order subtotal in cents."
+      },
+      {
+        "name": "Tax_paid_cents",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Tax paid in cents."
+      },
+      {
+        "name": "Order_total_cents",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order total in cents."
+      },
+      {
+        "name": "Subtotal",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order subtotal before tax."
+      },
+      {
+        "name": "Tax_paid",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Tax paid on the order."
+      },
+      {
+        "name": "Order_total",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order total including tax."
+      },
+      {
+        "name": "Order_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Date the order was placed."
+      },
+      {
+        "name": "Order_cost",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Supply cost to fulfil the order."
+      },
+      {
+        "name": "Order_items_subtotal",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Sum of item prices before tax."
+      },
+      {
+        "name": "Count_food_items",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of food items in the order."
+      },
+      {
+        "name": "Count_drink_items",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of drink items in the order."
+      },
+      {
+        "name": "Count_order_items",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of items in the order."
+      },
+      {
+        "name": "Is_food_order",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the order contains food."
+      },
+      {
+        "name": "Is_drink_order",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the order contains a drink."
+      },
+      {
+        "name": "Customer_order_number",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Sequence number of the order within the customer's history."
+      },
+      {
+        "name": "Order_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of orders."
+      },
+      {
+        "name": "Total_Revenue",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Gross revenue including tax."
+      },
+      {
+        "name": "Total_Subtotal",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Revenue before tax."
+      },
+      {
+        "name": "Total_Tax_Paid",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total tax collected."
+      },
+      {
+        "name": "Average_Order_Value",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average order value including tax."
+      },
+      {
+        "name": "Total_Order_Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total supply cost across the selected orders."
+      },
+      {
+        "name": "Gross_Margin",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Gross margin after supply cost, including tax."
+      },
+      {
+        "name": "Total_Items",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of items sold."
+      },
+      {
+        "name": "Average_Items_per_Order",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of items per order."
+      },
+      {
+        "name": "Food_Order_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of orders containing food."
+      },
+      {
+        "name": "Drink_Order_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of orders containing a drink."
+      },
+      {
+        "name": "Customer_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Name of the customer who placed the order."
+      },
+      {
+        "name": "Customer_Type",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Customer segment: new or returning."
+      },
+      {
+        "name": "Location_Name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Store location where the order was placed."
+      },
+      {
+        "name": "Location_Tax_Rate",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Tax rate of the store location."
+      },
+      {
+        "name": "cafe_customers._key_cafe_customers",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_customers.Customer_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for the customer."
+      },
+      {
+        "name": "cafe_customers.Customer_name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Customer full name."
+      },
+      {
+        "name": "cafe_customers.Count_lifetime_orders",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Total number of orders the customer has placed."
+      },
+      {
+        "name": "cafe_customers.First_order_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Date of the customer's first order."
+      },
+      {
+        "name": "cafe_customers.Last_order_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Date of the customer's most recent order."
+      },
+      {
+        "name": "cafe_customers.Lifetime_spend_pretax",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Lifetime spend before tax."
+      },
+      {
+        "name": "cafe_customers.Lifetime_tax_paid",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Lifetime tax paid."
+      },
+      {
+        "name": "cafe_customers.Lifetime_spend",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Lifetime spend including tax."
+      },
+      {
+        "name": "cafe_customers.Customer_type",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Customer segment: new or returning."
+      },
+      {
+        "name": "cafe_customers.Customer_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of customers."
+      },
+      {
+        "name": "cafe_customers.Total_Lifetime_Spend",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total lifetime spend across the selected customers."
+      },
+      {
+        "name": "cafe_customers.Average_Lifetime_Spend",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average lifetime spend per customer."
+      },
+      {
+        "name": "cafe_customers.Average_Lifetime_Orders",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of lifetime orders per customer."
+      },
+      {
+        "name": "cafe_customers.Returning_Customer_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of customers who have placed more than one order."
+      },
+      {
+        "name": "cafe_customers.New_Customer_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of customers with only their first order so far."
+      },
+      {
+        "name": "cafe_customers.Returning_Customer_Rate",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Share of customers in the returning segment."
+      },
+      {
+        "name": "cafe_locations._key_cafe_locations",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_locations.Location_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for the store location."
+      },
+      {
+        "name": "cafe_locations.Location_name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Human-readable store location name."
+      },
+      {
+        "name": "cafe_locations.Tax_rate",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Tax rate applied to orders at the location."
+      },
+      {
+        "name": "cafe_locations.Opened_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Date the location opened."
+      },
+      {
+        "name": "cafe_locations.Location_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of store locations."
+      },
+      {
+        "name": "cafe_locations.Average_Tax_Rate",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average tax rate across the selected locations."
+      },
+      {
+        "name": "cafe_locations.Earliest_Opened_Date",
+        "type": "date",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Earliest opening date among the selected locations."
+      },
+      {
+        "name": "cafe_order_items._key_cafe_order_items",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_order_items._key_cafe_orders",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_order_items._key_cafe_products",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_order_items._key_cafe_customers",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_order_items._key_cafe_locations",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_order_items.Order_item_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for the order item."
+      },
+      {
+        "name": "cafe_order_items.Order_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Order that contains this item."
+      },
+      {
+        "name": "cafe_order_items.Product_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Product ordered."
+      },
+      {
+        "name": "cafe_order_items.Order_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Date the parent order was placed."
+      },
+      {
+        "name": "cafe_order_items.Product_name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Product name at the time of the order."
+      },
+      {
+        "name": "cafe_order_items.Product_price",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Product price at the time of the order."
+      },
+      {
+        "name": "cafe_order_items.Is_food_item",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the item is food."
+      },
+      {
+        "name": "cafe_order_items.Is_drink_item",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the item is a drink."
+      },
+      {
+        "name": "cafe_order_items.Supply_cost",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Cost of supplies required to fulfil the item."
+      },
+      {
+        "name": "cafe_order_items.Order_Item_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of order items."
+      },
+      {
+        "name": "cafe_order_items.Item_Revenue",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Revenue from order items before tax."
+      },
+      {
+        "name": "cafe_order_items.Total_Supply_Cost",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total supply cost for the selected order items."
+      },
+      {
+        "name": "cafe_order_items.Item_Gross_Margin",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Item-level gross margin: item revenue minus supply cost."
+      },
+      {
+        "name": "cafe_order_items.Average_Item_Price",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average price per order item."
+      },
+      {
+        "name": "cafe_order_items.Food_Item_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of food items sold."
+      },
+      {
+        "name": "cafe_order_items.Drink_Item_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of drink items sold."
+      },
+      {
+        "name": "cafe_order_items.cafe_products._key_cafe_products",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Product_id",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Unique identifier for the product."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Product_name",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Product name shown on the menu."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Product_type",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Product category."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Product_description",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Product description."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Product_price",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Menu price of the product."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Is_food_item",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the product is a food item."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Is_drink_item",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the product is a drink item."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Product_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of products."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Average_Product_Price",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average menu price across the selected products."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Food_Product_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of food products."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Drink_Product_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of drink products."
+      },
+      {
+        "name": "cafe_order_items.cafe_products.Menu_Price_Range",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Difference between the highest and lowest menu price."
+      }
+    ]
+  }
+}

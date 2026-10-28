@@ -1,0 +1,1532 @@
+{
+  "comics_explore": {
+    "file": "3_explores/comics_explore.malloy",
+    "doc": "XKCD comic catalogue with publication metadata, text metrics, and image links. Publication-ready explore for XKCD comics enriched with calendar attributes. Use Comic_Count and the text measures from comics, and Calendar_* dimensions for time-based analysis.",
+    "dialect": "duckdb",
+    "primary_key": "Comic_key",
+    "is_published_explore": true,
+    "direct_fields": [
+      {
+        "name": "Comic_key",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Surrogate key for the comic, derived from the XKCD comic number."
+      },
+      {
+        "name": "Calendar_key",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Publication date used to join the comic to the calendar dimension."
+      },
+      {
+        "name": "Comic_number",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "XKCD comic number as published by the API."
+      },
+      {
+        "name": "Month",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Month of publication as returned by the XKCD API."
+      },
+      {
+        "name": "Year",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Year of publication as returned by the XKCD API."
+      },
+      {
+        "name": "Day",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Day of month of publication as returned by the XKCD API."
+      },
+      {
+        "name": "Link",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Optional URL the comic links to."
+      },
+      {
+        "name": "News",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Optional news or announcement text attached to the comic."
+      },
+      {
+        "name": "Safe_title",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "URL-safe title of the comic."
+      },
+      {
+        "name": "Title",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Display title of the comic."
+      },
+      {
+        "name": "Transcript",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Transcript text of the comic when available."
+      },
+      {
+        "name": "Extra_parts",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Extra parts required by interactive comics."
+      },
+      {
+        "name": "Publication_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Publication date built from year, month, and day."
+      },
+      {
+        "name": "Is_valid_date",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the source year, month, and day form a valid date."
+      },
+      {
+        "name": "Tooltip_text",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Alt text shown when hovering over the comic."
+      },
+      {
+        "name": "Image_url",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "URL of the comic image."
+      },
+      {
+        "name": "News_count",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "1 when the comic has news text, otherwise 0."
+      },
+      {
+        "name": "Link_count",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "1 when the comic has a link, otherwise 0."
+      },
+      {
+        "name": "Extra_parts_count",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "1 when the comic has extra parts, otherwise 0."
+      },
+      {
+        "name": "Transcript_characters",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of characters in the transcript."
+      },
+      {
+        "name": "Transcript_words",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of words in the transcript."
+      },
+      {
+        "name": "Tooltip_characters",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of characters in the tooltip text."
+      },
+      {
+        "name": "Tooltip_words",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of words in the tooltip text."
+      },
+      {
+        "name": "Title_characters",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of characters in the title."
+      },
+      {
+        "name": "Title_words",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of words in the title."
+      },
+      {
+        "name": "Updated_at",
+        "type": "timestamptz",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Timestamp when the comic record was last updated."
+      },
+      {
+        "name": "Comic_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of comics in the catalogue."
+      },
+      {
+        "name": "Total_Transcript_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of transcript words across the selected comics."
+      },
+      {
+        "name": "Average_Transcript_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of transcript words per comic."
+      },
+      {
+        "name": "Average_Title_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of words in a comic title."
+      },
+      {
+        "name": "Average_Tooltip_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of words in a comic tooltip."
+      },
+      {
+        "name": "Comics_With_News",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of comics that include news text."
+      },
+      {
+        "name": "Comics_With_Links",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of comics that include an outbound link."
+      },
+      {
+        "name": "Calendar_Year",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar year in which the comic was published."
+      },
+      {
+        "name": "Calendar_Month",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar month in which the comic was published."
+      },
+      {
+        "name": "Calendar_Month_Year",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Month and year in which the comic was published."
+      },
+      {
+        "name": "Calendar_Week",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "ISO week in which the comic was published."
+      },
+      {
+        "name": "Calendar_Day_Of_Week",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Day of the week on which the comic was published."
+      },
+      {
+        "name": "Calendar_Quarter",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar quarter in which the comic was published."
+      }
+    ],
+    "joined_entities": {
+      "calendar": {
+        "name": "calendar",
+        "fields": [
+          {
+            "name": "calendar._key_calendar",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.calendar_monthly_key",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.year_month",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.day_of_week_abbrv",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.day_number_in_month",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.day_number_in_week",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.week_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.week_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.month_number",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.month_abbrv",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.month_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.month_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.quarter_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.quarter_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.year_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.year_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_week_date",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_week_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_week_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_month_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_month_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_month_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_quarter_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_quarter_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_quarter_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_week_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_week_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_month_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_month_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_quarter_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_quarter_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_year_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.last_year_year_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_today",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_yesterday",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_week_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_week_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_month_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_month_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_quarter_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_quarter_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_year_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_year_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_last_week_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_last_week_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_last_month_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_last_month_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_last_quarter_start",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_last_quarter_end",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_today_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_yesterday_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_week_start_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_week_end_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_month_start_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_month_end_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_quarter_start_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_quarter_end_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_year_start_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.current_year_year_end_in_last_year",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": ""
+          },
+          {
+            "name": "calendar.Calendar_date",
+            "type": "date",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Calendar date. Same value as the primary key."
+          },
+          {
+            "name": "calendar.Calendar_year",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Calendar year number."
+          },
+          {
+            "name": "calendar.Calendar_month",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Full month name."
+          },
+          {
+            "name": "calendar.Calendar_month_year",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Month and year label, for example Jan 2024."
+          },
+          {
+            "name": "calendar.Calendar_week",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "ISO week number."
+          },
+          {
+            "name": "calendar.Calendar_day_of_week",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Full day-of-week name."
+          },
+          {
+            "name": "calendar.Calendar_quarter",
+            "type": "number",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Quarter number from 1 to 4."
+          },
+          {
+            "name": "calendar.Calendar_past_future",
+            "type": "string",
+            "expressionType": "dimension",
+            "category": "dimension",
+            "comment": "Whether the date is in the past or the future."
+          },
+          {
+            "name": "calendar.Day_Count",
+            "type": "number",
+            "expressionType": "measure",
+            "category": "measure",
+            "comment": "Number of calendar days in the selected period."
+          }
+        ]
+      }
+    },
+    "fields": [
+      {
+        "name": "Comic_key",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Surrogate key for the comic, derived from the XKCD comic number."
+      },
+      {
+        "name": "Calendar_key",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Publication date used to join the comic to the calendar dimension."
+      },
+      {
+        "name": "Comic_number",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "XKCD comic number as published by the API."
+      },
+      {
+        "name": "Month",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Month of publication as returned by the XKCD API."
+      },
+      {
+        "name": "Year",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Year of publication as returned by the XKCD API."
+      },
+      {
+        "name": "Day",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Day of month of publication as returned by the XKCD API."
+      },
+      {
+        "name": "Link",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Optional URL the comic links to."
+      },
+      {
+        "name": "News",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Optional news or announcement text attached to the comic."
+      },
+      {
+        "name": "Safe_title",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "URL-safe title of the comic."
+      },
+      {
+        "name": "Title",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Display title of the comic."
+      },
+      {
+        "name": "Transcript",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Transcript text of the comic when available."
+      },
+      {
+        "name": "Extra_parts",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Extra parts required by interactive comics."
+      },
+      {
+        "name": "Publication_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Publication date built from year, month, and day."
+      },
+      {
+        "name": "Is_valid_date",
+        "type": "boolean",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the source year, month, and day form a valid date."
+      },
+      {
+        "name": "Tooltip_text",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Alt text shown when hovering over the comic."
+      },
+      {
+        "name": "Image_url",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "URL of the comic image."
+      },
+      {
+        "name": "News_count",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "1 when the comic has news text, otherwise 0."
+      },
+      {
+        "name": "Link_count",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "1 when the comic has a link, otherwise 0."
+      },
+      {
+        "name": "Extra_parts_count",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "1 when the comic has extra parts, otherwise 0."
+      },
+      {
+        "name": "Transcript_characters",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of characters in the transcript."
+      },
+      {
+        "name": "Transcript_words",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of words in the transcript."
+      },
+      {
+        "name": "Tooltip_characters",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of characters in the tooltip text."
+      },
+      {
+        "name": "Tooltip_words",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of words in the tooltip text."
+      },
+      {
+        "name": "Title_characters",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of characters in the title."
+      },
+      {
+        "name": "Title_words",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Number of words in the title."
+      },
+      {
+        "name": "Updated_at",
+        "type": "timestamptz",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Timestamp when the comic record was last updated."
+      },
+      {
+        "name": "Comic_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of comics in the catalogue."
+      },
+      {
+        "name": "Total_Transcript_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Total number of transcript words across the selected comics."
+      },
+      {
+        "name": "Average_Transcript_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of transcript words per comic."
+      },
+      {
+        "name": "Average_Title_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of words in a comic title."
+      },
+      {
+        "name": "Average_Tooltip_Words",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Average number of words in a comic tooltip."
+      },
+      {
+        "name": "Comics_With_News",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of comics that include news text."
+      },
+      {
+        "name": "Comics_With_Links",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of comics that include an outbound link."
+      },
+      {
+        "name": "Calendar_Year",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar year in which the comic was published."
+      },
+      {
+        "name": "Calendar_Month",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar month in which the comic was published."
+      },
+      {
+        "name": "Calendar_Month_Year",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Month and year in which the comic was published."
+      },
+      {
+        "name": "Calendar_Week",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "ISO week in which the comic was published."
+      },
+      {
+        "name": "Calendar_Day_Of_Week",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Day of the week on which the comic was published."
+      },
+      {
+        "name": "Calendar_Quarter",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar quarter in which the comic was published."
+      },
+      {
+        "name": "calendar._key_calendar",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.calendar_monthly_key",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.year_month",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.day_of_week_abbrv",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.day_number_in_month",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.day_number_in_week",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.week_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.week_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.month_number",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.month_abbrv",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.month_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.month_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.quarter_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.quarter_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.year_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.year_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_week_date",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_week_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_week_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_month_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_month_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_month_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_quarter_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_quarter_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_quarter_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_week_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_week_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_month_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_month_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_quarter_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_quarter_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_year_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.last_year_year_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_today",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_yesterday",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_week_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_week_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_month_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_month_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_quarter_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_quarter_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_year_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_year_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_last_week_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_last_week_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_last_month_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_last_month_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_last_quarter_start",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_last_quarter_end",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_today_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_yesterday_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_week_start_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_week_end_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_month_start_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_month_end_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_quarter_start_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_quarter_end_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_year_start_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.current_year_year_end_in_last_year",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": ""
+      },
+      {
+        "name": "calendar.Calendar_date",
+        "type": "date",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar date. Same value as the primary key."
+      },
+      {
+        "name": "calendar.Calendar_year",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Calendar year number."
+      },
+      {
+        "name": "calendar.Calendar_month",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Full month name."
+      },
+      {
+        "name": "calendar.Calendar_month_year",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Month and year label, for example Jan 2024."
+      },
+      {
+        "name": "calendar.Calendar_week",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "ISO week number."
+      },
+      {
+        "name": "calendar.Calendar_day_of_week",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Full day-of-week name."
+      },
+      {
+        "name": "calendar.Calendar_quarter",
+        "type": "number",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Quarter number from 1 to 4."
+      },
+      {
+        "name": "calendar.Calendar_past_future",
+        "type": "string",
+        "expressionType": "dimension",
+        "category": "dimension",
+        "comment": "Whether the date is in the past or the future."
+      },
+      {
+        "name": "calendar.Day_Count",
+        "type": "number",
+        "expressionType": "measure",
+        "category": "measure",
+        "comment": "Number of calendar days in the selected period."
+      }
+    ]
+  }
+}

@@ -42,7 +42,7 @@
     {
       "intent_id": "intent_order_items",
       "intent_name": "Order Items Analysis",
-      "description": "The total gross sales value generated from all order items.",
+      "description": "Total revenue = gross sales. Sum of sale price across order items, in USD. Synonyms: sales, revenue, gross sales.",
       "entity_filters": [
         "order_items",
         "ecommerce_explore"

@@ -1,0 +1,1933 @@
+[
+  {
+    "id": "intent__comics_explore__intent_comics_explore_overview",
+    "text": "BUSINESS INTENT: Comics Explore Core Metrics\nIntent ID: intent_comics_explore_overview\nDescription: Core cross-cutting measures and calculations defined at the root of explore 'comics_explore' (file 3_explores/comics_explore.malloy).\nRequired Explore: comics_explore\nRelevant Joined Entities: calendar\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\n\nKey Measures & Metrics:\n  * `Comic_Count` (number): Total number of comics in the catalogue.\n  * `Total_Transcript_Words` (number): Total number of transcript words across the selected comics.\n  * `Average_Transcript_Words` (number): Average number of transcript words per comic.\n  * `Average_Title_Words` (number): Average number of words in a comic title.\n  * `Average_Tooltip_Words` (number): Average number of words in a comic tooltip.\n  * `Comics_With_News` (number): Number of comics that include news text.\n  * `Comics_With_Links` (number): Number of comics that include an outbound link.\n  * `calendar.Day_Count` (number): Number of calendar days in the selected period.\n\nKey Dimensions:\n  * `Comic_key` (string): Surrogate key for the comic, derived from the XKCD comic number.\n  * `Calendar_key` (date): Publication date used to join the comic to the calendar dimension.\n  * `Comic_number` (string): XKCD comic number as published by the API.\n  * `Link` (string): Optional URL the comic links to.\n  * `News` (string): Optional news or announcement text attached to the comic.\n  * `Safe_title` (string): URL-safe title of the comic.\n  * `Title` (string): Display title of the comic.\n  * `Transcript` (string): Transcript text of the comic when available.\n  * `Extra_parts` (string): Extra parts required by interactive comics.\n  * `Tooltip_text` (string): Alt text shown when hovering over the comic.\n  * `Image_url` (string): URL of the comic image.\n  * `News_count` (number): 1 when the comic has news text, otherwise 0.\n  * `Link_count` (number): 1 when the comic has a link, otherwise 0.\n  * `Extra_parts_count` (number): 1 when the comic has extra parts, otherwise 0.\n  * `Transcript_characters` (number): Number of characters in the transcript.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    Total_Transcript_Words\n    Average_Transcript_Words\n    Average_Title_Words\n    Average_Tooltip_Words\n    Comics_With_News\n    Comics_With_Links\n    calendar.Day_Count\n}",
+    "metadata": {
+      "chunk_type": "business_intent",
+      "intent_id": "intent_comics_explore_overview",
+      "intent_name": "Comics Explore Core Metrics",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb",
+      "relevant_entities": [
+        "calendar"
+      ],
+      "metrics_count": 8,
+      "dimensions_count": 27,
+      "canonical_metrics": [
+        "Comic_Count",
+        "Total_Transcript_Words",
+        "Average_Transcript_Words",
+        "Average_Title_Words",
+        "Average_Tooltip_Words",
+        "Comics_With_News",
+        "Comics_With_Links",
+        "calendar.Day_Count"
+      ],
+      "canonical_dimensions": [
+        "Comic_key",
+        "Calendar_key",
+        "Comic_number",
+        "Link",
+        "News",
+        "Safe_title",
+        "Title",
+        "Transcript",
+        "Extra_parts",
+        "Tooltip_text",
+        "Image_url",
+        "News_count",
+        "Link_count",
+        "Extra_parts_count",
+        "Transcript_characters",
+        "Transcript_words",
+        "Tooltip_characters",
+        "Tooltip_words",
+        "Title_characters",
+        "Title_words",
+        "Updated_at",
+        "Calendar_Year",
+        "Calendar_Month",
+        "Calendar_Month_Year",
+        "Calendar_Week",
+        "Calendar_Day_Of_Week",
+        "Calendar_Quarter"
+      ],
+      "executable_template": "# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    Total_Transcript_Words\n    Average_Transcript_Words\n    Average_Title_Words\n    Average_Tooltip_Words\n    Comics_With_News\n    Comics_With_Links\n    calendar.Day_Count\n}"
+    }
+  },
+  {
+    "id": "intent__comics_explore__intent_calendar",
+    "text": "BUSINESS INTENT: Calendar Analysis\nIntent ID: intent_calendar\nDescription: Number of calendar days in the selected period.\nRequired Explore: comics_explore\nRelevant Joined Entities: calendar\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\n\nKey Measures & Metrics:\n  * `Comic_Count` (number): Total number of comics in the catalogue.\n  * `calendar.Day_Count` (number): Number of calendar days in the selected period.\n\nKey Dimensions:\n  * `Comic_key` (string): Surrogate key for the comic, derived from the XKCD comic number.\n  * `Calendar_key` (date): Publication date used to join the comic to the calendar dimension.\n  * `Month` (string): Month of publication as returned by the XKCD API.\n  * `Year` (string): Year of publication as returned by the XKCD API.\n  * `Day` (string): Day of month of publication as returned by the XKCD API.\n  * `Publication_date` (date): Publication date built from year, month, and day.\n  * `Is_valid_date` (boolean): Whether the source year, month, and day form a valid date.\n  * `News_count` (number): 1 when the comic has news text, otherwise 0.\n  * `Link_count` (number): 1 when the comic has a link, otherwise 0.\n  * `Extra_parts_count` (number): 1 when the comic has extra parts, otherwise 0.\n  * `Updated_at` (timestamptz): Timestamp when the comic record was last updated.\n  * `Calendar_Year` (number): Calendar year in which the comic was published.\n  * `Calendar_Month` (string): Calendar month in which the comic was published.\n  * `Calendar_Month_Year` (string): Month and year in which the comic was published.\n  * `Calendar_Week` (number): ISO week in which the comic was published.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    calendar.Day_Count\n}",
+    "metadata": {
+      "chunk_type": "business_intent",
+      "intent_id": "intent_calendar",
+      "intent_name": "Calendar Analysis",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb",
+      "relevant_entities": [
+        "calendar"
+      ],
+      "metrics_count": 2,
+      "dimensions_count": 85,
+      "canonical_metrics": [
+        "Comic_Count",
+        "calendar.Day_Count"
+      ],
+      "canonical_dimensions": [
+        "Comic_key",
+        "Calendar_key",
+        "Month",
+        "Year",
+        "Day",
+        "Publication_date",
+        "Is_valid_date",
+        "News_count",
+        "Link_count",
+        "Extra_parts_count",
+        "Updated_at",
+        "Calendar_Year",
+        "Calendar_Month",
+        "Calendar_Month_Year",
+        "Calendar_Week",
+        "Calendar_Day_Of_Week",
+        "Calendar_Quarter",
+        "calendar._key_calendar",
+        "calendar.calendar_monthly_key",
+        "calendar.year_month",
+        "calendar.day_of_week_abbrv",
+        "calendar.day_number_in_month",
+        "calendar.day_number_in_week",
+        "calendar.week_start",
+        "calendar.week_end",
+        "calendar.month_number",
+        "calendar.month_abbrv",
+        "calendar.month_start",
+        "calendar.month_end",
+        "calendar.quarter_start",
+        "calendar.quarter_end",
+        "calendar.year_start",
+        "calendar.year_end",
+        "calendar.last_week_date",
+        "calendar.last_week_start",
+        "calendar.last_week_end",
+        "calendar.last_month_date",
+        "calendar.last_month_start",
+        "calendar.last_month_end",
+        "calendar.last_quarter_date",
+        "calendar.last_quarter_start",
+        "calendar.last_quarter_end",
+        "calendar.last_year_date",
+        "calendar.last_year_week_start",
+        "calendar.last_year_week_end",
+        "calendar.last_year_month_start",
+        "calendar.last_year_month_end",
+        "calendar.last_year_quarter_start",
+        "calendar.last_year_quarter_end",
+        "calendar.last_year_year_start",
+        "calendar.last_year_year_end",
+        "calendar.current_year_today",
+        "calendar.current_year_yesterday",
+        "calendar.current_year_week_start",
+        "calendar.current_year_week_end",
+        "calendar.current_year_month_start",
+        "calendar.current_year_month_end",
+        "calendar.current_year_quarter_start",
+        "calendar.current_year_quarter_end",
+        "calendar.current_year_year_start",
+        "calendar.current_year_year_end",
+        "calendar.current_year_last_week_start",
+        "calendar.current_year_last_week_end",
+        "calendar.current_year_last_month_start",
+        "calendar.current_year_last_month_end",
+        "calendar.current_year_last_quarter_start",
+        "calendar.current_year_last_quarter_end",
+        "calendar.current_year_today_in_last_year",
+        "calendar.current_year_yesterday_in_last_year",
+        "calendar.current_year_week_start_in_last_year",
+        "calendar.current_year_week_end_in_last_year",
+        "calendar.current_year_month_start_in_last_year",
+        "calendar.current_year_month_end_in_last_year",
+        "calendar.current_year_quarter_start_in_last_year",
+        "calendar.current_year_quarter_end_in_last_year",
+        "calendar.current_year_year_start_in_last_year",
+        "calendar.current_year_year_end_in_last_year",
+        "calendar.Calendar_date",
+        "calendar.Calendar_year",
+        "calendar.Calendar_month",
+        "calendar.Calendar_month_year",
+        "calendar.Calendar_week",
+        "calendar.Calendar_day_of_week",
+        "calendar.Calendar_quarter",
+        "calendar.Calendar_past_future"
+      ],
+      "executable_template": "# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    calendar.Day_Count\n}"
+    }
+  },
+  {
+    "id": "node_root__comics_explore",
+    "text": "GRAPH NODE: Root Explore `comics_explore`\nDescription: XKCD comic catalogue with publication metadata, text metrics, and image links. Publication-ready explore for XKCD comics enriched with calendar attributes. Use Comic_Count and the text measures from comics, and Calendar_* dimensions for time-based analysis.\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\nIs Published Explore: True\nDirect Measures Count: 7 | Direct Dimensions Count: 32\nJoined Entities Available: calendar\n\nFields:\n- `Comic_key` [dimension] (string): Surrogate key for the comic, derived from the XKCD comic number.\n- `Calendar_key` [dimension] (date): Publication date used to join the comic to the calendar dimension.\n- `Comic_number` [dimension] (string): XKCD comic number as published by the API.\n- `Month` [dimension] (string): Month of publication as returned by the XKCD API.\n- `Year` [dimension] (string): Year of publication as returned by the XKCD API.\n- `Day` [dimension] (string): Day of month of publication as returned by the XKCD API.\n- `Link` [dimension] (string): Optional URL the comic links to.\n- `News` [dimension] (string): Optional news or announcement text attached to the comic.\n- `Safe_title` [dimension] (string): URL-safe title of the comic.\n- `Title` [dimension] (string): Display title of the comic.\n- `Transcript` [dimension] (string): Transcript text of the comic when available.\n- `Extra_parts` [dimension] (string): Extra parts required by interactive comics.\n- `Publication_date` [dimension] (date): Publication date built from year, month, and day.\n- `Is_valid_date` [dimension] (boolean): Whether the source year, month, and day form a valid date.\n- `Tooltip_text` [dimension] (string): Alt text shown when hovering over the comic.\n- `Image_url` [dimension] (string): URL of the comic image.\n- `News_count` [dimension] (number): 1 when the comic has news text, otherwise 0.\n- `Link_count` [dimension] (number): 1 when the comic has a link, otherwise 0.\n- `Extra_parts_count` [dimension] (number): 1 when the comic has extra parts, otherwise 0.\n- `Transcript_characters` [dimension] (number): Number of characters in the transcript.\n- `Transcript_words` [dimension] (number): Number of words in the transcript.\n- `Tooltip_characters` [dimension] (number): Number of characters in the tooltip text.\n- `Tooltip_words` [dimension] (number): Number of words in the tooltip text.\n- `Title_characters` [dimension] (number): Number of characters in the title.\n- `Title_words` [dimension] (number): Number of words in the title.\n- `Updated_at` [dimension] (timestamptz): Timestamp when the comic record was last updated.\n- `Comic_Count` [measure] (number): Total number of comics in the catalogue.\n- `Total_Transcript_Words` [measure] (number): Total number of transcript words across the selected comics.\n- `Average_Transcript_Words` [measure] (number): Average number of transcript words per comic.\n- `Average_Title_Words` [measure] (number): Average number of words in a comic title.\n- `Average_Tooltip_Words` [measure] (number): Average number of words in a comic tooltip.\n- `Comics_With_News` [measure] (number): Number of comics that include news text.\n- `Comics_With_Links` [measure] (number): Number of comics that include an outbound link.\n- `Calendar_Year` [dimension] (number): Calendar year in which the comic was published.\n- `Calendar_Month` [dimension] (string): Calendar month in which the comic was published.\n- `Calendar_Month_Year` [dimension] (string): Month and year in which the comic was published.\n- `Calendar_Week` [dimension] (number): ISO week in which the comic was published.\n- `Calendar_Day_Of_Week` [dimension] (string): Day of the week on which the comic was published.\n- `Calendar_Quarter` [dimension] (number): Calendar quarter in which the comic was published.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    Total_Transcript_Words\n    Average_Transcript_Words\n    Average_Title_Words\n    Average_Tooltip_Words\n    Comics_With_News\n    Comics_With_Links\n}",
+    "metadata": {
+      "chunk_type": "entity_graph_node",
+      "entity_type": "root",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "source_doc": "XKCD comic catalogue with publication metadata, text metrics, and image links. Publication-ready explore for XKCD comics enriched with calendar attributes. Use Comic_Count and the text measures from comics, and Calendar_* dimensions for time-based analysis.",
+      "joined_entity": null,
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb",
+      "measures_count": 7,
+      "dimensions_count": 32
+    }
+  },
+  {
+    "id": "node_join__comics_explore__calendar",
+    "text": "GRAPH NODE: Joined Entity `calendar` in Explore `comics_explore`\nParent Explore: comics_explore\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb\nTotal Fields: 69 (Measures: 1, Dimensions: 68)\n\nJoined Entity Fields:\n- `calendar._key_calendar` [dimension] (date): \n- `calendar.calendar_monthly_key` [dimension] (date): \n- `calendar.year_month` [dimension] (string): \n- `calendar.day_of_week_abbrv` [dimension] (string): \n- `calendar.day_number_in_month` [dimension] (number): \n- `calendar.day_number_in_week` [dimension] (number): \n- `calendar.week_start` [dimension] (date): \n- `calendar.week_end` [dimension] (date): \n- `calendar.month_number` [dimension] (number): \n- `calendar.month_abbrv` [dimension] (string): \n- `calendar.month_start` [dimension] (date): \n- `calendar.month_end` [dimension] (date): \n- `calendar.quarter_start` [dimension] (date): \n- `calendar.quarter_end` [dimension] (date): \n- `calendar.year_start` [dimension] (date): \n- `calendar.year_end` [dimension] (date): \n- `calendar.last_week_date` [dimension] (number): \n- `calendar.last_week_start` [dimension] (date): \n- `calendar.last_week_end` [dimension] (date): \n- `calendar.last_month_date` [dimension] (date): \n- `calendar.last_month_start` [dimension] (date): \n- `calendar.last_month_end` [dimension] (date): \n- `calendar.last_quarter_date` [dimension] (date): \n- `calendar.last_quarter_start` [dimension] (date): \n- `calendar.last_quarter_end` [dimension] (date): \n- `calendar.last_year_date` [dimension] (date): \n- `calendar.last_year_week_start` [dimension] (date): \n- `calendar.last_year_week_end` [dimension] (date): \n- `calendar.last_year_month_start` [dimension] (date): \n- `calendar.last_year_month_end` [dimension] (date): \n- `calendar.last_year_quarter_start` [dimension] (date): \n- `calendar.last_year_quarter_end` [dimension] (date): \n- `calendar.last_year_year_start` [dimension] (date): \n- `calendar.last_year_year_end` [dimension] (date): \n- `calendar.current_year_today` [dimension] (date): \n- `calendar.current_year_yesterday` [dimension] (date): \n- `calendar.current_year_week_start` [dimension] (date): \n- `calendar.current_year_week_end` [dimension] (date): \n- `calendar.current_year_month_start` [dimension] (date): \n- `calendar.current_year_month_end` [dimension] (date): \n- `calendar.current_year_quarter_start` [dimension] (date): \n- `calendar.current_year_quarter_end` [dimension] (date): \n- `calendar.current_year_year_start` [dimension] (date): \n- `calendar.current_year_year_end` [dimension] (date): \n- `calendar.current_year_last_week_start` [dimension] (date): \n- `calendar.current_year_last_week_end` [dimension] (date): \n- `calendar.current_year_last_month_start` [dimension] (date): \n- `calendar.current_year_last_month_end` [dimension] (date): \n- `calendar.current_year_last_quarter_start` [dimension] (date): \n- `calendar.current_year_last_quarter_end` [dimension] (date): \n- `calendar.current_year_today_in_last_year` [dimension] (date): \n- `calendar.current_year_yesterday_in_last_year` [dimension] (date): \n- `calendar.current_year_week_start_in_last_year` [dimension] (date): \n- `calendar.current_year_week_end_in_last_year` [dimension] (date): \n- `calendar.current_year_month_start_in_last_year` [dimension] (date): \n- `calendar.current_year_month_end_in_last_year` [dimension] (date): \n- `calendar.current_year_quarter_start_in_last_year` [dimension] (date): \n- `calendar.current_year_quarter_end_in_last_year` [dimension] (date): \n- `calendar.current_year_year_start_in_last_year` [dimension] (date): \n- `calendar.current_year_year_end_in_last_year` [dimension] (date): \n- `calendar.Calendar_date` [dimension] (date): Calendar date. Same value as the primary key.\n- `calendar.Calendar_year` [dimension] (number): Calendar year number.\n- `calendar.Calendar_month` [dimension] (string): Full month name.\n- `calendar.Calendar_month_year` [dimension] (string): Month and year label, for example Jan 2024.\n- `calendar.Calendar_week` [dimension] (number): ISO week number.\n- `calendar.Calendar_day_of_week` [dimension] (string): Full day-of-week name.\n- `calendar.Calendar_quarter` [dimension] (number): Quarter number from 1 to 4.\n- `calendar.Calendar_past_future` [dimension] (string): Whether the date is in the past or the future.\n- `calendar.Day_Count` [measure] (number): Number of calendar days in the selected period.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    calendar.Day_Count\n}",
+    "metadata": {
+      "chunk_type": "entity_graph_node",
+      "entity_type": "join",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "joined_entity": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb",
+      "measures_count": 1,
+      "dimensions_count": 68
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Comic_key",
+    "text": "FIELD DEFINITION: `Comic_key`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Surrogate key for the comic, derived from the XKCD comic number.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Comic_key",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Calendar_key",
+    "text": "FIELD DEFINITION: `Calendar_key`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: date\nDescription: Publication date used to join the comic to the calendar dimension.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Calendar_key",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Comic_number",
+    "text": "FIELD DEFINITION: `Comic_number`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: XKCD comic number as published by the API.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Comic_number",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Month",
+    "text": "FIELD DEFINITION: `Month`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Month of publication as returned by the XKCD API.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Month",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Year",
+    "text": "FIELD DEFINITION: `Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Year of publication as returned by the XKCD API.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Year",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Day",
+    "text": "FIELD DEFINITION: `Day`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Day of month of publication as returned by the XKCD API.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Day",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Link",
+    "text": "FIELD DEFINITION: `Link`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Optional URL the comic links to.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Link",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__News",
+    "text": "FIELD DEFINITION: `News`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Optional news or announcement text attached to the comic.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "News",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Safe_title",
+    "text": "FIELD DEFINITION: `Safe_title`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: URL-safe title of the comic.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Safe_title",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Title",
+    "text": "FIELD DEFINITION: `Title`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Display title of the comic.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Title",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Transcript",
+    "text": "FIELD DEFINITION: `Transcript`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Transcript text of the comic when available.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Transcript",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Extra_parts",
+    "text": "FIELD DEFINITION: `Extra_parts`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Extra parts required by interactive comics.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Extra_parts",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Publication_date",
+    "text": "FIELD DEFINITION: `Publication_date`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: date\nDescription: Publication date built from year, month, and day.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Publication_date",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Is_valid_date",
+    "text": "FIELD DEFINITION: `Is_valid_date`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: boolean\nDescription: Whether the source year, month, and day form a valid date.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Is_valid_date",
+      "field_category": "dimension",
+      "field_type": "boolean",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Tooltip_text",
+    "text": "FIELD DEFINITION: `Tooltip_text`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Alt text shown when hovering over the comic.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Tooltip_text",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Image_url",
+    "text": "FIELD DEFINITION: `Image_url`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: URL of the comic image.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Image_url",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__News_count",
+    "text": "FIELD DEFINITION: `News_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has news text, otherwise 0.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "News_count",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Link_count",
+    "text": "FIELD DEFINITION: `Link_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has a link, otherwise 0.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Link_count",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Extra_parts_count",
+    "text": "FIELD DEFINITION: `Extra_parts_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has extra parts, otherwise 0.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Extra_parts_count",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Transcript_characters",
+    "text": "FIELD DEFINITION: `Transcript_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the transcript.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Transcript_characters",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Transcript_words",
+    "text": "FIELD DEFINITION: `Transcript_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the transcript.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Transcript_words",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Tooltip_characters",
+    "text": "FIELD DEFINITION: `Tooltip_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the tooltip text.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Tooltip_characters",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Tooltip_words",
+    "text": "FIELD DEFINITION: `Tooltip_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the tooltip text.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Tooltip_words",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Title_characters",
+    "text": "FIELD DEFINITION: `Title_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the title.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Title_characters",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Title_words",
+    "text": "FIELD DEFINITION: `Title_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the title.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Title_words",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Updated_at",
+    "text": "FIELD DEFINITION: `Updated_at`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: timestamptz\nDescription: Timestamp when the comic record was last updated.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Updated_at",
+      "field_category": "dimension",
+      "field_type": "timestamptz",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Comic_Count",
+    "text": "FIELD DEFINITION: `Comic_Count`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Total number of comics in the catalogue.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Comic_Count",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Total_Transcript_Words",
+    "text": "FIELD DEFINITION: `Total_Transcript_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Total number of transcript words across the selected comics.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Total_Transcript_Words",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Average_Transcript_Words",
+    "text": "FIELD DEFINITION: `Average_Transcript_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of transcript words per comic.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Average_Transcript_Words",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Average_Title_Words",
+    "text": "FIELD DEFINITION: `Average_Title_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of words in a comic title.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Average_Title_Words",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Average_Tooltip_Words",
+    "text": "FIELD DEFINITION: `Average_Tooltip_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of words in a comic tooltip.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Average_Tooltip_Words",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Comics_With_News",
+    "text": "FIELD DEFINITION: `Comics_With_News`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Number of comics that include news text.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Comics_With_News",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Comics_With_Links",
+    "text": "FIELD DEFINITION: `Comics_With_Links`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Number of comics that include an outbound link.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Comics_With_Links",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Calendar_Year",
+    "text": "FIELD DEFINITION: `Calendar_Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Calendar year in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Calendar_Year",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Calendar_Month",
+    "text": "FIELD DEFINITION: `Calendar_Month`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Calendar month in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Calendar_Month",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Calendar_Month_Year",
+    "text": "FIELD DEFINITION: `Calendar_Month_Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Month and year in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Calendar_Month_Year",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Calendar_Week",
+    "text": "FIELD DEFINITION: `Calendar_Week`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: ISO week in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Calendar_Week",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Calendar_Day_Of_Week",
+    "text": "FIELD DEFINITION: `Calendar_Day_Of_Week`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Day of the week on which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Calendar_Day_Of_Week",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__Calendar_Quarter",
+    "text": "FIELD DEFINITION: `Calendar_Quarter`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Calendar quarter in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "Calendar_Quarter",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "comics_explore",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar__key_calendar",
+    "text": "FIELD DEFINITION: `calendar._key_calendar`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar._key_calendar",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_calendar_monthly_key",
+    "text": "FIELD DEFINITION: `calendar.calendar_monthly_key`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.calendar_monthly_key",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_year_month",
+    "text": "FIELD DEFINITION: `calendar.year_month`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.year_month",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_day_of_week_abbrv",
+    "text": "FIELD DEFINITION: `calendar.day_of_week_abbrv`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.day_of_week_abbrv",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_day_number_in_month",
+    "text": "FIELD DEFINITION: `calendar.day_number_in_month`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.day_number_in_month",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_day_number_in_week",
+    "text": "FIELD DEFINITION: `calendar.day_number_in_week`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.day_number_in_week",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_week_start",
+    "text": "FIELD DEFINITION: `calendar.week_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.week_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_week_end",
+    "text": "FIELD DEFINITION: `calendar.week_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.week_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_month_number",
+    "text": "FIELD DEFINITION: `calendar.month_number`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.month_number",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_month_abbrv",
+    "text": "FIELD DEFINITION: `calendar.month_abbrv`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.month_abbrv",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_month_start",
+    "text": "FIELD DEFINITION: `calendar.month_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.month_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_month_end",
+    "text": "FIELD DEFINITION: `calendar.month_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.month_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_quarter_start",
+    "text": "FIELD DEFINITION: `calendar.quarter_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.quarter_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_quarter_end",
+    "text": "FIELD DEFINITION: `calendar.quarter_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.quarter_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_year_start",
+    "text": "FIELD DEFINITION: `calendar.year_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.year_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_year_end",
+    "text": "FIELD DEFINITION: `calendar.year_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.year_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_week_date",
+    "text": "FIELD DEFINITION: `calendar.last_week_date`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_week_date",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_week_start",
+    "text": "FIELD DEFINITION: `calendar.last_week_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_week_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_week_end",
+    "text": "FIELD DEFINITION: `calendar.last_week_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_week_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_month_date",
+    "text": "FIELD DEFINITION: `calendar.last_month_date`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_month_date",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_month_start",
+    "text": "FIELD DEFINITION: `calendar.last_month_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_month_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_month_end",
+    "text": "FIELD DEFINITION: `calendar.last_month_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_month_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_quarter_date",
+    "text": "FIELD DEFINITION: `calendar.last_quarter_date`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_quarter_date",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_quarter_start",
+    "text": "FIELD DEFINITION: `calendar.last_quarter_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_quarter_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_quarter_end",
+    "text": "FIELD DEFINITION: `calendar.last_quarter_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_quarter_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_date",
+    "text": "FIELD DEFINITION: `calendar.last_year_date`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_date",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_week_start",
+    "text": "FIELD DEFINITION: `calendar.last_year_week_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_week_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_week_end",
+    "text": "FIELD DEFINITION: `calendar.last_year_week_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_week_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_month_start",
+    "text": "FIELD DEFINITION: `calendar.last_year_month_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_month_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_month_end",
+    "text": "FIELD DEFINITION: `calendar.last_year_month_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_month_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_quarter_start",
+    "text": "FIELD DEFINITION: `calendar.last_year_quarter_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_quarter_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_quarter_end",
+    "text": "FIELD DEFINITION: `calendar.last_year_quarter_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_quarter_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_year_start",
+    "text": "FIELD DEFINITION: `calendar.last_year_year_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_year_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_last_year_year_end",
+    "text": "FIELD DEFINITION: `calendar.last_year_year_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.last_year_year_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_today",
+    "text": "FIELD DEFINITION: `calendar.current_year_today`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_today",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_yesterday",
+    "text": "FIELD DEFINITION: `calendar.current_year_yesterday`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_yesterday",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_week_start",
+    "text": "FIELD DEFINITION: `calendar.current_year_week_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_week_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_week_end",
+    "text": "FIELD DEFINITION: `calendar.current_year_week_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_week_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_month_start",
+    "text": "FIELD DEFINITION: `calendar.current_year_month_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_month_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_month_end",
+    "text": "FIELD DEFINITION: `calendar.current_year_month_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_month_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_quarter_start",
+    "text": "FIELD DEFINITION: `calendar.current_year_quarter_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_quarter_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_quarter_end",
+    "text": "FIELD DEFINITION: `calendar.current_year_quarter_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_quarter_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_year_start",
+    "text": "FIELD DEFINITION: `calendar.current_year_year_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_year_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_year_end",
+    "text": "FIELD DEFINITION: `calendar.current_year_year_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_year_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_last_week_start",
+    "text": "FIELD DEFINITION: `calendar.current_year_last_week_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_last_week_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_last_week_end",
+    "text": "FIELD DEFINITION: `calendar.current_year_last_week_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_last_week_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_last_month_start",
+    "text": "FIELD DEFINITION: `calendar.current_year_last_month_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_last_month_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_last_month_end",
+    "text": "FIELD DEFINITION: `calendar.current_year_last_month_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_last_month_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_last_quarter_start",
+    "text": "FIELD DEFINITION: `calendar.current_year_last_quarter_start`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_last_quarter_start",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_last_quarter_end",
+    "text": "FIELD DEFINITION: `calendar.current_year_last_quarter_end`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_last_quarter_end",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_today_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_today_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_today_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_yesterday_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_yesterday_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_yesterday_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_week_start_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_week_start_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_week_start_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_week_end_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_week_end_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_week_end_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_month_start_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_month_start_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_month_start_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_month_end_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_month_end_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_month_end_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_quarter_start_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_quarter_start_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_quarter_start_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_quarter_end_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_quarter_end_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_quarter_end_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_year_start_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_year_start_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_year_start_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_current_year_year_end_in_last_year",
+    "text": "FIELD DEFINITION: `calendar.current_year_year_end_in_last_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: \nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.current_year_year_end_in_last_year",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_date",
+    "text": "FIELD DEFINITION: `calendar.Calendar_date`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: Calendar date. Same value as the primary key.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_date",
+      "field_category": "dimension",
+      "field_type": "date",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_year",
+    "text": "FIELD DEFINITION: `calendar.Calendar_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: Calendar year number.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_year",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_month",
+    "text": "FIELD DEFINITION: `calendar.Calendar_month`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Full month name.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_month",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_month_year",
+    "text": "FIELD DEFINITION: `calendar.Calendar_month_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Month and year label, for example Jan 2024.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_month_year",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_week",
+    "text": "FIELD DEFINITION: `calendar.Calendar_week`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: ISO week number.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_week",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_day_of_week",
+    "text": "FIELD DEFINITION: `calendar.Calendar_day_of_week`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Full day-of-week name.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_day_of_week",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_quarter",
+    "text": "FIELD DEFINITION: `calendar.Calendar_quarter`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: Quarter number from 1 to 4.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_quarter",
+      "field_category": "dimension",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Calendar_past_future",
+    "text": "FIELD DEFINITION: `calendar.Calendar_past_future`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Whether the date is in the past or the future.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Calendar_past_future",
+      "field_category": "dimension",
+      "field_type": "string",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  },
+  {
+    "id": "field_node__comics_explore__calendar_Day_Count",
+    "text": "FIELD DEFINITION: `calendar.Day_Count`\nExplore: comics_explore | Entity: calendar\nCategory: measure | Data Type: number\nDescription: Number of calendar days in the selected period.\nFile: 3_explores/comics_explore.malloy",
+    "metadata": {
+      "chunk_type": "field_metric_node",
+      "field_name": "calendar.Day_Count",
+      "field_category": "measure",
+      "field_type": "number",
+      "source_name": "comics_explore",
+      "parent_source": "comics_explore",
+      "entity_name": "calendar",
+      "file_name": "3_explores/comics_explore.malloy",
+      "is_published_explore": true,
+      "dialect": "duckdb"
+    }
+  }
+]

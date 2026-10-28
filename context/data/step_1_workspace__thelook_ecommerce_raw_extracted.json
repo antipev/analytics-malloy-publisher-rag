@@ -1,6 +1,7 @@
 {
   "ecommerce_explore": {
     "file": "3_explores/ecommerce_explore.malloy",
+    "doc": "theLook is an online fashion e-commerce retailer. BRIDGE/STAR-SCHEMA: the facts (order_items, events, orders, inventory_items, users) connect only through a shared Stage bridge and common dimensions, never directly to each other. Metric map: revenue / orders / AOV / units -> order_items; web activity / sessions / funnel -> events; COGS / gross margin / markup -> bridge_model; customer counts / demographics -> users; product catalog / branding -> products; logistics -> distribution_centers. Grain rules: for a single-table measure, group by that table's own dimension (order_items.User_Country with order_items.Total_Revenue); when combining measures from different tables (e.g. revenue + margin + conversion), group by the BRIDGE common dimension (bridge_model.User_Country, or top-level User_Country); filter time on the fact's own timestamp (order_items.Created_at); having: filters aggregates, where: filters rows; backtick reserved words.",
     "dialect": "duckdb",
     "primary_key": null,
     "is_published_explore": true,

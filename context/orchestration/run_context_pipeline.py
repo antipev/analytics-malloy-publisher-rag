@@ -137,18 +137,25 @@ def index_chroma(packages: list | None = None, config_path: str = None):
 
     packages = packages if packages is not None else iter_packages(config_path=config_path)
     client = chromadb.PersistentClient(path=CHROMA_DIR)
-    try:
-        client.delete_collection(CHROMA_COLLECTION)
-    except Exception:
-        pass
     collection = client.get_or_create_collection(CHROMA_COLLECTION)
 
     total = 0
+    skipped = []
     for package in packages:
         path = rag_path(package)
         if not os.path.exists(path):
+            skipped.append(package["context_id"])
             print(f"ℹ️ No Stage-2 file for {package['context_id']}: {path}")
             continue
+        # Clear ONLY this context's vectors.  The collection is shared by every
+        # package, so the old blanket delete_collection() also erased contexts this
+        # run did not rebuild (e.g. graphs generated in CI then dropped by a narrow
+        # build-time run).  Per-context delete keeps indexing additive and safe.
+        try:
+            collection.delete(where={"context": package["context_id"]})
+        except Exception as exc:
+            print(f"⚠️ Could not clear stale vectors for '{package['context_id']}': {exc}",
+                  file=sys.stderr)
         with open(path, "r", encoding="utf-8") as f:
             chunks = json.load(f)
         # Ensure unique IDs for ChromaDB upsert
@@ -167,7 +174,10 @@ def index_chroma(packages: list | None = None, config_path: str = None):
         total += len(unique_ids)
         print(f"✅ Indexed {len(unique_ids)} chunks for context '{package['context_id']}'")
 
-    print(f"\nTotal chunks in ChromaDB '{CHROMA_COLLECTION}': {total}")
+    print(f"\nTotal chunks indexed in ChromaDB '{CHROMA_COLLECTION}': {total}")
+    if skipped:
+        print(f"⚠️ Contexts with no Stage-2 graph (not indexed): {', '.join(skipped)}",
+              file=sys.stderr)
     return total
 
 
