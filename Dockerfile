@@ -31,13 +31,34 @@ WORKDIR /app/context
 RUN npm install --omit=dev
 WORKDIR /app
 
-# Run context pipeline to refresh ChromaDB and RAG Intent Graph at build time.
-# The build-time compiler has only DuckDB/BigQuery connections, so this config
-# intentionally contains only packages that compile against those connections.
-# Publisher still serves every package in publisher.config.json.
+# Refresh the RAG artifacts at build time, using the SAME config the server serves.
+# A narrower build-time config (publisher.context.config.json) is precisely what let
+# jaffle_shop/comics ship with no Stage-2 graph, so malloy_getContext relayed them to
+# the raw source stub and lost every money measure.
+#
+# No --fresh: existing graphs are reused and missing ones are built; Chroma is re-indexed
+# per context (delete-where-context + upsert), so this is idempotent and works whether
+# context/chroma_db is present (local build) or absent (Cloud Build, .gcloudignore:20).
+#
+# MOTHERDUCK_TOKEN is required, not optional: Stage 1 compiles every served package and
+# jaffle_shop/comics only compile against MotherDuck.  Pass it as a build arg, never as an
+# ENV, so it is baked into no layer:
+#     docker build --build-arg MOTHERDUCK_TOKEN="$(cat token)" .
+# CI must therefore supply buildArgs through a cloudbuild.yaml (see TASK-08).
+ARG MOTHERDUCK_TOKEN
+
+# 1) Report the coverage of the incoming build context (advisory, --soft = never fails).
+# 2) Rebuild graphs + vectors for every served package.
+# 3) Fail the image if coverage regressed: an image that would answer malloy_getContext
+#    without money measures must not be buildable.
 ENV PYTHONPATH="/app/context:/app/context/shared"
-RUN python3 /app/context/orchestration/run_context_pipeline.py --all --fresh --index-chroma \
-      --config /app/workspace/publisher.context.config.json
+RUN python3 /app/context/orchestration/verify_index_coverage.py --soft \
+      --config /app/workspace/publisher.config.json \
+ && MOTHERDUCK_TOKEN="${MOTHERDUCK_TOKEN}" \
+    python3 /app/context/orchestration/run_context_pipeline.py --all --index-chroma \
+      --config /app/workspace/publisher.config.json \
+ && python3 /app/context/orchestration/verify_index_coverage.py \
+      --config /app/workspace/publisher.config.json
 
 # Ensure entrypoint script is executable
 RUN chmod +x ./context/deploy/entrypoint.sh
