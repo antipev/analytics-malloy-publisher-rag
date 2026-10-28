@@ -7,6 +7,8 @@ node_modules/
 workspace/publisher.db*
 workspace/publisher_data/
 context/.venv/
+context/.venv-index/
+**/.venv-index/
 context/__pycache__/
 **/__pycache__/
 .git/

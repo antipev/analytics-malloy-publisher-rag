@@ -19,6 +19,7 @@ workspace-local/
 node_modules/
 **/node_modules/
 **/.venv/
+**/.venv-index/
 **/__pycache__/
 context/chroma_db/
 .vscode/

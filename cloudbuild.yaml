@@ -11,6 +11,10 @@ steps:
   # build config (the shell inside the step does the expansion).
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
+    # Maps the availableSecrets entry below onto this step's environment. Without
+    # it Cloud Build rejects the build with "secretEnv MOTHERDUCK_TOKEN is defined
+    # without being used" - measured on the first GATE-03 attempt.
+    secretEnv: ['MOTHERDUCK_TOKEN']
     args:
       - '-c'
       - |
