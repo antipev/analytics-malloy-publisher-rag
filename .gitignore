@@ -13,6 +13,9 @@ __pycache__/
 .venv/
 venv/
 env/
+# Interpreter created by scripts/build_context_index.sh when the pipeline deps
+# are not importable (the pipeline imports Stage 3 even for a Stage-1/2 run).
+.venv-index/
 
 # Data folders & local databases
 publisher_data/
