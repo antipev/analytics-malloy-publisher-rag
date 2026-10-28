@@ -1,7 +1,7 @@
 [
   {
     "id": "intent__comics_explore__intent_comics_explore_overview",
-    "text": "BUSINESS INTENT: Comics Explore Core Metrics\nIntent ID: intent_comics_explore_overview\nDescription: Core cross-cutting measures and calculations defined at the root of explore 'comics_explore' (file 3_explores/comics_explore.malloy).\nRequired Explore: comics_explore\nRelevant Joined Entities: calendar\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\n\nKey Measures & Metrics:\n  * `Comic_Count` (number): Total number of comics in the catalogue.\n  * `Total_Transcript_Words` (number): Total number of transcript words across the selected comics.\n  * `Average_Transcript_Words` (number): Average number of transcript words per comic.\n  * `Average_Title_Words` (number): Average number of words in a comic title.\n  * `Average_Tooltip_Words` (number): Average number of words in a comic tooltip.\n  * `Comics_With_News` (number): Number of comics that include news text.\n  * `Comics_With_Links` (number): Number of comics that include an outbound link.\n  * `calendar.Day_Count` (number): Number of calendar days in the selected period.\n\nKey Dimensions:\n  * `Comic_key` (string): Surrogate key for the comic, derived from the XKCD comic number.\n  * `Calendar_key` (date): Publication date used to join the comic to the calendar dimension.\n  * `Comic_number` (string): XKCD comic number as published by the API.\n  * `Link` (string): Optional URL the comic links to.\n  * `News` (string): Optional news or announcement text attached to the comic.\n  * `Safe_title` (string): URL-safe title of the comic.\n  * `Title` (string): Display title of the comic.\n  * `Transcript` (string): Transcript text of the comic when available.\n  * `Extra_parts` (string): Extra parts required by interactive comics.\n  * `Tooltip_text` (string): Alt text shown when hovering over the comic.\n  * `Image_url` (string): URL of the comic image.\n  * `News_count` (number): 1 when the comic has news text, otherwise 0.\n  * `Link_count` (number): 1 when the comic has a link, otherwise 0.\n  * `Extra_parts_count` (number): 1 when the comic has extra parts, otherwise 0.\n  * `Transcript_characters` (number): Number of characters in the transcript.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    Total_Transcript_Words\n    Average_Transcript_Words\n    Average_Title_Words\n    Average_Tooltip_Words\n    Comics_With_News\n    Comics_With_Links\n    calendar.Day_Count\n}",
+    "text": "BUSINESS INTENT: Comics Explore Core Metrics\nIntent ID: intent_comics_explore_overview\nDescription: Core cross-cutting measures and calculations defined at the root of explore 'comics_explore' (file 3_explores/comics_explore.malloy).\nRequired Explore: comics_explore\nRelevant Joined Entities: calendar\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\n\nKey Measures & Metrics:\n  * `Comic_Count` (number): Total number of comics in the catalogue\n  * `Total_Transcript_Words` (number): Total number of transcript words across the selected comics\n  * `Average_Transcript_Words` (number): Average number of transcript words per comic\n  * `Average_Title_Words` (number): Average number of words in a comic title\n  * `Average_Tooltip_Words` (number): Average number of words in a comic tooltip\n  * `Comics_With_News` (number): Number of comics that include news text\n  * `Comics_With_Links` (number): Number of comics that include an outbound link\n  * `calendar.Day_Count` (number): Number of calendar days in the selected period\n\nKey Dimensions:\n  * `Comic_key` (string): Surrogate key for the comic, derived from the XKCD comic number\n  * `Calendar_key` (date): Publication date used to join the comic to the calendar dimension\n  * `Comic_number` (string): XKCD comic number as published by the API\n  * `Link` (string): Optional URL the comic links to\n  * `News` (string): Optional news or announcement text attached to the comic\n  * `Safe_title` (string): URL-safe title of the comic\n  * `Title` (string): Display title of the comic\n  * `Transcript` (string): Transcript text of the comic when available\n  * `Extra_parts` (string): Extra parts required by interactive comics\n  * `Tooltip_text` (string): Alt text shown when hovering over the comic\n  * `Image_url` (string): URL of the comic image\n  * `News_count` (number): 1 when the comic has news text, otherwise 0\n  * `Link_count` (number): 1 when the comic has a link, otherwise 0\n  * `Extra_parts_count` (number): 1 when the comic has extra parts, otherwise 0\n  * `Transcript_characters` (number): Number of characters in the transcript\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    Total_Transcript_Words\n    Average_Transcript_Words\n    Average_Title_Words\n    Average_Tooltip_Words\n    Comics_With_News\n    Comics_With_Links\n    calendar.Day_Count\n}",
     "metadata": {
       "chunk_type": "business_intent",
       "intent_id": "intent_comics_explore_overview",
@@ -60,7 +60,7 @@
   },
   {
     "id": "intent__comics_explore__intent_calendar",
-    "text": "BUSINESS INTENT: Calendar Analysis\nIntent ID: intent_calendar\nDescription: Number of calendar days in the selected period.\nRequired Explore: comics_explore\nRelevant Joined Entities: calendar\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\n\nKey Measures & Metrics:\n  * `Comic_Count` (number): Total number of comics in the catalogue.\n  * `calendar.Day_Count` (number): Number of calendar days in the selected period.\n\nKey Dimensions:\n  * `Comic_key` (string): Surrogate key for the comic, derived from the XKCD comic number.\n  * `Calendar_key` (date): Publication date used to join the comic to the calendar dimension.\n  * `Month` (string): Month of publication as returned by the XKCD API.\n  * `Year` (string): Year of publication as returned by the XKCD API.\n  * `Day` (string): Day of month of publication as returned by the XKCD API.\n  * `Publication_date` (date): Publication date built from year, month, and day.\n  * `Is_valid_date` (boolean): Whether the source year, month, and day form a valid date.\n  * `News_count` (number): 1 when the comic has news text, otherwise 0.\n  * `Link_count` (number): 1 when the comic has a link, otherwise 0.\n  * `Extra_parts_count` (number): 1 when the comic has extra parts, otherwise 0.\n  * `Updated_at` (timestamptz): Timestamp when the comic record was last updated.\n  * `Calendar_Year` (number): Calendar year in which the comic was published.\n  * `Calendar_Month` (string): Calendar month in which the comic was published.\n  * `Calendar_Month_Year` (string): Month and year in which the comic was published.\n  * `Calendar_Week` (number): ISO week in which the comic was published.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    calendar.Day_Count\n}",
+    "text": "BUSINESS INTENT: Calendar Analysis\nIntent ID: intent_calendar\nDescription: Number of calendar days in the selected period.\nRequired Explore: comics_explore\nRelevant Joined Entities: calendar\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\n\nKey Measures & Metrics:\n  * `Comic_Count` (number): Total number of comics in the catalogue\n  * `calendar.Day_Count` (number): Number of calendar days in the selected period\n\nKey Dimensions:\n  * `Comic_key` (string): Surrogate key for the comic, derived from the XKCD comic number\n  * `Calendar_key` (date): Publication date used to join the comic to the calendar dimension\n  * `Month` (string): Month of publication as returned by the XKCD API\n  * `Year` (string): Year of publication as returned by the XKCD API\n  * `Day` (string): Day of month of publication as returned by the XKCD API\n  * `Publication_date` (date): Publication date built from year, month, and day\n  * `Is_valid_date` (boolean): Whether the source year, month, and day form a valid date\n  * `News_count` (number): 1 when the comic has news text, otherwise 0\n  * `Link_count` (number): 1 when the comic has a link, otherwise 0\n  * `Extra_parts_count` (number): 1 when the comic has extra parts, otherwise 0\n  * `Updated_at` (timestamptz): Timestamp when the comic record was last updated\n  * `Calendar_Year` (number): Calendar year in which the comic was published\n  * `Calendar_Month` (string): Calendar month in which the comic was published\n  * `Calendar_Month_Year` (string): Month and year in which the comic was published\n  * `Calendar_Week` (number): ISO week in which the comic was published\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    calendar.Day_Count\n}",
     "metadata": {
       "chunk_type": "business_intent",
       "intent_id": "intent_calendar",
@@ -171,13 +171,13 @@
   },
   {
     "id": "node_root__comics_explore",
-    "text": "GRAPH NODE: Root Explore `comics_explore`\nDescription: XKCD comic catalogue with publication metadata, text metrics, and image links. Publication-ready explore for XKCD comics enriched with calendar attributes. Use Comic_Count and the text measures from comics, and Calendar_* dimensions for time-based analysis.\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\nIs Published Explore: True\nDirect Measures Count: 7 | Direct Dimensions Count: 32\nJoined Entities Available: calendar\n\nFields:\n- `Comic_key` [dimension] (string): Surrogate key for the comic, derived from the XKCD comic number.\n- `Calendar_key` [dimension] (date): Publication date used to join the comic to the calendar dimension.\n- `Comic_number` [dimension] (string): XKCD comic number as published by the API.\n- `Month` [dimension] (string): Month of publication as returned by the XKCD API.\n- `Year` [dimension] (string): Year of publication as returned by the XKCD API.\n- `Day` [dimension] (string): Day of month of publication as returned by the XKCD API.\n- `Link` [dimension] (string): Optional URL the comic links to.\n- `News` [dimension] (string): Optional news or announcement text attached to the comic.\n- `Safe_title` [dimension] (string): URL-safe title of the comic.\n- `Title` [dimension] (string): Display title of the comic.\n- `Transcript` [dimension] (string): Transcript text of the comic when available.\n- `Extra_parts` [dimension] (string): Extra parts required by interactive comics.\n- `Publication_date` [dimension] (date): Publication date built from year, month, and day.\n- `Is_valid_date` [dimension] (boolean): Whether the source year, month, and day form a valid date.\n- `Tooltip_text` [dimension] (string): Alt text shown when hovering over the comic.\n- `Image_url` [dimension] (string): URL of the comic image.\n- `News_count` [dimension] (number): 1 when the comic has news text, otherwise 0.\n- `Link_count` [dimension] (number): 1 when the comic has a link, otherwise 0.\n- `Extra_parts_count` [dimension] (number): 1 when the comic has extra parts, otherwise 0.\n- `Transcript_characters` [dimension] (number): Number of characters in the transcript.\n- `Transcript_words` [dimension] (number): Number of words in the transcript.\n- `Tooltip_characters` [dimension] (number): Number of characters in the tooltip text.\n- `Tooltip_words` [dimension] (number): Number of words in the tooltip text.\n- `Title_characters` [dimension] (number): Number of characters in the title.\n- `Title_words` [dimension] (number): Number of words in the title.\n- `Updated_at` [dimension] (timestamptz): Timestamp when the comic record was last updated.\n- `Comic_Count` [measure] (number): Total number of comics in the catalogue.\n- `Total_Transcript_Words` [measure] (number): Total number of transcript words across the selected comics.\n- `Average_Transcript_Words` [measure] (number): Average number of transcript words per comic.\n- `Average_Title_Words` [measure] (number): Average number of words in a comic title.\n- `Average_Tooltip_Words` [measure] (number): Average number of words in a comic tooltip.\n- `Comics_With_News` [measure] (number): Number of comics that include news text.\n- `Comics_With_Links` [measure] (number): Number of comics that include an outbound link.\n- `Calendar_Year` [dimension] (number): Calendar year in which the comic was published.\n- `Calendar_Month` [dimension] (string): Calendar month in which the comic was published.\n- `Calendar_Month_Year` [dimension] (string): Month and year in which the comic was published.\n- `Calendar_Week` [dimension] (number): ISO week in which the comic was published.\n- `Calendar_Day_Of_Week` [dimension] (string): Day of the week on which the comic was published.\n- `Calendar_Quarter` [dimension] (number): Calendar quarter in which the comic was published.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    Total_Transcript_Words\n    Average_Transcript_Words\n    Average_Title_Words\n    Average_Tooltip_Words\n    Comics_With_News\n    Comics_With_Links\n}",
+    "text": "GRAPH NODE: Root Explore `comics_explore`\nDescription: XKCD comic catalogue with publication metadata, text metrics, and image links Publication-ready explore for XKCD comics enriched with calendar attributes Use Comic_Count and the text measures from comics, and Calendar_* dimensions for time-based analysis\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb | Primary Key: Comic_key\nIs Published Explore: True\nDirect Measures Count: 7 | Direct Dimensions Count: 32\nJoined Entities Available: calendar\n\nFields:\n- `Comic_key` [dimension] (string): Surrogate key for the comic, derived from the XKCD comic number\n- `Calendar_key` [dimension] (date): Publication date used to join the comic to the calendar dimension\n- `Comic_number` [dimension] (string): XKCD comic number as published by the API\n- `Month` [dimension] (string): Month of publication as returned by the XKCD API\n- `Year` [dimension] (string): Year of publication as returned by the XKCD API\n- `Day` [dimension] (string): Day of month of publication as returned by the XKCD API\n- `Link` [dimension] (string): Optional URL the comic links to\n- `News` [dimension] (string): Optional news or announcement text attached to the comic\n- `Safe_title` [dimension] (string): URL-safe title of the comic\n- `Title` [dimension] (string): Display title of the comic\n- `Transcript` [dimension] (string): Transcript text of the comic when available\n- `Extra_parts` [dimension] (string): Extra parts required by interactive comics\n- `Publication_date` [dimension] (date): Publication date built from year, month, and day\n- `Is_valid_date` [dimension] (boolean): Whether the source year, month, and day form a valid date\n- `Tooltip_text` [dimension] (string): Alt text shown when hovering over the comic\n- `Image_url` [dimension] (string): URL of the comic image\n- `News_count` [dimension] (number): 1 when the comic has news text, otherwise 0\n- `Link_count` [dimension] (number): 1 when the comic has a link, otherwise 0\n- `Extra_parts_count` [dimension] (number): 1 when the comic has extra parts, otherwise 0\n- `Transcript_characters` [dimension] (number): Number of characters in the transcript\n- `Transcript_words` [dimension] (number): Number of words in the transcript\n- `Tooltip_characters` [dimension] (number): Number of characters in the tooltip text\n- `Tooltip_words` [dimension] (number): Number of words in the tooltip text\n- `Title_characters` [dimension] (number): Number of characters in the title\n- `Title_words` [dimension] (number): Number of words in the title\n- `Updated_at` [dimension] (timestamptz): Timestamp when the comic record was last updated\n- `Comic_Count` [measure] (number): Total number of comics in the catalogue\n- `Total_Transcript_Words` [measure] (number): Total number of transcript words across the selected comics\n- `Average_Transcript_Words` [measure] (number): Average number of transcript words per comic\n- `Average_Title_Words` [measure] (number): Average number of words in a comic title\n- `Average_Tooltip_Words` [measure] (number): Average number of words in a comic tooltip\n- `Comics_With_News` [measure] (number): Number of comics that include news text\n- `Comics_With_Links` [measure] (number): Number of comics that include an outbound link\n- `Calendar_Year` [dimension] (number): Calendar year in which the comic was published\n- `Calendar_Month` [dimension] (string): Calendar month in which the comic was published\n- `Calendar_Month_Year` [dimension] (string): Month and year in which the comic was published\n- `Calendar_Week` [dimension] (number): ISO week in which the comic was published\n- `Calendar_Day_Of_Week` [dimension] (string): Day of the week on which the comic was published\n- `Calendar_Quarter` [dimension] (number): Calendar quarter in which the comic was published\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    Comic_Count\n    Total_Transcript_Words\n    Average_Transcript_Words\n    Average_Title_Words\n    Average_Tooltip_Words\n    Comics_With_News\n    Comics_With_Links\n}",
     "metadata": {
       "chunk_type": "entity_graph_node",
       "entity_type": "root",
       "source_name": "comics_explore",
       "parent_source": "comics_explore",
-      "source_doc": "XKCD comic catalogue with publication metadata, text metrics, and image links. Publication-ready explore for XKCD comics enriched with calendar attributes. Use Comic_Count and the text measures from comics, and Calendar_* dimensions for time-based analysis.",
+      "source_doc": "XKCD comic catalogue with publication metadata, text metrics, and image links Publication-ready explore for XKCD comics enriched with calendar attributes Use Comic_Count and the text measures from comics, and Calendar_* dimensions for time-based analysis",
       "joined_entity": null,
       "file_name": "3_explores/comics_explore.malloy",
       "is_published_explore": true,
@@ -188,7 +188,7 @@
   },
   {
     "id": "node_join__comics_explore__calendar",
-    "text": "GRAPH NODE: Joined Entity `calendar` in Explore `comics_explore`\nParent Explore: comics_explore\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb\nTotal Fields: 69 (Measures: 1, Dimensions: 68)\n\nJoined Entity Fields:\n- `calendar._key_calendar` [dimension] (date): \n- `calendar.calendar_monthly_key` [dimension] (date): \n- `calendar.year_month` [dimension] (string): \n- `calendar.day_of_week_abbrv` [dimension] (string): \n- `calendar.day_number_in_month` [dimension] (number): \n- `calendar.day_number_in_week` [dimension] (number): \n- `calendar.week_start` [dimension] (date): \n- `calendar.week_end` [dimension] (date): \n- `calendar.month_number` [dimension] (number): \n- `calendar.month_abbrv` [dimension] (string): \n- `calendar.month_start` [dimension] (date): \n- `calendar.month_end` [dimension] (date): \n- `calendar.quarter_start` [dimension] (date): \n- `calendar.quarter_end` [dimension] (date): \n- `calendar.year_start` [dimension] (date): \n- `calendar.year_end` [dimension] (date): \n- `calendar.last_week_date` [dimension] (number): \n- `calendar.last_week_start` [dimension] (date): \n- `calendar.last_week_end` [dimension] (date): \n- `calendar.last_month_date` [dimension] (date): \n- `calendar.last_month_start` [dimension] (date): \n- `calendar.last_month_end` [dimension] (date): \n- `calendar.last_quarter_date` [dimension] (date): \n- `calendar.last_quarter_start` [dimension] (date): \n- `calendar.last_quarter_end` [dimension] (date): \n- `calendar.last_year_date` [dimension] (date): \n- `calendar.last_year_week_start` [dimension] (date): \n- `calendar.last_year_week_end` [dimension] (date): \n- `calendar.last_year_month_start` [dimension] (date): \n- `calendar.last_year_month_end` [dimension] (date): \n- `calendar.last_year_quarter_start` [dimension] (date): \n- `calendar.last_year_quarter_end` [dimension] (date): \n- `calendar.last_year_year_start` [dimension] (date): \n- `calendar.last_year_year_end` [dimension] (date): \n- `calendar.current_year_today` [dimension] (date): \n- `calendar.current_year_yesterday` [dimension] (date): \n- `calendar.current_year_week_start` [dimension] (date): \n- `calendar.current_year_week_end` [dimension] (date): \n- `calendar.current_year_month_start` [dimension] (date): \n- `calendar.current_year_month_end` [dimension] (date): \n- `calendar.current_year_quarter_start` [dimension] (date): \n- `calendar.current_year_quarter_end` [dimension] (date): \n- `calendar.current_year_year_start` [dimension] (date): \n- `calendar.current_year_year_end` [dimension] (date): \n- `calendar.current_year_last_week_start` [dimension] (date): \n- `calendar.current_year_last_week_end` [dimension] (date): \n- `calendar.current_year_last_month_start` [dimension] (date): \n- `calendar.current_year_last_month_end` [dimension] (date): \n- `calendar.current_year_last_quarter_start` [dimension] (date): \n- `calendar.current_year_last_quarter_end` [dimension] (date): \n- `calendar.current_year_today_in_last_year` [dimension] (date): \n- `calendar.current_year_yesterday_in_last_year` [dimension] (date): \n- `calendar.current_year_week_start_in_last_year` [dimension] (date): \n- `calendar.current_year_week_end_in_last_year` [dimension] (date): \n- `calendar.current_year_month_start_in_last_year` [dimension] (date): \n- `calendar.current_year_month_end_in_last_year` [dimension] (date): \n- `calendar.current_year_quarter_start_in_last_year` [dimension] (date): \n- `calendar.current_year_quarter_end_in_last_year` [dimension] (date): \n- `calendar.current_year_year_start_in_last_year` [dimension] (date): \n- `calendar.current_year_year_end_in_last_year` [dimension] (date): \n- `calendar.Calendar_date` [dimension] (date): Calendar date. Same value as the primary key.\n- `calendar.Calendar_year` [dimension] (number): Calendar year number.\n- `calendar.Calendar_month` [dimension] (string): Full month name.\n- `calendar.Calendar_month_year` [dimension] (string): Month and year label, for example Jan 2024.\n- `calendar.Calendar_week` [dimension] (number): ISO week number.\n- `calendar.Calendar_day_of_week` [dimension] (string): Full day-of-week name.\n- `calendar.Calendar_quarter` [dimension] (number): Quarter number from 1 to 4.\n- `calendar.Calendar_past_future` [dimension] (string): Whether the date is in the past or the future.\n- `calendar.Day_Count` [measure] (number): Number of calendar days in the selected period.\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    calendar.Day_Count\n}",
+    "text": "GRAPH NODE: Joined Entity `calendar` in Explore `comics_explore`\nParent Explore: comics_explore\nFile: 3_explores/comics_explore.malloy | Dialect: duckdb\nTotal Fields: 69 (Measures: 1, Dimensions: 68)\n\nJoined Entity Fields:\n- `calendar._key_calendar` [dimension] (date): \n- `calendar.calendar_monthly_key` [dimension] (date): \n- `calendar.year_month` [dimension] (string): \n- `calendar.day_of_week_abbrv` [dimension] (string): \n- `calendar.day_number_in_month` [dimension] (number): \n- `calendar.day_number_in_week` [dimension] (number): \n- `calendar.week_start` [dimension] (date): \n- `calendar.week_end` [dimension] (date): \n- `calendar.month_number` [dimension] (number): \n- `calendar.month_abbrv` [dimension] (string): \n- `calendar.month_start` [dimension] (date): \n- `calendar.month_end` [dimension] (date): \n- `calendar.quarter_start` [dimension] (date): \n- `calendar.quarter_end` [dimension] (date): \n- `calendar.year_start` [dimension] (date): \n- `calendar.year_end` [dimension] (date): \n- `calendar.last_week_date` [dimension] (number): \n- `calendar.last_week_start` [dimension] (date): \n- `calendar.last_week_end` [dimension] (date): \n- `calendar.last_month_date` [dimension] (date): \n- `calendar.last_month_start` [dimension] (date): \n- `calendar.last_month_end` [dimension] (date): \n- `calendar.last_quarter_date` [dimension] (date): \n- `calendar.last_quarter_start` [dimension] (date): \n- `calendar.last_quarter_end` [dimension] (date): \n- `calendar.last_year_date` [dimension] (date): \n- `calendar.last_year_week_start` [dimension] (date): \n- `calendar.last_year_week_end` [dimension] (date): \n- `calendar.last_year_month_start` [dimension] (date): \n- `calendar.last_year_month_end` [dimension] (date): \n- `calendar.last_year_quarter_start` [dimension] (date): \n- `calendar.last_year_quarter_end` [dimension] (date): \n- `calendar.last_year_year_start` [dimension] (date): \n- `calendar.last_year_year_end` [dimension] (date): \n- `calendar.current_year_today` [dimension] (date): \n- `calendar.current_year_yesterday` [dimension] (date): \n- `calendar.current_year_week_start` [dimension] (date): \n- `calendar.current_year_week_end` [dimension] (date): \n- `calendar.current_year_month_start` [dimension] (date): \n- `calendar.current_year_month_end` [dimension] (date): \n- `calendar.current_year_quarter_start` [dimension] (date): \n- `calendar.current_year_quarter_end` [dimension] (date): \n- `calendar.current_year_year_start` [dimension] (date): \n- `calendar.current_year_year_end` [dimension] (date): \n- `calendar.current_year_last_week_start` [dimension] (date): \n- `calendar.current_year_last_week_end` [dimension] (date): \n- `calendar.current_year_last_month_start` [dimension] (date): \n- `calendar.current_year_last_month_end` [dimension] (date): \n- `calendar.current_year_last_quarter_start` [dimension] (date): \n- `calendar.current_year_last_quarter_end` [dimension] (date): \n- `calendar.current_year_today_in_last_year` [dimension] (date): \n- `calendar.current_year_yesterday_in_last_year` [dimension] (date): \n- `calendar.current_year_week_start_in_last_year` [dimension] (date): \n- `calendar.current_year_week_end_in_last_year` [dimension] (date): \n- `calendar.current_year_month_start_in_last_year` [dimension] (date): \n- `calendar.current_year_month_end_in_last_year` [dimension] (date): \n- `calendar.current_year_quarter_start_in_last_year` [dimension] (date): \n- `calendar.current_year_quarter_end_in_last_year` [dimension] (date): \n- `calendar.current_year_year_start_in_last_year` [dimension] (date): \n- `calendar.current_year_year_end_in_last_year` [dimension] (date): \n- `calendar.Calendar_date` [dimension] (date): Calendar date. Same value as the primary key\n- `calendar.Calendar_year` [dimension] (number): Calendar year number\n- `calendar.Calendar_month` [dimension] (string): Full month name\n- `calendar.Calendar_month_year` [dimension] (string): Month and year label, for example Jan 2024\n- `calendar.Calendar_week` [dimension] (number): ISO week number\n- `calendar.Calendar_day_of_week` [dimension] (string): Full day-of-week name\n- `calendar.Calendar_quarter` [dimension] (number): Quarter number from 1 to 4\n- `calendar.Calendar_past_future` [dimension] (string): Whether the date is in the past or the future\n- `calendar.Day_Count` [measure] (number): Number of calendar days in the selected period\n\n# Zero-Shot Executable Malloy Reference Pattern:\nrun: comics_explore -> {\n  group_by: Month\n  aggregate:\n    calendar.Day_Count\n}",
     "metadata": {
       "chunk_type": "entity_graph_node",
       "entity_type": "join",
@@ -204,7 +204,7 @@
   },
   {
     "id": "field_node__comics_explore__Comic_key",
-    "text": "FIELD DEFINITION: `Comic_key`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Surrogate key for the comic, derived from the XKCD comic number.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Comic_key`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Surrogate key for the comic, derived from the XKCD comic number\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Comic_key",
@@ -220,7 +220,7 @@
   },
   {
     "id": "field_node__comics_explore__Calendar_key",
-    "text": "FIELD DEFINITION: `Calendar_key`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: date\nDescription: Publication date used to join the comic to the calendar dimension.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Calendar_key`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: date\nDescription: Publication date used to join the comic to the calendar dimension\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Calendar_key",
@@ -236,7 +236,7 @@
   },
   {
     "id": "field_node__comics_explore__Comic_number",
-    "text": "FIELD DEFINITION: `Comic_number`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: XKCD comic number as published by the API.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Comic_number`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: XKCD comic number as published by the API\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Comic_number",
@@ -252,7 +252,7 @@
   },
   {
     "id": "field_node__comics_explore__Month",
-    "text": "FIELD DEFINITION: `Month`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Month of publication as returned by the XKCD API.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Month`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Month of publication as returned by the XKCD API\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Month",
@@ -268,7 +268,7 @@
   },
   {
     "id": "field_node__comics_explore__Year",
-    "text": "FIELD DEFINITION: `Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Year of publication as returned by the XKCD API.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Year of publication as returned by the XKCD API\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Year",
@@ -284,7 +284,7 @@
   },
   {
     "id": "field_node__comics_explore__Day",
-    "text": "FIELD DEFINITION: `Day`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Day of month of publication as returned by the XKCD API.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Day`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Day of month of publication as returned by the XKCD API\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Day",
@@ -300,7 +300,7 @@
   },
   {
     "id": "field_node__comics_explore__Link",
-    "text": "FIELD DEFINITION: `Link`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Optional URL the comic links to.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Link`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Optional URL the comic links to\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Link",
@@ -316,7 +316,7 @@
   },
   {
     "id": "field_node__comics_explore__News",
-    "text": "FIELD DEFINITION: `News`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Optional news or announcement text attached to the comic.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `News`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Optional news or announcement text attached to the comic\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "News",
@@ -332,7 +332,7 @@
   },
   {
     "id": "field_node__comics_explore__Safe_title",
-    "text": "FIELD DEFINITION: `Safe_title`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: URL-safe title of the comic.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Safe_title`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: URL-safe title of the comic\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Safe_title",
@@ -348,7 +348,7 @@
   },
   {
     "id": "field_node__comics_explore__Title",
-    "text": "FIELD DEFINITION: `Title`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Display title of the comic.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Title`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Display title of the comic\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Title",
@@ -364,7 +364,7 @@
   },
   {
     "id": "field_node__comics_explore__Transcript",
-    "text": "FIELD DEFINITION: `Transcript`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Transcript text of the comic when available.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Transcript`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Transcript text of the comic when available\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Transcript",
@@ -380,7 +380,7 @@
   },
   {
     "id": "field_node__comics_explore__Extra_parts",
-    "text": "FIELD DEFINITION: `Extra_parts`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Extra parts required by interactive comics.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Extra_parts`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Extra parts required by interactive comics\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Extra_parts",
@@ -396,7 +396,7 @@
   },
   {
     "id": "field_node__comics_explore__Publication_date",
-    "text": "FIELD DEFINITION: `Publication_date`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: date\nDescription: Publication date built from year, month, and day.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Publication_date`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: date\nDescription: Publication date built from year, month, and day\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Publication_date",
@@ -412,7 +412,7 @@
   },
   {
     "id": "field_node__comics_explore__Is_valid_date",
-    "text": "FIELD DEFINITION: `Is_valid_date`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: boolean\nDescription: Whether the source year, month, and day form a valid date.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Is_valid_date`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: boolean\nDescription: Whether the source year, month, and day form a valid date\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Is_valid_date",
@@ -428,7 +428,7 @@
   },
   {
     "id": "field_node__comics_explore__Tooltip_text",
-    "text": "FIELD DEFINITION: `Tooltip_text`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Alt text shown when hovering over the comic.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Tooltip_text`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Alt text shown when hovering over the comic\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Tooltip_text",
@@ -444,7 +444,7 @@
   },
   {
     "id": "field_node__comics_explore__Image_url",
-    "text": "FIELD DEFINITION: `Image_url`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: URL of the comic image.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Image_url`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: URL of the comic image\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Image_url",
@@ -460,7 +460,7 @@
   },
   {
     "id": "field_node__comics_explore__News_count",
-    "text": "FIELD DEFINITION: `News_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has news text, otherwise 0.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `News_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has news text, otherwise 0\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "News_count",
@@ -476,7 +476,7 @@
   },
   {
     "id": "field_node__comics_explore__Link_count",
-    "text": "FIELD DEFINITION: `Link_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has a link, otherwise 0.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Link_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has a link, otherwise 0\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Link_count",
@@ -492,7 +492,7 @@
   },
   {
     "id": "field_node__comics_explore__Extra_parts_count",
-    "text": "FIELD DEFINITION: `Extra_parts_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has extra parts, otherwise 0.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Extra_parts_count`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: 1 when the comic has extra parts, otherwise 0\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Extra_parts_count",
@@ -508,7 +508,7 @@
   },
   {
     "id": "field_node__comics_explore__Transcript_characters",
-    "text": "FIELD DEFINITION: `Transcript_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the transcript.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Transcript_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the transcript\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Transcript_characters",
@@ -524,7 +524,7 @@
   },
   {
     "id": "field_node__comics_explore__Transcript_words",
-    "text": "FIELD DEFINITION: `Transcript_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the transcript.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Transcript_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the transcript\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Transcript_words",
@@ -540,7 +540,7 @@
   },
   {
     "id": "field_node__comics_explore__Tooltip_characters",
-    "text": "FIELD DEFINITION: `Tooltip_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the tooltip text.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Tooltip_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the tooltip text\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Tooltip_characters",
@@ -556,7 +556,7 @@
   },
   {
     "id": "field_node__comics_explore__Tooltip_words",
-    "text": "FIELD DEFINITION: `Tooltip_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the tooltip text.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Tooltip_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the tooltip text\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Tooltip_words",
@@ -572,7 +572,7 @@
   },
   {
     "id": "field_node__comics_explore__Title_characters",
-    "text": "FIELD DEFINITION: `Title_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the title.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Title_characters`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of characters in the title\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Title_characters",
@@ -588,7 +588,7 @@
   },
   {
     "id": "field_node__comics_explore__Title_words",
-    "text": "FIELD DEFINITION: `Title_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the title.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Title_words`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Number of words in the title\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Title_words",
@@ -604,7 +604,7 @@
   },
   {
     "id": "field_node__comics_explore__Updated_at",
-    "text": "FIELD DEFINITION: `Updated_at`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: timestamptz\nDescription: Timestamp when the comic record was last updated.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Updated_at`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: timestamptz\nDescription: Timestamp when the comic record was last updated\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Updated_at",
@@ -620,7 +620,7 @@
   },
   {
     "id": "field_node__comics_explore__Comic_Count",
-    "text": "FIELD DEFINITION: `Comic_Count`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Total number of comics in the catalogue.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Comic_Count`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Total number of comics in the catalogue\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Comic_Count",
@@ -636,7 +636,7 @@
   },
   {
     "id": "field_node__comics_explore__Total_Transcript_Words",
-    "text": "FIELD DEFINITION: `Total_Transcript_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Total number of transcript words across the selected comics.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Total_Transcript_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Total number of transcript words across the selected comics\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Total_Transcript_Words",
@@ -652,7 +652,7 @@
   },
   {
     "id": "field_node__comics_explore__Average_Transcript_Words",
-    "text": "FIELD DEFINITION: `Average_Transcript_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of transcript words per comic.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Average_Transcript_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of transcript words per comic\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Average_Transcript_Words",
@@ -668,7 +668,7 @@
   },
   {
     "id": "field_node__comics_explore__Average_Title_Words",
-    "text": "FIELD DEFINITION: `Average_Title_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of words in a comic title.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Average_Title_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of words in a comic title\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Average_Title_Words",
@@ -684,7 +684,7 @@
   },
   {
     "id": "field_node__comics_explore__Average_Tooltip_Words",
-    "text": "FIELD DEFINITION: `Average_Tooltip_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of words in a comic tooltip.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Average_Tooltip_Words`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Average number of words in a comic tooltip\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Average_Tooltip_Words",
@@ -700,7 +700,7 @@
   },
   {
     "id": "field_node__comics_explore__Comics_With_News",
-    "text": "FIELD DEFINITION: `Comics_With_News`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Number of comics that include news text.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Comics_With_News`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Number of comics that include news text\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Comics_With_News",
@@ -716,7 +716,7 @@
   },
   {
     "id": "field_node__comics_explore__Comics_With_Links",
-    "text": "FIELD DEFINITION: `Comics_With_Links`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Number of comics that include an outbound link.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Comics_With_Links`\nExplore: comics_explore | Entity: comics_explore\nCategory: measure | Data Type: number\nDescription: Number of comics that include an outbound link\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Comics_With_Links",
@@ -732,7 +732,7 @@
   },
   {
     "id": "field_node__comics_explore__Calendar_Year",
-    "text": "FIELD DEFINITION: `Calendar_Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Calendar year in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Calendar_Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Calendar year in which the comic was published\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Calendar_Year",
@@ -748,7 +748,7 @@
   },
   {
     "id": "field_node__comics_explore__Calendar_Month",
-    "text": "FIELD DEFINITION: `Calendar_Month`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Calendar month in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Calendar_Month`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Calendar month in which the comic was published\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Calendar_Month",
@@ -764,7 +764,7 @@
   },
   {
     "id": "field_node__comics_explore__Calendar_Month_Year",
-    "text": "FIELD DEFINITION: `Calendar_Month_Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Month and year in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Calendar_Month_Year`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Month and year in which the comic was published\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Calendar_Month_Year",
@@ -780,7 +780,7 @@
   },
   {
     "id": "field_node__comics_explore__Calendar_Week",
-    "text": "FIELD DEFINITION: `Calendar_Week`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: ISO week in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Calendar_Week`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: ISO week in which the comic was published\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Calendar_Week",
@@ -796,7 +796,7 @@
   },
   {
     "id": "field_node__comics_explore__Calendar_Day_Of_Week",
-    "text": "FIELD DEFINITION: `Calendar_Day_Of_Week`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Day of the week on which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Calendar_Day_Of_Week`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: string\nDescription: Day of the week on which the comic was published\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Calendar_Day_Of_Week",
@@ -812,7 +812,7 @@
   },
   {
     "id": "field_node__comics_explore__Calendar_Quarter",
-    "text": "FIELD DEFINITION: `Calendar_Quarter`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Calendar quarter in which the comic was published.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `Calendar_Quarter`\nExplore: comics_explore | Entity: comics_explore\nCategory: dimension | Data Type: number\nDescription: Calendar quarter in which the comic was published\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "Calendar_Quarter",
@@ -1788,7 +1788,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_date",
-    "text": "FIELD DEFINITION: `calendar.Calendar_date`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: Calendar date. Same value as the primary key.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_date`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: date\nDescription: Calendar date. Same value as the primary key\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_date",
@@ -1804,7 +1804,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_year",
-    "text": "FIELD DEFINITION: `calendar.Calendar_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: Calendar year number.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: Calendar year number\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_year",
@@ -1820,7 +1820,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_month",
-    "text": "FIELD DEFINITION: `calendar.Calendar_month`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Full month name.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_month`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Full month name\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_month",
@@ -1836,7 +1836,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_month_year",
-    "text": "FIELD DEFINITION: `calendar.Calendar_month_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Month and year label, for example Jan 2024.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_month_year`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Month and year label, for example Jan 2024\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_month_year",
@@ -1852,7 +1852,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_week",
-    "text": "FIELD DEFINITION: `calendar.Calendar_week`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: ISO week number.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_week`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: ISO week number\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_week",
@@ -1868,7 +1868,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_day_of_week",
-    "text": "FIELD DEFINITION: `calendar.Calendar_day_of_week`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Full day-of-week name.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_day_of_week`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Full day-of-week name\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_day_of_week",
@@ -1884,7 +1884,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_quarter",
-    "text": "FIELD DEFINITION: `calendar.Calendar_quarter`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: Quarter number from 1 to 4.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_quarter`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: number\nDescription: Quarter number from 1 to 4\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_quarter",
@@ -1900,7 +1900,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Calendar_past_future",
-    "text": "FIELD DEFINITION: `calendar.Calendar_past_future`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Whether the date is in the past or the future.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Calendar_past_future`\nExplore: comics_explore | Entity: calendar\nCategory: dimension | Data Type: string\nDescription: Whether the date is in the past or the future\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Calendar_past_future",
@@ -1916,7 +1916,7 @@
   },
   {
     "id": "field_node__comics_explore__calendar_Day_Count",
-    "text": "FIELD DEFINITION: `calendar.Day_Count`\nExplore: comics_explore | Entity: calendar\nCategory: measure | Data Type: number\nDescription: Number of calendar days in the selected period.\nFile: 3_explores/comics_explore.malloy",
+    "text": "FIELD DEFINITION: `calendar.Day_Count`\nExplore: comics_explore | Entity: calendar\nCategory: measure | Data Type: number\nDescription: Number of calendar days in the selected period\nFile: 3_explores/comics_explore.malloy",
     "metadata": {
       "chunk_type": "field_metric_node",
       "field_name": "calendar.Day_Count",

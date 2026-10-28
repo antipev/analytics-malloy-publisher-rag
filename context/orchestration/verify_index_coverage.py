@@ -54,6 +54,31 @@ def _norm(name) -> str:
     return re.sub(r"[^a-z0-9]", "", str(name or "").lower())
 
 
+def _leaf_norm(name) -> str:
+    """Normalized final segment: `cafe_orders.Total_Revenue` -> `totalrevenue`."""
+    return _norm(str(name or "").split(".")[-1])
+
+
+def resolve_required(wanted: str, measures: dict):
+    """The graph's own name for a required measure, or None.
+
+    Stage 2 writes a qualified name whenever the measure is reached through a
+    joined source - the unified-star bridge explore does exactly that, so the
+    graph carries `cafe_orders.Total_Revenue` while a caller naturally asks for
+    `Total_Revenue`. Matching only the full string reported the measure as
+    missing while the graph held it, which is a false alarm in the one check
+    that must never cry wolf. So a requirement matches either the whole field
+    or its final segment, and the caller is told which name actually matched.
+    """
+    key = _norm(wanted)
+    if key in measures:
+        return measures[key]
+    for name in measures.values():
+        if _leaf_norm(name) == key:
+            return name
+    return None
+
+
 def collect_measures(chunks: list) -> dict:
     """Every measure/metric name a Stage-2 graph exposes, keyed by normalized form.
 
@@ -87,7 +112,13 @@ def check_package(package: dict, required: dict) -> dict:
     measures = collect_measures(chunks) if isinstance(chunks, list) else {}
     wanted = list(required.get(package["package_name"], [])) + list(
         required.get(package["context_id"], []))
-    missing_measures = [w for w in wanted if _norm(w) not in measures]
+    matched, missing_measures = {}, []
+    for w in wanted:
+        actual = resolve_required(w, measures)
+        if actual is None:
+            missing_measures.append(w)
+        else:
+            matched[w] = actual
 
     problems = []
     if not present:
@@ -112,6 +143,7 @@ def check_package(package: dict, required: dict) -> dict:
         "chunks": len(chunks) if isinstance(chunks, list) else 0,
         "measures": len(measures),
         "required": wanted,
+        "matched_measures": matched,
         "missing_measures": missing_measures,
         "problems": problems,
         "warnings": warnings,
@@ -161,7 +193,11 @@ def main() -> int:
     for r in results:
         if r["ok"]:
             if not args.quiet:
-                print(f"✅ {r['context_id']:<38} {r['chunks']:>5} chunks  {r['measures']:>4} measures")
+                qualified = [f"{w} -> {a}" for w, a in r["matched_measures"].items()
+                             if _norm(w) != _norm(a)]
+                note = f"   ({', '.join(qualified)})" if qualified else ""
+                print(f"✅ {r['context_id']:<38} {r['chunks']:>5} chunks  "
+                      f"{r['measures']:>4} measures{note}")
         else:
             print(f"❌ {r['context_id']:<38} -> {'; '.join(r['problems'])}", file=sys.stderr)
         for warning in r["warnings"]:
