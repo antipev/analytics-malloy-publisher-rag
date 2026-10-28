@@ -761,13 +761,22 @@ async def lifespan(app: FastAPI):
     app.state.http_client = httpx.AsyncClient(timeout=300)
     # Preload in-memory routers
     count = 0
+    missing = []
     for pkg in iter_packages():
         router, _ = load_context(pkg["env_name"], pkg["package_name"])
         if router is not None:
             count += 1
+        else:
+            missing.append(pkg["context_id"])
     # Warm up ChromaDB singleton
     ChromaRetriever.get_collection()
     print(f"🚀 [Stage 3 Server] Ready on 0.0.0.0:{PORT} | Preloaded {count} contexts | Upstream: {UPSTREAM}")
+    if missing:
+        print(f"⚠️ [Stage 3 Server] No RAG intent graph for: {', '.join(missing)}. "
+              f"malloy_getContext will relay those packages to the Node Publisher "
+              f"(raw source stub, no money measures). Repair with: "
+              f"python3 context/orchestration/run_context_pipeline.py --context <id> --index-chroma",
+              file=sys.stderr)
     yield
     await app.state.http_client.aclose()
 
@@ -831,10 +840,54 @@ async def _relay_to_upstream(raw_body: bytes, request: Request) -> Response:
         return Response(content=json.dumps(err_payload), status_code=502, media_type="application/json")
 
 
+_COVERAGE_TTL_SECONDS = float(os.environ.get("COVERAGE_CACHE_TTL", "30"))
+_coverage_cache = {"ts": 0.0, "data": {}}
+
+
+def context_coverage() -> dict:
+    """Which served packages actually have a Stage-2 RAG graph (cached ~30s).
+
+    `contexts_preloaded` only counted contexts that had already been requested;
+    this compares publisher.config.json (what we serve) against the Stage-2 files
+    on disk (what we can actually answer from).  A non-empty `missing` list means
+    those packages get the raw upstream stub from malloy_getContext.
+    """
+    now = time.time()
+    cached = _coverage_cache["data"]
+    if cached and now - _coverage_cache["ts"] < _COVERAGE_TTL_SECONDS:
+        return cached
+    indexed, missing = [], []
+    for pkg in iter_packages():
+        (indexed if os.path.exists(rag_path(pkg)) else missing).append(pkg["context_id"])
+    data = {
+        "contexts_expected": len(indexed) + len(missing),
+        "contexts_indexed": len(indexed),
+        "indexed": indexed,
+        "missing": missing,
+    }
+    _coverage_cache.update(ts=now, data=data)
+    return data
+
+
+@app.get("/context/healthz")
 @app.get("/healthz")
 async def health_check():
-    """Liveness & readiness probe for Google Cloud Run."""
-    return {"status": "ok", "contexts_preloaded": len(_ctx_cache), "upstream": UPSTREAM}
+    """Liveness/readiness + RAG coverage probe.
+
+    `/context/healthz` is the path to monitor and to point Cloud Run probes at:
+    the bare `/healthz` is intercepted by Google Frontend before the request ever
+    reaches this container (404 with Google's own error page, while `/healthz/`
+    and `/healthz2` both reach the app).  `/healthz` is kept as a back-compatible
+    alias for local runs, `docker run` and 127.0.0.1 probes, where nothing
+    intercepts it.  Both routes are declared above the catch-all proxy so they
+    keep winning over it.
+    """
+    return {
+        "status": "ok",
+        "upstream": UPSTREAM,
+        "contexts_preloaded": len(_ctx_cache),
+        **context_coverage(),
+    }
 
 
 @app.get("/mcp")
@@ -914,6 +967,13 @@ async def mcp_endpoint(request: Request):
     # Case 3: Package specified (or defaulted due to query) -> Fetch enriched 3-Section context + results
     router, domain = load_context(env, pkg)
     if router is None:
+        # No Stage-2 graph for this package, so the upstream Node Publisher answers
+        # with a raw source-level stub (fields only, no 3-section context, no joined
+        # money measures).  Never let that happen silently: it is exactly how
+        # jaffle_shop/comics lost their metrics while every build stayed green.
+        print(f"⚠️ [getContext] no RAG intent graph for {env}/{pkg} "
+              f"({os.path.basename(rag_path({'context_id': context_id_for(env, pkg)}))}); "
+              f"relaying to upstream Node Publisher", file=sys.stderr)
         return await _relay_to_upstream(raw, request)
 
     context_data = get_publisher_context(env, pkg, question)
