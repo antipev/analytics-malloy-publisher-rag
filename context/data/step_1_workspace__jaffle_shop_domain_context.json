@@ -1,56 +1,37 @@
 {
   "context_source": "auto-derived (editable)",
-  "published_file": "3_explores/cafe_explore.malloy",
-  "package_description": "Malloy semantic layer for explore 'cafe_explore'",
+  "published_file": "3_explores/cafe_bridge_explore.malloy",
+  "package_description": "Malloy semantic layer for explore 'cafe_bridge_explore'",
   "preferred_group_by": [
-    "Subtotal_cents",
-    "Order_total_cents",
-    "Subtotal",
-    "Order_total",
-    "Order_cost",
-    "Order_items_subtotal",
-    "Count_food_items",
-    "Count_drink_items",
-    "Count_order_items",
-    "Is_food_order",
-    "Is_drink_order",
-    "Customer_Type",
-    "Location_Tax_Rate"
+    "Stage"
   ],
-  "fallback_explore": "cafe_explore",
+  "fallback_explore": "cafe_bridge_explore",
   "intents": [
     {
-      "intent_id": "intent_cafe_explore_overview",
-      "intent_name": "Cafe Explore Core Metrics",
-      "description": "Core cross-cutting measures and calculations defined at the root of explore 'cafe_explore' (file 3_explores/cafe_explore.malloy).",
+      "intent_id": "intent_cafe_bridge_explore_overview",
+      "intent_name": "Cafe Bridge Explore Core Metrics",
+      "description": "Core cross-cutting measures and calculations defined at the root of explore 'cafe_bridge_explore' (file 3_explores/cafe_bridge_explore.malloy).",
       "entity_filters": [
         "cafe_customers",
         "cafe_locations",
-        "cafe_order_items"
+        "cafe_orders",
+        "cafe_order_items",
+        "cafe_products",
+        "cafe_supplies"
       ],
       "metric_patterns": [
-        "cost",
+        "bridge",
         "count",
-        "drink",
-        "food",
-        "gross",
-        "items",
-        "margin",
-        "order",
-        "paid",
-        "revenue",
-        "subtotal",
-        "tax",
-        "value"
+        "row"
       ]
     },
     {
       "intent_id": "intent_cafe_customers",
       "intent_name": "Cafe Customers Analysis",
-      "description": "Total number of customers.",
+      "description": "Total number of customers",
       "entity_filters": [
         "cafe_customers",
-        "cafe_explore"
+        "cafe_bridge_explore"
       ],
       "metric_patterns": [
         "cafe",
@@ -78,10 +59,10 @@
     {
       "intent_id": "intent_cafe_locations",
       "intent_name": "Cafe Locations Analysis",
-      "description": "Total number of store locations.",
+      "description": "Total number of store locations",
       "entity_filters": [
         "cafe_locations",
-        "cafe_explore"
+        "cafe_bridge_explore"
       ],
       "metric_patterns": [
         "cafe",
@@ -98,12 +79,65 @@
       ]
     },
     {
+      "intent_id": "intent_cafe_orders",
+      "intent_name": "Cafe Orders Analysis",
+      "description": "Total number of orders",
+      "entity_filters": [
+        "cafe_orders",
+        "cafe_bridge_explore"
+      ],
+      "metric_patterns": [
+        "cafe",
+        "cents",
+        "cost",
+        "count",
+        "customer",
+        "customers",
+        "date",
+        "description",
+        "drink",
+        "earliest",
+        "first",
+        "food",
+        "gross",
+        "item",
+        "items",
+        "key",
+        "last",
+        "lifetime",
+        "location",
+        "locations",
+        "margin",
+        "menu",
+        "name",
+        "new",
+        "opened",
+        "order",
+        "orders",
+        "paid",
+        "pretax",
+        "price",
+        "product",
+        "products",
+        "range",
+        "rate",
+        "returning",
+        "revenue",
+        "spend",
+        "subtotal",
+        "supply",
+        "tax",
+        "type",
+        "value"
+      ]
+    },
+    {
       "intent_id": "intent_cafe_order_items",
       "intent_name": "Cafe Order Items Analysis",
-      "description": "Total number of order items.",
+      "description": "Total number of order items",
       "entity_filters": [
         "cafe_order_items",
-        "cafe_explore"
+        "cafe_bridge_explore"
       ],
       "metric_patterns": [
         "cafe",
@@ -132,6 +166,54 @@
         "supply",
         "type"
       ]
+    },
+    {
+      "intent_id": "intent_cafe_products",
+      "intent_name": "Cafe Products Analysis",
+      "description": "Total number of products",
+      "entity_filters": [
+        "cafe_products",
+        "cafe_bridge_explore"
+      ],
+      "metric_patterns": [
+        "cafe",
+        "count",
+        "description",
+        "drink",
+        "food",
+        "item",
+        "key",
+        "menu",
+        "name",
+        "price",
+        "product",
+        "products",
+        "range",
+        "type"
+      ]
+    },
+    {
+      "intent_id": "intent_cafe_supplies",
+      "intent_name": "Cafe Supplies Analysis",
+      "description": "Total number of supply records",
+      "entity_filters": [
+        "cafe_supplies",
+        "cafe_bridge_explore"
+      ],
+      "metric_patterns": [
+        "cafe",
+        "cost",
+        "count",
+        "key",
+        "name",
+        "perishable",
+        "product",
+        "products",
+        "rate",
+        "supplies",
+        "supply",
+        "uuid"
+      ]
     }
   ],
   "keyword_mappings": {
@@ -144,43 +226,56 @@
     "locations": "intent_cafe_locations",
     "cafe location": "intent_cafe_locations",
     "location": "intent_cafe_locations",
+    "cafe orders": "intent_cafe_orders",
+    "orders": "intent_cafe_orders",
+    "cafe order": "intent_cafe_orders",
+    "order": "intent_cafe_orders",
     "cafe order items": "intent_cafe_order_items",
-    "order": "intent_cafe_order_items",
     "items": "intent_cafe_order_items",
     "cafe order item": "intent_cafe_order_items",
     "item": "intent_cafe_order_items",
-    "count": "intent_cafe_explore_overview",
-    "revenue": "intent_cafe_explore_overview",
-    "subtotal": "intent_cafe_explore_overview",
-    "tax": "intent_cafe_explore_overview",
-    "paid": "intent_cafe_explore_overview",
-    "value": "intent_cafe_explore_overview",
-    "cost": "intent_cafe_explore_overview",
-    "gross": "intent_cafe_explore_overview",
-    "margin": "intent_cafe_explore_overview",
-    "food": "intent_cafe_explore_overview",
-    "drink": "intent_cafe_explore_overview",
+    "cafe products": "intent_cafe_products",
+    "products": "intent_cafe_products",
+    "cafe product": "intent_cafe_products",
+    "product": "intent_cafe_products",
+    "cafe supplies": "intent_cafe_supplies",
+    "supplies": "intent_cafe_supplies",
+    "cafe supplie": "intent_cafe_supplies",
+    "supplie": "intent_cafe_supplies",
+    "bridge": "intent_cafe_bridge_explore_overview",
+    "row": "intent_cafe_bridge_explore_overview",
+    "count": "intent_cafe_bridge_explore_overview",
     "lifetime": "intent_cafe_customers",
     "spend": "intent_cafe_customers",
-    "orders": "intent_cafe_customers",
     "returning": "intent_cafe_customers",
     "new": "intent_cafe_customers",
     "rate": "intent_cafe_customers",
-    "key": "intent_cafe_customers",
     "name": "intent_cafe_customers",
     "first": "intent_cafe_customers",
     "date": "intent_cafe_customers",
     "last": "intent_cafe_customers",
     "pretax": "intent_cafe_customers",
+    "tax": "intent_cafe_customers",
+    "paid": "intent_cafe_customers",
     "type": "intent_cafe_customers",
+    "key": "intent_cafe_customers",
     "earliest": "intent_cafe_locations",
     "opened": "intent_cafe_locations",
-    "supply": "intent_cafe_order_items",
-    "price": "intent_cafe_order_items",
-    "products": "intent_cafe_order_items",
-    "product": "intent_cafe_order_items",
-    "menu": "intent_cafe_order_items",
-    "range": "intent_cafe_order_items",
-    "description": "intent_cafe_order_items"
+    "revenue": "intent_cafe_orders",
+    "subtotal": "intent_cafe_orders",
+    "value": "intent_cafe_orders",
+    "cost": "intent_cafe_orders",
+    "gross": "intent_cafe_orders",
+    "margin": "intent_cafe_orders",
+    "food": "intent_cafe_orders",
+    "drink": "intent_cafe_orders",
+    "supply": "intent_cafe_orders",
+    "price": "intent_cafe_orders",
+    "menu": "intent_cafe_orders",
+    "range": "intent_cafe_orders",
+    "cents": "intent_cafe_orders",
+    "description": "intent_cafe_orders",
+    "perishable": "intent_cafe_supplies",
+    "uuid": "intent_cafe_supplies"
   }
 }

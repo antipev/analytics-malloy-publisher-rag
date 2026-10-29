@@ -295,6 +295,36 @@ def extract_context(package: dict, fresh: bool = False):
     d_path = domain_path(package)
     existing = load_json(d_path)
     if existing is not None and not fresh:
+        # The domain context is derived once and then curated, so it is the one
+        # artifact that can silently outlive the package it describes.  GATE-04
+        # caught exactly that: after the canonical package renamed its explore,
+        # the stored file still named `cafe_explore`, so the discovery tier of
+        # malloy_getContext advertised an explore that no longer exists and any
+        # client that followed it got "Resource not found".  Compare the stored
+        # names against the explore this run just compiled and refuse to ship a
+        # stale description.
+        published = {name: (meta or {}).get("file", "")
+                     for name, meta in extracted_data.items()
+                     if (meta or {}).get("is_published_explore")}
+        stale = []
+        if published:
+            fallback = existing.get("fallback_explore")
+            if fallback not in published:
+                stale.append(f"fallback_explore={fallback!r} (package has "
+                             f"{sorted(published)})")
+            published_file = existing.get("published_file")
+            if published_file not in set(published.values()):
+                stale.append(f"published_file={published_file!r} (package has "
+                             f"{sorted(set(published.values()))})")
+        if stale:
+            print(f"❌ Stale domain context '{d_path}': "
+                  f"{'; '.join(stale)}.\n"
+                  f"   The package's published explore changed since this file was "
+                  f"derived. Regenerate it and commit the result:\n"
+                  f"   python3 context/orchestration/run_context_pipeline.py "
+                  f"--context {package['context_id']} --fresh",
+                  file=sys.stderr)
+            sys.exit(1)
         print(f"ℹ️ Domain context already present; keeping curated '{d_path}' "
               f"(delete the file or pass --fresh to auto-regenerate).")
     else:

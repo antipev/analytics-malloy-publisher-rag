@@ -311,6 +311,26 @@ assertion), and then again inside the image (`Dockerfile`), because `.gcloudigno
 excludes `context/chroma_db`. Both end with `verify_index_coverage.py`, which fails the
 deploy/image on an empty or measure-less context.
 
+**The domain context is the one artifact that can go stale, and it fails the build now.**
+`context/data/step_1_<ctx>_domain_context.json` is derived once and then curated, so
+`run_context_pipeline.py` keeps it unless you pass `--fresh`. When the canonical package
+renames its explore, the file keeps naming the old one, and two things follow: the discovery
+tier of `malloy_getContext` advertises an explore that no longer exists (a client that then
+calls `malloy_executeQuery` with that path gets `Resource not found`), and the intent chunks
+carry the old name in their prose. Stage 1 now compares the stored `fallback_explore` /
+`published_file` against the explore it just compiled and stops with the exact command to run:
+
+```
+❌ Stale domain context '.../step_1_workspace__jaffle_shop_domain_context.json':
+   fallback_explore='cafe_explore' (package has ['cafe_bridge_explore']); ...
+   python3 context/orchestration/run_context_pipeline.py \
+     --context workspace__jaffle_shop --fresh
+```
+
+Regenerate, commit the JSON together with the refreshed `step_2_*_rag_intent_graph.json`, and
+redeploy. The rename in `GATE-04` (`cafe_explore` → `cafe_bridge_explore`) was propagated that
+way; the other two packages were already current.
+
 **Token rotation.** One secret, one rotation, both consumers:
 ```bash
 # 1. put the new token in Secret Manager (new version, old one stays readable)
