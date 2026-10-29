@@ -238,7 +238,7 @@ The current architecture merges both into a **single, cost-effective container**
      --cpu-boost \
      --timeout 600 \
      --port 5050 \
-     --startup-probe httpGet.path=/context/healthz,httpGet.port=5050,periodSeconds=5,timeoutSeconds=2,successThreshold=1,failureThreshold=24 \
+     --startup-probe httpGet.path=/context/healthz,httpGet.port=5050,periodSeconds=5,timeoutSeconds=2,failureThreshold=24 \
      --set-secrets=MOTHERDUCK_TOKEN=motherduck-token:latest
    ```
 
@@ -299,6 +299,11 @@ is still proxied to the Node publisher's actuator and says nothing about context
 the Node publisher plus the context preload). Cloud Run only routes traffic to an instance
 once the probe passes, so a revision whose Stage 3 cannot load its index stays off traffic
 instead of 500-ing at the edge.
+
+The startup probe accepts `httpGet.*`, `initialDelaySeconds`, `periodSeconds`,
+`timeoutSeconds` and `failureThreshold` — **not** `successThreshold`: gcloud rejects the whole
+flag with `Key [successThreshold] not recognized for startup probe` and the deploy never
+runs. Successes are counted once, by definition, so there is nothing to configure.
 
 **Who builds the index.** CI does, in `analytics-engineering`:
 `scripts/build_context_index.sh` (token preflight → `npm ci` → pipeline → coverage
