@@ -205,14 +205,24 @@ The current architecture merges both into a **single, cost-effective container**
 2. **Build and push container image to Google Container Registry:**
    ```bash
    ./scripts/sync_semantic_layer.sh
-   gcloud builds submit --tag gcr.io/my-1-st-project-training/malloy-publisher-mcp .
+   MOTHERDUCK_TOKEN=$(gcloud secrets versions access latest --secret=motherduck-token) \
+     gcloud builds submit --config cloudbuild.yaml \
+       --substitutions=_IMAGE=gcr.io/my-1-st-project-training/malloy-publisher-mcp .
    ```
 
    > `scripts/sync_semantic_layer.sh` copies `semantic_layer/workspace/*` into
-   > `workspace/semantic_layer/` before the build. The Docker build runs the RAG/context
-   > pipeline with `workspace/publisher.context.config.json`, which lists only the
-   > packages the build-time DuckDB/BigQuery compiler can validate. Publisher
-   > itself still loads every package in `workspace/publisher.config.json`.
+   > `workspace/semantic_layer/` before the build — that directory is generated and
+   > gitignored, so a checkout alone does not contain the `jaffle_shop`/`comics` packages.
+   >
+   > There is only **one** config now, `workspace/publisher.config.json`, for both the
+   > build and the server. The build recompiles and re-indexes every package in it, so
+   > `MOTHERDUCK_TOKEN` is a **required build input** (`--build-arg`), never an `ENV`:
+   > `cloudbuild.yaml` mounts it from Secret Manager with `secretEnv`. An image that
+   > would answer `malloy_getContext` without money measures fails its own build.
+   >
+   > In CI none of this is manual: `.github/workflows/deploy-publisher.yml` (in
+   > `analytics-engineering`) resolves the token, runs `scripts/build_context_index.sh`,
+   > then builds through the same `cloudbuild.yaml`.
 
 3. **Deploy Unified Service to Cloud Run:**
    ```bash
@@ -228,6 +238,7 @@ The current architecture merges both into a **single, cost-effective container**
      --cpu-boost \
      --timeout 600 \
      --port 5050 \
+     --startup-probe httpGet.path=/context/healthz,httpGet.port=5050,periodSeconds=5,timeoutSeconds=2,successThreshold=1,failureThreshold=24 \
      --set-secrets=MOTHERDUCK_TOKEN=motherduck-token:latest
    ```
 
@@ -252,12 +263,82 @@ The current architecture merges both into a **single, cost-effective container**
 4. **Verify Deployment:**
    * **Web UI for Humans:** Open `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/` in your browser.
    * **AI MCP for LLMs:** Query `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/mcp` via curl or Antigravity (agy).
+   * **Context coverage:** `curl -s https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/context/healthz`
+     must report `contexts_expected == contexts_indexed` and `"missing": []` (see the
+     health section below).
    * **Logs:**
      ```bash
      gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=malloy-publisher-mcp" \
        --limit 20 \
        --format="table(timestamp, textPayload)"
      ```
+
+---
+
+### Context health, probes and token rotation
+
+Everything in this section exists because of one incident: `jaffle_shop` and `comics`
+were served with **no RAG context at all** for weeks, and every existing health signal
+(`/api/v0/status`, `loadErrors`, the deploy smoke test) was green the whole time. The
+Publisher can serve a package whose graph is missing; `malloy_getContext` then silently
+falls back to the raw source stub — fields only, no money measures.
+
+**Health endpoint: `/context/healthz`, not `/healthz`.** The Stage 3 app registers both,
+but Google Frontend answers `/healthz` itself with a 404 before the request ever reaches
+the container (`/healthz/` and `/healthz2` do reach it, which is how the rule was
+identified). Any probe, uptime check or dashboard must use `/context/healthz`. `/health`
+is still proxied to the Node publisher's actuator and says nothing about context.
+
+```json
+{"status":"ok","contexts_preloaded":3,"contexts_expected":3,
+ "contexts_indexed":3,"indexed":["..."],"missing":[]}
+```
+
+**Startup probe.** The revision declares `--startup-probe httpGet.path=/context/healthz`
+(period 5 s, 24 failures ⇒ 2 minutes of budget, enough for the entrypoint's 60 s wait for
+the Node publisher plus the context preload). Cloud Run only routes traffic to an instance
+once the probe passes, so a revision whose Stage 3 cannot load its index stays off traffic
+instead of 500-ing at the edge.
+
+**Who builds the index.** CI does, in `analytics-engineering`:
+`scripts/build_context_index.sh` (token preflight → `npm ci` → pipeline → coverage
+assertion), and then again inside the image (`Dockerfile`), because `.gcloudignore`
+excludes `context/chroma_db`. Both end with `verify_index_coverage.py`, which fails the
+deploy/image on an empty or measure-less context.
+
+**Token rotation.** One secret, one rotation, both consumers:
+```bash
+# 1. put the new token in Secret Manager (new version, old one stays readable)
+printf '%s' "$NEW_TOKEN" | gcloud secrets versions add motherduck-token \
+  --project my-1-st-project-training --data-file=-
+# 2. redeploy so the revision picks up :latest (--set-secrets ...:latest)
+gh workflow run deploy-publisher.yml --repo antipev/analytics-engineering --ref main
+# 3. after the run is green, disable the previous version
+gcloud secrets versions disable <OLD_VERSION> --secret=motherduck-token \
+  --project my-1-st-project-training
+```
+The deploy identity `malloy-analytics-user@` holds `roles/secretmanager.secretAccessor`
+on this one secret; Cloud Build's own service account holds it too (for `secretEnv`), and
+the Cloud Run runtime account holds it for `--set-secrets`. Nothing else reads it.
+
+**Stale contexts.** Re-indexing prunes: the pipeline deletes the previous chunks for a
+context id before upserting, and `run_context_pipeline.py` deletes artifacts for packages
+that left `publisher.config.json`. If a context id itself changes (an environment rename),
+delete the orphan once:
+
+```bash
+python3 - <<'PY'
+import chromadb
+col = chromadb.PersistentClient(path='context/chroma_db').get_collection('malloy_subgraphs')
+for cid in {m['context'] for m in col.get(include=['metadatas'])['metadatas']}:
+    if cid not in {'workspace__thelook_ecommerce', 'workspace__comics', 'workspace__jaffle_shop'}:
+        print('deleting', cid); col.delete(where={'context': cid})
+PY
+```
+
+`context/chroma_db/` is **not committed** — it is a build artifact, recreated in about
+three minutes by `scripts/build_context_index.sh`. A checkout without it is normal; a
+checkout with a stale one is how this incident started.
 
 ---
 

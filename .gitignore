@@ -33,3 +33,8 @@ workspace/semantic_layer/
 # Optional: Large data files
 # *.parquet
 A_Semantic_Layer/0_data/README.md
+
+# The RAG index is a build artifact (scripts/build_context_index.sh or the image
+# build recreates it in ~3 minutes). Never committed: the binaries churn on every
+# re-index and a stale copy silently answers malloy_getContext with old graphs.
+context/chroma_db/

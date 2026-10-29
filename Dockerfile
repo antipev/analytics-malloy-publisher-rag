@@ -32,25 +32,27 @@ RUN npm install --omit=dev
 WORKDIR /app
 
 # Refresh the RAG artifacts at build time, using the SAME config the server serves.
-# A narrower build-time config (publisher.context.config.json) is precisely what let
-# jaffle_shop/comics ship with no Stage-2 graph, so malloy_getContext relayed them to
-# the raw source stub and lost every money measure.
+# There is exactly one config (workspace/publisher.config.json): a second, narrower
+# build-time config is what let jaffle_shop/comics ship with no Stage-2 graph, so
+# malloy_getContext relayed them to the raw source stub and lost every money measure.
 #
 # No --fresh: existing graphs are reused and missing ones are built; Chroma is re-indexed
 # per context (delete-where-context + upsert), so this is idempotent and works whether
-# context/chroma_db is present (local build) or absent (Cloud Build, .gcloudignore:20).
+# context/chroma_db is present (local build) or absent (Cloud Build, .gcloudignore).
 #
 # MOTHERDUCK_TOKEN is required, not optional: Stage 1 compiles every served package and
 # jaffle_shop/comics only compile against MotherDuck.  Pass it as a build arg, never as an
 # ENV, so it is baked into no layer:
 #     docker build --build-arg MOTHERDUCK_TOKEN="$(cat token)" .
-# CI must therefore supply buildArgs through a cloudbuild.yaml (see TASK-08).
+# CI supplies it through cloudbuild.yaml, which mounts it from Secret Manager with
+# secretEnv (see TASK-08 in DOCUMENTATION/2_Plan_and_Implementation/11_PROJECT_1_RAG_Context_Coverage.md).
 ARG MOTHERDUCK_TOKEN
 
 # 1) Report the coverage of the incoming build context (advisory, --soft = never fails).
 # 2) Rebuild graphs + vectors for every served package.
-# 3) Fail the image if coverage regressed: an image that would answer malloy_getContext
-#    without money measures must not be buildable.
+# 3) Fail the image if coverage regressed, and require the two measures the original bug
+#    destroyed: an image that would answer malloy_getContext without money measures must
+#    not be buildable.
 ENV PYTHONPATH="/app/context:/app/context/shared"
 RUN python3 /app/context/orchestration/verify_index_coverage.py --soft \
       --config /app/workspace/publisher.config.json \
@@ -58,7 +60,9 @@ RUN python3 /app/context/orchestration/verify_index_coverage.py --soft \
     python3 /app/context/orchestration/run_context_pipeline.py --all --index-chroma \
       --config /app/workspace/publisher.config.json \
  && python3 /app/context/orchestration/verify_index_coverage.py \
-      --config /app/workspace/publisher.config.json
+      --config /app/workspace/publisher.config.json \
+      --require jaffle_shop:Total_Revenue \
+      --require jaffle_shop:Gross_Margin
 
 # Ensure entrypoint script is executable
 RUN chmod +x ./context/deploy/entrypoint.sh
