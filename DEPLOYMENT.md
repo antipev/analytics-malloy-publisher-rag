@@ -259,6 +259,79 @@ The current architecture merges both into a **single, cost-effective container**
    >   --region northamerica-northeast1 \
    >   --min-instances 0
    > ```
+   >
+   > If the live revision was deployed with `--no-cpu-throttling` (CPU allocated even
+   > while idle, so scale-to-zero never kicks in and 2 vCPU / 4 GiB is billed around
+   > the clock), flip it back without rebuilding — this creates a new revision on the
+   > same image and, with the route on `latestRevision`, moves traffic to it:
+   >
+   > ```bash
+   > gcloud run services update malloy-publisher-mcp \
+   >   --region northamerica-northeast1 \
+   >   --cpu-throttling
+   > ```
+   >
+   > Check it took with
+   > `gcloud run services describe malloy-publisher-mcp --region northamerica-northeast1 --format='value(spec.template.metadata.annotations)'`:
+   > it must contain `run.googleapis.com/cpu-throttling=true`.
+
+   > **A health uptime check defeats scale-to-zero.** `--cpu-throttling` +
+   > `--min-instances 0` only make scale-to-zero *possible*; any request restarts the
+   > ~15-minute idle timer that keeps one instance alive. This project has a Cloud
+   > Monitoring uptime check, `malloy-publisher RAG context coverage`
+   > (`projects/my-1-st-project-training/uptimeCheckConfigs/malloy-publisher-rag-context-coverage-cM1IOugWXCE`),
+   > that GETs `/context/healthz` every 60 s from 3 regions, so one instance is
+   > **always** running and billing never reaches zero (it is at least billed at the
+   > throttled idle rate instead of the `--no-cpu-throttling` rate). Proof:
+   > `run.googleapis.com/container/instance_count` keeps `state=active` = 1 with no
+   > other traffic, while the request log shows only
+   > `GoogleStackdriverMonitoring-UptimeChecks` hits. To actually scale to zero,
+   > export and then delete the check (gcloud 441 has no `monitoring uptime` command,
+   > use the API):
+   >
+   > ```bash
+   > TOKEN=$(gcloud auth print-access-token)
+   > CHECK=projects/my-1-st-project-training/uptimeCheckConfigs/malloy-publisher-rag-context-coverage-cM1IOugWXCE
+   > # keep a copy so it can be recreated later
+   > curl -s -H "Authorization: Bearer $TOKEN" "https://monitoring.googleapis.com/v3/${CHECK}" > /tmp/uptime-check.json
+   > # delete it (recreate by POSTing the same JSON, minus its "name", to
+   > # https://monitoring.googleapis.com/v3/projects/my-1-st-project-training/uptimeCheckConfigs)
+   > curl -s -X DELETE -H "Authorization: Bearer $TOKEN" "https://monitoring.googleapis.com/v3/${CHECK}"
+   > ```
+   >
+   > Verify the instance really goes away ~15 min after the last request — the metric
+   > has a 2–3 min export lag and simply *stops emitting* for a revision once its last
+   > instance is gone:
+   >
+   > ```bash
+   > TOKEN=$(gcloud auth print-access-token)
+   > curl -s -H "Authorization: Bearer $TOKEN" \
+   >   "https://monitoring.googleapis.com/v3/projects/my-1-st-project-training/timeSeries?filter=metric.type%3D%22run.googleapis.com%2Fcontainer%2Finstance_count%22%20AND%20resource.labels.service_name%3D%22malloy-publisher-mcp%22&interval.startTime=$(date -u -d '-40 minutes' +%Y-%m-%dT%H:%M:%SZ)&interval.endTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+   > ```
+   >
+   > If you want to keep the check, budget for one always-on instance (2 vCPU /
+   > 4 GiB, CPU-only-during-requests) — that is the honest trade-off, and it is the
+   > current state of the live service.
+
+   > **Pinned traffic retires new revisions.** `gcloud run deploy` inherits the
+   > service's traffic block. If it is pinned by revision name
+   > (`status.traffic: [{percent: 100, revisionName: malloy-publisher-mcp-00038-688}]`)
+   > instead of `latestRevision: true`, the revision you just built gets 0% and Cloud
+   > Run **retires it within about a second** — it reports `Ready=True` with reason
+   > `Retired`, the deploy exits "successfully" naming the *old* revision, and the
+   > service keeps serving the old one. Two deploys were lost this way (`00051-peg`,
+   > `00052-mis`). Re-point the route to the latest revision once, then deploy again:
+   >
+   > ```bash
+   > gcloud run services update-traffic malloy-publisher-mcp \
+   >   --region northamerica-northeast1 \
+   >   --to-latest
+   > ```
+   >
+   > Confirm with `gcloud run services describe malloy-publisher-mcp --region
+   > northamerica-northeast1 --format='value(status.traffic)'` — the entry must read
+   > `latestRevision: True`. A retired revision can be revived by that same
+   > `update-traffic` call, so no rebuild is needed to recover.
 
 4. **Verify Deployment:**
    * **Web UI for Humans:** Open `https://malloy-publisher-mcp-bolcwt6srq-nn.a.run.app/` in your browser.
